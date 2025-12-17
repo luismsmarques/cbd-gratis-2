@@ -390,6 +390,17 @@
 	color: var(--mui-blue-primary);
 }
 
+/* Hide placeholder when label is shrunk - using adjacent sibling selector */
+.mui-text-field-label-shrink + .mui-input::placeholder,
+.mui-text-field-label-shrink ~ .mui-input::placeholder {
+	opacity: 0;
+}
+
+/* Alternative: hide placeholder when parent has shrink label */
+.mui-text-field:has(.mui-text-field-label-shrink) .mui-input::placeholder {
+	opacity: 0;
+}
+
 .mui-input {
 	width: 100%;
 	padding: 16.5px 14px;
@@ -427,10 +438,36 @@
 	padding: 16.5px 14px;
 }
 
+/* Adjust padding for outlined input when label is shrunk */
+.mui-text-field:has(.mui-text-field-label-shrink) .mui-input-outlined {
+	padding-top: 20px;
+	padding-bottom: 12px;
+}
+
+/* Fallback for browsers without :has() support */
+.mui-text-field-label-shrink + .mui-input-outlined,
+.mui-text-field-label-shrink ~ .mui-input-outlined {
+	padding-top: 20px;
+	padding-bottom: 12px;
+}
+
 .mui-input-outlined:focus {
 	border-color: var(--mui-blue-primary);
 	border-width: 2px;
 	padding: 15.5px 13px;
+}
+
+/* Adjust padding for outlined input on focus when label is shrunk */
+.mui-text-field:has(.mui-text-field-label-shrink) .mui-input-outlined:focus {
+	padding-top: 19px;
+	padding-bottom: 11px;
+}
+
+/* Fallback for browsers without :has() support */
+.mui-text-field-label-shrink + .mui-input-outlined:focus,
+.mui-text-field-label-shrink ~ .mui-input-outlined:focus {
+	padding-top: 19px;
+	padding-bottom: 11px;
 }
 
 .mui-input-helper-text {

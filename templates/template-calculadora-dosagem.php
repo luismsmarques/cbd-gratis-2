@@ -112,55 +112,55 @@ if ( $animais_page ) {
 						<div class="mui-text-field mb-6">
 							<label for="weight" class="mui-text-field-label mui-text-field-label-shrink">
 								Peso (kg)
-						</label>
-						<input 
-							type="number" 
-							id="weight" 
-							name="weight" 
-							min="0.1" 
-							step="0.1" 
-							required
+							</label>
+							<input 
+								type="number" 
+								id="weight" 
+								name="weight" 
+								min="0.1" 
+								step="0.1" 
+								required
 								class="mui-input mui-input-outlined"
-							placeholder="Ex: 70"
-						>
-							<div class="mui-input-helper-text">Digite o peso em quilogramas</div>
-					</div>
+								placeholder=""
+							>
+							<div class="mui-input-helper-text">Digite o peso em quilogramas (ex: 70)</div>
+						</div>
 
 						<!-- Product Concentration Input - MUI Text Field -->
 						<div class="mui-text-field mb-6">
 							<label for="concentration" class="mui-text-field-label mui-text-field-label-shrink">
 								Concentração do Produto (mg CBD por ml)
-						</label>
-						<input 
-							type="number" 
-							id="concentration" 
-							name="concentration" 
-							min="0.1" 
-							step="0.1" 
-							required
+							</label>
+							<input 
+								type="number" 
+								id="concentration" 
+								name="concentration" 
+								min="0.1" 
+								step="0.1" 
+								required
 								class="mui-input mui-input-outlined"
-							placeholder="Ex: 10"
-						>
-							<div class="mui-input-helper-text">Calcule: mg total de CBD na garrafa ÷ ml da garrafa</div>
-					</div>
+								placeholder=""
+							>
+							<div class="mui-input-helper-text">Calcule: mg total de CBD na garrafa ÷ ml da garrafa (ex: 10)</div>
+						</div>
 
 						<!-- Condition Severity Dropdown - MUI Select -->
 						<div class="mui-text-field mb-6">
 							<label for="severity" class="mui-text-field-label mui-text-field-label-shrink">
-							Gravidade da Condição
-						</label>
-						<select 
-							id="severity" 
-							name="severity" 
-							required
+								Gravidade da Condição
+							</label>
+							<select 
+								id="severity" 
+								name="severity" 
+								required
 								class="mui-input mui-input-outlined"
-						>
-							<option value="">Selecione a gravidade...</option>
-							<option value="leve">Leve (Stress diário, sono ligeiro)</option>
-							<option value="media">Média (Ansiedade, dores crónicas moderadas)</option>
-							<option value="elevada">Elevada (Dores severas, epilepsia)</option>
-						</select>
-					</div>
+							>
+								<option value="">Selecione a gravidade...</option>
+								<option value="leve">Leve (Stress diário, sono ligeiro)</option>
+								<option value="media">Média (Ansiedade, dores crónicas moderadas)</option>
+								<option value="elevada">Elevada (Dores severas, epilepsia)</option>
+							</select>
+						</div>
 
 						<!-- Calculate Button - MUI Button -->
 					<button 
