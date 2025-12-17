@@ -24,8 +24,10 @@ body {
 }
 
 /* Ensure container has proper spacing */
+/* Removed padding-top to prevent gap between header and content in desktop */
 .site-main {
-	padding: 2rem 0;
+	padding-top: 0;
+	padding-bottom: 2rem;
 }
 
 /* Fix for WordPress admin bar */

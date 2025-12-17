@@ -36,10 +36,10 @@
 	</div>
 
 	<!-- Main Header -->
-	<header id="masthead" class="site-header bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-		<div class="container mx-auto px-4">
+	<header id="masthead" class="site-header bg-white border-b border-gray-200 lg:static top-0 z-50 shadow-sm">
+		<div class="container mx-auto px-4 lg:px-6">
 			<!-- Logo and Mobile Menu -->
-			<div class="flex items-center justify-between py-2 md:py-4 gap-2 md:gap-4">
+			<div class="flex items-center justify-between py-2 md:py-4 gap-2 md:gap-4 lg:gap-6">
 				<div class="site-branding flex items-center flex-shrink-0">
 					<?php if ( has_custom_logo() ) : ?>
 						<?php the_custom_logo(); ?>
@@ -58,7 +58,7 @@
 						'theme_location' => 'primary',
 						'menu_id' => 'primary-menu',
 						'container' => false,
-						'menu_class' => 'flex items-center gap-1',
+						'menu_class' => 'flex items-center gap-1 lg:gap-2',
 						'walker' => new CBD_AI_Menu_Walker(),
 						'fallback_cb' => 'cbd_ai_fallback_menu',
 					) );

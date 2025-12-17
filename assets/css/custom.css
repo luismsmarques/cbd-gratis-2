@@ -21,6 +21,45 @@
 	visibility: hidden !important;
 }
 
+/* Correção de espaçamento entre header e main em desktop */
+/* Quando o header não é sticky (lg:static), remover qualquer espaçamento entre header e main */
+@media (min-width: 1024px) {
+	.site-main {
+		padding-top: 0 !important;
+		margin-top: 0 !important;
+	}
+	
+	/* Garantir que o primeiro elemento dentro do main não tenha margin-top em desktop */
+	.site-main > *:first-child {
+		margin-top: 0 !important;
+	}
+	
+	/* Remover padding-top do primeiro elemento quando header não é sticky */
+	/* O header tem lg:static, então em desktop não é sticky */
+	.site-main > section:first-child,
+	.site-main > div:first-child {
+		margin-top: 0 !important;
+	}
+}
+
+/* Header sticky apenas em mobile */
+@media (max-width: 1023px) {
+	.site-header {
+		position: sticky !important;
+		top: 0 !important;
+		z-index: 50 !important;
+	}
+}
+
+/* Header static em desktop */
+@media (min-width: 1024px) {
+	.site-header {
+		position: static !important;
+		top: auto !important;
+		z-index: auto !important;
+	}
+}
+
 /* Correção de espaçamento do header em mobile */
 @media (max-width: 767px) {
 	.site-header {

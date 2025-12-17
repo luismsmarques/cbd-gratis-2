@@ -76,7 +76,7 @@ get_header();
 					<button 
 						type="submit" 
 						class="mui-button mui-button-contained mui-button-contained-teal"
-						style="border-radius: 0 4px 4px 0; min-width: auto; padding: 16.5px 24px;"
+						style="border-radius: 0 4px 4px 0; min-width: auto; padding: 10.5px 24px;"
 						aria-label="Pesquisar"
 					>
 						<svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
