@@ -69,8 +69,9 @@
     padding-right: 1rem;
   }
   
-  /* Force 4 columns on mobile with horizontal scroll - apenas para guides-grid */
-  .guides-grid {
+  /* Force 4 columns on mobile with horizontal scroll */
+  .guides-grid,
+  .grid.grid-cols-4 {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     overflow-x: auto;
@@ -78,19 +79,26 @@
     scrollbar-width: thin;
   }
   
-  .guides-grid > * {
+  .guides-grid > *,
+  .grid.grid-cols-4 > * {
     min-width: 0;
   }
-  
-  /* Categories section - 1 coluna em mobile */
-  .categories-section .grid {
+}
+
+/* Ensure 4 columns on all screen sizes - apenas para guides-grid */
+.guides-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+/* Categories section - 1 coluna em mobile, 4 colunas em desktop */
+@media (max-width: 767px) {
+  .categories-section .grid.grid-cols-4 {
     grid-template-columns: 1fr !important;
   }
 }
 
-/* Ensure 4 columns on desktop for guides-grid */
-@media (min-width: 641px) {
-  .guides-grid {
+@media (min-width: 768px) {
+  .categories-section .grid.grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }
