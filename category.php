@@ -1,8 +1,8 @@
 <?php
 /**
- * Archive Template - MUI Design System
+ * Category Archive Template - MUI Design System
  *
- * Template genérico para arquivos (tags, autores, datas, etc.)
+ * Template específico para páginas de arquivo de categorias
  * Design focado em rigor, segurança e inovação
  *
  * @package CBD_AI_Theme
@@ -11,8 +11,10 @@
 
 get_header();
 
-$archive_title = get_the_archive_title();
-$archive_description = get_the_archive_description();
+$category = get_queried_object();
+$category_name = $category->name;
+$category_description = category_description();
+$post_count = $category->count;
 ?>
 
 <main class="main-content py-8 md:py-12" style="background: linear-gradient(to bottom, var(--mui-gray-50), rgba(0, 137, 123, 0.03), var(--mui-gray-50));">
@@ -22,28 +24,35 @@ $archive_description = get_the_archive_description();
 			<!-- Main Content Area -->
 			<div class="lg:col-span-8">
 				
-				<!-- Archive Header -->
+				<!-- Category Header -->
 				<header class="mb-8 md:mb-12">
 					<div class="mui-card mui-card-elevated p-6 md:p-8 mb-6">
+						<div class="flex flex-wrap items-center gap-3 mb-4">
+							<span class="mui-chip mui-chip-info mui-chip-large">
+								<?php echo esc_html( $category_name ); ?>
+							</span>
+							<?php if ( $post_count > 0 ) : ?>
+								<span class="mui-typography-body2" style="color: var(--mui-gray-600);">
+									<?php printf( 
+										_n( 
+											'%d artigo', 
+											'%d artigos', 
+											$post_count, 
+											'cbd-ai-theme' 
+										), 
+										$post_count 
+									); ?>
+								</span>
+							<?php endif; ?>
+						</div>
+						
 						<h1 class="mui-typography-h1 mb-4">
-							<?php echo wp_kses_post( $archive_title ); ?>
+							<?php echo esc_html( $category_name ); ?>
 						</h1>
 						
-						<?php if ( ! empty( $archive_description ) ) : ?>
+						<?php if ( ! empty( $category_description ) ) : ?>
 							<div class="mui-typography-body1" style="color: var(--mui-gray-700);">
-								<?php echo wp_kses_post( $archive_description ); ?>
-							</div>
-						<?php endif; ?>
-						
-						<?php
-						global $wp_query;
-						if ( $wp_query->found_posts > 0 ) :
-						?>
-							<div class="mt-4 pt-4 border-t" style="border-color: var(--mui-gray-300);">
-								<p class="mui-typography-body2" style="color: var(--mui-gray-600);">
-									<strong><?php echo esc_html( $wp_query->found_posts ); ?></strong> 
-									<?php echo _n( 'artigo encontrado', 'artigos encontrados', $wp_query->found_posts, 'cbd-ai-theme' ); ?>
-								</p>
+								<?php echo wp_kses_post( $category_description ); ?>
 							</div>
 						<?php endif; ?>
 					</div>
@@ -55,7 +64,7 @@ $archive_description = get_the_archive_description();
 				<?php if ( have_posts() ) : ?>
 					
 					<!-- Posts Grid -->
-					<div class="archive-posts-grid grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+					<div class="category-posts-grid grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 						<?php while ( have_posts() ) : the_post(); ?>
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300' ); ?> itemscope itemtype="https://schema.org/Article">
 								
@@ -79,11 +88,11 @@ $archive_description = get_the_archive_description();
 									if ( ! empty( $categories ) ) :
 									?>
 										<div class="flex flex-wrap gap-2 mb-3">
-											<?php foreach ( array_slice( $categories, 0, 2 ) as $category ) : ?>
-												<a href="<?php echo esc_url( get_category_link( $category->term_id ) ); ?>" 
+											<?php foreach ( array_slice( $categories, 0, 2 ) as $cat ) : ?>
+												<a href="<?php echo esc_url( get_category_link( $cat->term_id ) ); ?>" 
 												   class="mui-chip mui-chip-info mui-chip-small" 
 												   style="text-decoration: none;">
-													<?php echo esc_html( $category->name ); ?>
+													<?php echo esc_html( $cat->name ); ?>
 												</a>
 											<?php endforeach; ?>
 										</div>
@@ -172,9 +181,9 @@ $archive_description = get_the_archive_description();
 						<div class="mui-alert mui-alert-info">
 							<div class="mui-alert-icon" style="font-size: 3rem;">📝</div>
 							<div class="mui-alert-message">
-								<h2 class="mui-typography-h4 mb-2">Nenhum conteúdo encontrado</h2>
+								<h2 class="mui-typography-h4 mb-2">Nenhum artigo encontrado</h2>
 								<p class="mui-typography-body1 mb-4" style="color: var(--mui-gray-700);">
-									Não há posts neste arquivo ainda.
+									Ainda não há artigos publicados na categoria "<strong><?php echo esc_html( $category_name ); ?></strong>".
 								</p>
 								<div class="mt-6">
 									<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="mui-button mui-button-contained mui-button-primary">
@@ -196,15 +205,67 @@ $archive_description = get_the_archive_description();
 			<aside class="lg:col-span-4">
 				<div class="sticky top-24 space-y-6">
 					
+					<!-- Category Info Widget -->
+					<div class="mui-card mui-card-elevated p-6">
+						<h3 class="mui-typography-h6 mb-4">Sobre esta Categoria</h3>
+						<?php if ( ! empty( $category_description ) ) : ?>
+							<div class="mui-typography-body2 mb-4" style="color: var(--mui-gray-700);">
+								<?php echo wp_kses_post( wp_trim_words( $category_description, 30 ) ); ?>
+							</div>
+						<?php else : ?>
+							<p class="mui-typography-body2" style="color: var(--mui-gray-600);">
+								Artigos relacionados com <?php echo esc_html( strtolower( $category_name ) ); ?>.
+							</p>
+						<?php endif; ?>
+						<?php if ( $post_count > 0 ) : ?>
+							<div class="mt-4 pt-4 border-t" style="border-color: var(--mui-gray-300);">
+								<p class="mui-typography-caption" style="color: var(--mui-gray-600);">
+									<strong><?php echo esc_html( $post_count ); ?></strong> 
+									<?php echo _n( 'artigo publicado', 'artigos publicados', $post_count, 'cbd-ai-theme' ); ?>
+								</p>
+							</div>
+						<?php endif; ?>
+					</div>
+					
+					<!-- Related Categories Widget -->
+					<?php
+					$related_categories = get_categories( array(
+						'exclude' => array( $category->term_id ),
+						'orderby' => 'count',
+						'order' => 'DESC',
+						'hide_empty' => true,
+						'number' => 8,
+					) );
+					
+					if ( ! empty( $related_categories ) ) :
+					?>
+						<div class="mui-card mui-card-elevated p-6">
+							<h3 class="mui-typography-h6 mb-4">Outras Categorias</h3>
+							<ul class="mui-list">
+								<?php foreach ( $related_categories as $related_cat ) : ?>
+									<li class="mui-list-item">
+										<a href="<?php echo esc_url( get_category_link( $related_cat->term_id ) ); ?>" 
+										   class="mui-list-item-text flex items-center justify-between hover:text-blue-600 transition-colors">
+											<span><?php echo esc_html( $related_cat->name ); ?></span>
+											<span class="mui-typography-caption" style="color: var(--mui-gray-500);">
+												<?php echo esc_html( $related_cat->count ); ?>
+											</span>
+										</a>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						</div>
+					<?php endif; ?>
+					
 					<!-- Search Widget -->
 					<div class="mui-card mui-card-elevated p-6">
 						<h3 class="mui-typography-h6 mb-4">Pesquisar Artigos</h3>
 						<form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 							<div class="mui-text-field">
-								<label for="archive-search-input" class="mui-text-field-label mui-text-field-label-shrink">Pesquisar</label>
+								<label for="category-search-input" class="mui-text-field-label mui-text-field-label-shrink">Pesquisar</label>
 								<input
 									type="search"
-									id="archive-search-input"
+									id="category-search-input"
 									name="s"
 									placeholder="Digite sua pesquisa..."
 									class="mui-input mui-input-outlined"
@@ -218,35 +279,6 @@ $archive_description = get_the_archive_description();
 							</button>
 						</form>
 					</div>
-					
-					<!-- Categories Widget -->
-					<?php
-					$categories = get_categories( array(
-						'orderby' => 'count',
-						'order' => 'DESC',
-						'hide_empty' => true,
-						'number' => 10,
-					) );
-					
-					if ( ! empty( $categories ) ) :
-					?>
-						<div class="mui-card mui-card-elevated p-6">
-							<h3 class="mui-typography-h6 mb-4">Categorias</h3>
-							<ul class="mui-list">
-								<?php foreach ( $categories as $category ) : ?>
-									<li class="mui-list-item">
-										<a href="<?php echo esc_url( get_category_link( $category->term_id ) ); ?>" 
-										   class="mui-list-item-text flex items-center justify-between hover:text-blue-600 transition-colors">
-											<span><?php echo esc_html( $category->name ); ?></span>
-											<span class="mui-typography-caption" style="color: var(--mui-gray-500);">
-												<?php echo esc_html( $category->count ); ?>
-											</span>
-										</a>
-									</li>
-								<?php endforeach; ?>
-							</ul>
-						</div>
-					<?php endif; ?>
 					
 					<!-- Recent Posts Widget -->
 					<?php
@@ -305,7 +337,7 @@ $archive_description = get_the_archive_description();
 						</div>
 						<div class="p-6">
 							<p class="mui-typography-body2 mb-4" style="color: var(--mui-gray-700);">
-								Faça perguntas sobre dosagem, segurança ou qualquer dúvida sobre CBD. Nossa IA especializada está pronta para ajudar.
+								Faça perguntas sobre CBD relacionadas com <?php echo esc_html( strtolower( $category_name ) ); ?>. Nossa IA especializada está pronta para ajudar.
 							</p>
 							<a href="<?php echo esc_url( home_url( '/chatbot-ai-cbd/' ) ); ?>" class="mui-button mui-button-contained mui-button-contained-teal w-full">
 								<svg style="width: 20px; height: 20px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -351,15 +383,15 @@ $archive_description = get_the_archive_description();
 	cursor: default;
 }
 
-/* Archive Posts Grid Responsive */
+/* Category Posts Grid Responsive */
 @media (min-width: 768px) {
-	.archive-posts-grid {
+	.category-posts-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
 @media (min-width: 1024px) {
-	.archive-posts-grid {
+	.category-posts-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
@@ -384,3 +416,4 @@ $archive_description = get_the_archive_description();
 <?php
 get_footer();
 ?>
+
