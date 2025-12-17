@@ -12,7 +12,7 @@ get_header();
 ?>
 
 <!-- Hero Section - MUI Design Dashboard de Autoridade -->
-<section class="hero-authority py-12 md:py-20" style="background: linear-gradient(to bottom, #ffffff, rgba(0, 137, 123, 0.05), #ffffff);">
+<section class="hero-authority py-6 md:py-10" style="background: linear-gradient(to bottom, #ffffff, rgba(0, 137, 123, 0.05), #ffffff);">
 	<div class="mui-container">
 		<div class="max-w-4xl mx-auto text-center">
 			<!-- Trust Badge - MUI Chip Style -->
