@@ -281,12 +281,25 @@ get_header();
 </section>
 
 <!-- Section B: Featured Guides - WordPress Posts -->
-<section class="guides-section py-12 md:py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50" id="guias-praticos">
+<section class="guides-section py-12 md:py-16 bg-gradient-to-b from-teal-50 via-white to-teal-50" id="guias-praticos">
 	<div class="container mx-auto px-4">
 		<div class="max-w-7xl mx-auto">
+			<?php
+			$recent_posts = new WP_Query( array(
+				'post_type' => 'post',
+				'posts_per_page' => 6,
+				'post_status' => 'publish',
+				'orderby' => 'date',
+				'order' => 'DESC',
+			) );
+			
+			$posts_page_id = get_option( 'page_for_posts' );
+			$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
+			?>
+			
 			<!-- Section Header -->
 			<div class="text-center mb-8 md:mb-12">
-				<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold uppercase tracking-wide mb-4">
+				<div class="inline-flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-semibold uppercase tracking-wide mb-4">
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
 					</svg>
@@ -300,18 +313,8 @@ get_header();
 				</p>
 			</div>
 			
-			<!-- Posts Grid -->
-			<?php
-			$recent_posts = new WP_Query( array(
-				'post_type' => 'post',
-				'posts_per_page' => 6,
-				'post_status' => 'publish',
-				'orderby' => 'date',
-				'order' => 'DESC',
-			) );
-			
-			if ( $recent_posts->have_posts() ) :
-			?>
+			<?php if ( $recent_posts->have_posts() ) : ?>
+				<!-- Posts Grid -->
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					<?php while ( $recent_posts->have_posts() ) : $recent_posts->the_post(); ?>
 						<article 
@@ -319,24 +322,26 @@ get_header();
 							itemscope 
 							itemtype="https://schema.org/Article"
 						>
+							
 							<!-- Featured Image -->
 							<?php if ( has_post_thumbnail() ) : ?>
 								<div class="w-full h-48 overflow-hidden bg-gray-100 group/image">
 									<a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>" class="block h-full">
-										<?php the_post_thumbnail( 'medium_large', array( 
+										<?php 
+										$thumbnail = get_the_post_thumbnail( get_the_ID(), 'medium_large', array( 
 											'class' => 'w-full h-full object-cover transition-transform duration-300 group-hover/image:scale-105',
 											'loading' => 'lazy'
-										) ); ?>
+										) );
+										echo $thumbnail;
+										?>
 									</a>
 								</div>
 							<?php endif; ?>
 							
 							<!-- Card Content -->
 							<div class="p-6" itemprop="articleBody">
-								<h3 class="text-lg font-bold text-gray-900 mb-4 leading-tight line-clamp-2 group-hover:text-blue-700 transition-colors" itemprop="headline">
-									<a href="<?php the_permalink(); ?>">
-										<?php the_title(); ?>
-									</a>
+								<h3 class="text-lg font-bold text-gray-900 mb-4 leading-tight line-clamp-2 group-hover:text-teal-700 transition-colors" itemprop="headline">
+									<?php the_title(); ?>
 								</h3>
 								
 								<p class="text-sm text-gray-600 mb-5 leading-relaxed line-clamp-3" itemprop="description">
@@ -354,7 +359,7 @@ get_header();
 								
 								<a 
 									href="<?php the_permalink(); ?>" 
-									class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 group-hover:gap-3 transition-all"
+									class="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700 group-hover:gap-3 transition-all"
 									itemprop="url"
 									aria-label="Ler artigo completo: <?php echo esc_attr( get_the_title() ); ?>"
 								>
@@ -369,10 +374,6 @@ get_header();
 				</div>
 				
 				<!-- CTA to Blog Archive -->
-				<?php
-				$posts_page_id = get_option( 'page_for_posts' );
-				$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
-				?>
 				<div class="text-center">
 					<a 
 						href="<?php echo esc_url( $posts_page_url ); ?>" 
@@ -389,35 +390,46 @@ get_header();
 						</svg>
 					</a>
 				</div>
-			<?php
-				wp_reset_postdata();
-			else :
-			?>
+			<?php else : ?>
 				<!-- No Posts State -->
 				<div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden max-w-2xl mx-auto">
-					<div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 md:px-8 py-6">
+					<div class="bg-gradient-to-r from-teal-500 to-teal-600 px-6 md:px-8 py-6">
 						<div class="flex items-center gap-4">
 							<div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
 								<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
 								</svg>
 							</div>
 							<div class="flex-1">
 								<h3 class="text-xl md:text-2xl font-bold text-white mb-1">Guias Práticos</h3>
-								<p class="text-sm text-blue-100">Artigos especializados sobre CBD</p>
+								<p class="text-sm text-teal-100">Artigos especializados sobre CBD</p>
 							</div>
 						</div>
 					</div>
 					<div class="p-6 md:p-8 text-center">
-						<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg mb-4">
+						<div class="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg mb-4">
 							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-								<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+								<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
 							</svg>
 							<span class="font-semibold">Ainda não há artigos publicados. Volte em breve!</span>
 						</div>
+						<p class="text-sm text-gray-600 mb-6">
+							Última atualização: <time datetime="<?php echo esc_attr( date( 'Y-m-d\TH:i:s' ) ); ?>" class="font-medium"><?php echo date_i18n( 'd/m/Y H:i' ); ?></time>
+						</p>
+						<a 
+							href="<?php echo esc_url( $posts_page_url ); ?>" 
+							class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors"
+						>
+							<span>Ver Blog</span>
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+							</svg>
+						</a>
 					</div>
 				</div>
-			<?php endif; ?>
+			<?php 
+				wp_reset_postdata();
+			endif; ?>
 		</div>
 	</div>
 </section>
