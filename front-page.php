@@ -284,6 +284,18 @@ get_header();
 <section class="guides-section py-12 md:py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50" id="guias-praticos">
 	<div class="container mx-auto px-4">
 		<div class="max-w-7xl mx-auto">
+			<?php
+			$recent_posts = new WP_Query( array(
+				'post_type' => 'post',
+				'posts_per_page' => 6,
+				'post_status' => 'publish',
+				'orderby' => 'date',
+				'order' => 'DESC',
+			) );
+			$posts_page_id = get_option( 'page_for_posts' );
+			$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
+			?>
+			
 			<!-- Section Header -->
 			<div class="text-center mb-8 md:mb-12">
 				<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold uppercase tracking-wide mb-4">
@@ -300,18 +312,8 @@ get_header();
 				</p>
 			</div>
 			
-			<!-- Posts Grid -->
-			<?php
-			$recent_posts = new WP_Query( array(
-				'post_type' => 'post',
-				'posts_per_page' => 6,
-				'post_status' => 'publish',
-				'orderby' => 'date',
-				'order' => 'DESC',
-			) );
-			
-			if ( $recent_posts->have_posts() ) :
-			?>
+			<?php if ( $recent_posts->have_posts() ) : ?>
+				<!-- Posts Grid -->
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					<?php while ( $recent_posts->have_posts() ) : $recent_posts->the_post(); ?>
 						<article 
@@ -319,6 +321,7 @@ get_header();
 							itemscope 
 							itemtype="https://schema.org/Article"
 						>
+							
 							<!-- Featured Image -->
 							<?php if ( has_post_thumbnail() ) : ?>
 								<div class="w-full h-48 overflow-hidden bg-gray-100 group/image">
@@ -376,10 +379,6 @@ get_header();
 				</div>
 				
 				<!-- CTA to Blog Archive -->
-				<?php
-				$posts_page_id = get_option( 'page_for_posts' );
-				$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
-				?>
 				<div class="text-center">
 					<a 
 						href="<?php echo esc_url( $posts_page_url ); ?>" 
@@ -396,10 +395,7 @@ get_header();
 						</svg>
 					</a>
 				</div>
-			<?php
-				wp_reset_postdata();
-			else :
-			?>
+			<?php else : ?>
 				<!-- No Posts State -->
 				<div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden max-w-2xl mx-auto">
 					<div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 md:px-8 py-6">
@@ -415,7 +411,7 @@ get_header();
 							</div>
 						</div>
 					</div>
-					<div class="p-6 md:p-8 text-center">
+					<div class="p-6 md:px-8 text-center">
 						<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg mb-4">
 							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
 								<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
@@ -424,7 +420,9 @@ get_header();
 						</div>
 					</div>
 				</div>
-			<?php endif; ?>
+			<?php 
+				wp_reset_postdata();
+			endif; ?>
 		</div>
 	</div>
 </section>
@@ -484,7 +482,7 @@ get_header();
 						>
 							<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br <?php echo esc_attr( $colors['gradient'] ); ?> to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							<div class="relative z-10">
-								<div class="w-16 h-16 bg-gradient-to-br <?php echo esc_attr( $colors['bg'] ); ?> <?php echo esc_attr( $colors['to'] ); ?> rounded-xl flex items-center justify-center text-white text-2xl mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
+								<div class="w-20 h-20 bg-gradient-to-br <?php echo esc_attr( $colors['bg'] ); ?> <?php echo esc_attr( $colors['to'] ); ?> rounded-2xl flex items-center justify-center text-white text-4xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
 									<?php 
 									// Get category icon from description or use default
 									$icon = '📋';
