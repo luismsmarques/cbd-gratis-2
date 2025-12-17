@@ -2,8 +2,9 @@
 deployment:
   tasks:
     - export DEPLOYPATH=$HOME/public_html/wp-content/themes
+    - cd $HOME/repositories/cbd-gratis 2>/dev/null || cd $HOME 2>/dev/null || true
     - /bin/rm -rf $DEPLOYPATH/cbd-ai-theme
     - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R app/public/wp-content/themes/cbd-ai-theme $DEPLOYPATH/
+    - /bin/cp -R app/public/wp-content/themes/cbd-ai-theme $DEPLOYPATH/ 2>/dev/null || /bin/cp -R $HOME/repositories/cbd-gratis/app/public/wp-content/themes/cbd-ai-theme $DEPLOYPATH/ 2>/dev/null || /bin/cp -R $(pwd)/app/public/wp-content/themes/cbd-ai-theme $DEPLOYPATH/
     - /bin/chmod -R 755 $DEPLOYPATH/cbd-ai-theme
     - /bin/find $DEPLOYPATH/cbd-ai-theme -type f -exec chmod 644 {} \;
