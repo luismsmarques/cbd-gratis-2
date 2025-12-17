@@ -290,43 +290,19 @@ get_header();
 					?>
 						<article class="mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300" itemscope itemtype="https://schema.org/Article">
 							<?php if ( has_post_thumbnail() ) : ?>
-								<a href="<?php the_permalink(); ?>" class="block overflow-hidden relative" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
+								<a href="<?php the_permalink(); ?>" class="block overflow-hidden" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
 									<?php the_post_thumbnail( 'medium_large', array( 
 										'class' => 'w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105',
 										'loading' => 'lazy',
 										'itemprop' => 'image'
 									) ); ?>
-									<?php if ( $primary_category ) : ?>
-										<div class="absolute top-3 left-3">
-											<a 
-												href="<?php echo esc_url( get_category_link( $primary_category->term_id ) ); ?>" 
-												class="mui-chip mui-chip-primary"
-												style="display: inline-flex; background-color: rgba(25, 118, 210, 0.9); color: white; backdrop-filter: blur(4px);"
-												onclick="event.stopPropagation();"
-											>
-												<?php echo esc_html( $primary_category->name ); ?>
-											</a>
-										</div>
-									<?php endif; ?>
 								</a>
 							<?php else : ?>
 								<!-- Placeholder when no thumbnail -->
-								<div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
+								<div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
 									<svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
 									</svg>
-									<?php if ( $primary_category ) : ?>
-										<div class="absolute top-3 left-3">
-											<a 
-												href="<?php echo esc_url( get_category_link( $primary_category->term_id ) ); ?>" 
-												class="mui-chip mui-chip-primary"
-												style="display: inline-flex; background-color: rgba(25, 118, 210, 0.9); color: white; backdrop-filter: blur(4px);"
-												onclick="event.stopPropagation();"
-											>
-												<?php echo esc_html( $primary_category->name ); ?>
-											</a>
-										</div>
-									<?php endif; ?>
 								</div>
 							<?php endif; ?>
 							
