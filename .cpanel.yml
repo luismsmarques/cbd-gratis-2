@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - /bin/bash -c 'rm -rf $HOME/public_html/wp-content/themes/cbd-ai-theme && mkdir -p $HOME/public_html/wp-content/themes && if [ -d "app/public/wp-content/themes/cbd-ai-theme" ]; then cp -R app/public/wp-content/themes/cbd-ai-theme $HOME/public_html/wp-content/themes/; chmod -R 755 $HOME/public_html/wp-content/themes/cbd-ai-theme; find $HOME/public_html/wp-content/themes/cbd-ai-theme -type f -exec chmod 644 {} \; ; fi'
+    - /bin/bash -c 'REPO_DIR=$(pwd); rm -rf $HOME/public_html/wp-content/themes/cbd-ai-theme; mkdir -p $HOME/public_html/wp-content/themes; if [ -d "$REPO_DIR/app/public/wp-content/themes/cbd-ai-theme" ]; then cp -R "$REPO_DIR/app/public/wp-content/themes/cbd-ai-theme" "$HOME/public_html/wp-content/themes/"; elif [ -d "$REPO_DIR/wp-content/themes/cbd-ai-theme" ]; then cp -R "$REPO_DIR/wp-content/themes/cbd-ai-theme" "$HOME/public_html/wp-content/themes/"; fi; chmod -R 755 $HOME/public_html/wp-content/themes/cbd-ai-theme; find $HOME/public_html/wp-content/themes/cbd-ai-theme -type f -exec chmod 644 {} \;'
