@@ -61,3 +61,11 @@ build/
 .env.local
 .env.*.local
 
+# Arquivos index padrão do WordPress
+app/public/index.php
+app/public/wp-content/index.php
+app/public/wp-content/themes/index.php
+app/public/wp-content/themes/functions.php
+app/public/wp-content/themes/templates/
+app/public/.htaccess
+
