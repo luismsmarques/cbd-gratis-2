@@ -280,7 +280,7 @@ get_header();
 	</div>
 </section>
 
-<!-- Section B: Featured Guides - MUI ActionCards -->
+<!-- Section B: Featured Guides - WordPress Posts -->
 <section class="guides-section py-16 md:py-20" style="background: linear-gradient(to bottom, #ffffff, #fafafa, #ffffff);">
 	<div class="mui-container">
 		<div class="max-w-7xl mx-auto">
@@ -300,17 +300,83 @@ get_header();
 				</p>
 			</div>
 			
-			<!-- ActionCards Grid - MUI Grid System -->
+			<!-- Posts Grid - MUI Cards -->
 			<?php
-			// Get page URLs
-			$pessoas_url = get_permalink( get_page_by_path( 'cbd-para-pessoas' ) ) ?: home_url( '/cbd-para-pessoas/' );
-			$animais_url = get_permalink( get_page_by_path( 'cbd-animais' ) ) ?: get_permalink( get_page_by_path( 'cbd-para-animais' ) ) ?: home_url( '/cbd-animais/' );
-			$calculadora_url = get_permalink( get_page_by_path( 'calculadora-de-dosagem' ) ) ?: home_url( '/calculadora-de-dosagem/' );
-			?>
+			$recent_posts = new WP_Query( array(
+				'post_type' => 'post',
+				'posts_per_page' => 6,
+				'post_status' => 'publish',
+				'orderby' => 'date',
+				'order' => 'DESC',
+			) );
 			
-			<div id="action-cards-app" class="mui-grid" style="margin: -12px;">
-				<!-- ActionCards serão renderizados via Vue -->
-			</div>
+			if ( $recent_posts->have_posts() ) :
+			?>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+					<?php while ( $recent_posts->have_posts() ) : $recent_posts->the_post(); ?>
+						<article class="mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300">
+							<?php if ( has_post_thumbnail() ) : ?>
+								<a href="<?php the_permalink(); ?>" class="block overflow-hidden" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
+									<?php the_post_thumbnail( 'medium_large', array( 
+										'class' => 'w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105',
+										'loading' => 'lazy'
+									) ); ?>
+								</a>
+							<?php endif; ?>
+							
+							<div class="mui-card-content">
+								<h3 class="mui-typography-h6 mb-2">
+									<a href="<?php the_permalink(); ?>" class="hover:text-blue-600 transition-colors">
+										<?php the_title(); ?>
+									</a>
+								</h3>
+								
+								<p class="mui-typography-body2 mb-4" style="color: var(--mui-gray-600);">
+									<?php echo esc_html( wp_trim_words( get_the_excerpt() ?: get_the_content(), 20 ) ); ?>
+								</p>
+								
+								<div class="flex items-center justify-between">
+									<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="mui-typography-caption" style="color: var(--mui-gray-500);">
+										<?php echo esc_html( get_the_date( 'd/m/Y' ) ); ?>
+									</time>
+									<a href="<?php the_permalink(); ?>" class="mui-button mui-button-text mui-button-small">
+										Ler mais
+										<svg style="width: 14px; height: 14px; margin-left: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+										</svg>
+									</a>
+								</div>
+							</div>
+						</article>
+					<?php endwhile; ?>
+				</div>
+				
+				<!-- Link to Blog Archive -->
+				<?php
+				$posts_page_id = get_option( 'page_for_posts' );
+				$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
+				?>
+				<div class="text-center">
+					<a 
+						href="<?php echo esc_url( $posts_page_url ); ?>" 
+						class="mui-button mui-button-contained mui-button-primary mui-button-large"
+					>
+						Ver Todos os Artigos
+						<svg style="width: 20px; height: 20px; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+						</svg>
+					</a>
+				</div>
+			<?php
+				wp_reset_postdata();
+			else :
+			?>
+				<div class="text-center py-12">
+					<p class="mui-typography-body1" style="color: var(--mui-gray-600);">
+						Ainda não há artigos publicados. Volte em breve!
+					</p>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>
@@ -527,18 +593,10 @@ get_header();
 </section>
 
 <?php
-// Enqueue StatusCard and ActionCard components
+// Enqueue StatusCard component
 wp_enqueue_script(
 	'cbd-ai-status-card',
 	CBD_AI_THEME_URI . '/assets/js/components/StatusCard.js',
-	array( 'vue-prod' ),
-	CBD_AI_THEME_VERSION,
-	false
-);
-
-wp_enqueue_script(
-	'cbd-ai-action-card',
-	CBD_AI_THEME_URI . '/assets/js/components/ActionCard.js',
 	array( 'vue-prod' ),
 	CBD_AI_THEME_VERSION,
 	false
@@ -565,54 +623,6 @@ wp_enqueue_script(
 				};
 			},
 			template: '<StatusCard :status="status" :titulo="titulo" :mensagem="mensagem" :dataAtualizacao="dataAtualizacao" />'
-		});
-		
-		// Initialize ActionCards using Vue Helper
-		window.CBDVueHelper.initComponent('ActionCard', 'action-cards-app', {
-			data() {
-				return {
-					cards: [
-						{
-							titulo: 'CBD para Animais',
-							descricao: 'Guias completos sobre CBD para cães e gatos, incluindo dosagem, benefícios e segurança.',
-							icone: '🐕',
-							url: '<?php echo esc_js( $animais_url ); ?>',
-							cor: 'teal',
-							tamanho: 'medium'
-						},
-						{
-							titulo: 'CBD para Pessoas',
-							descricao: 'Guia completo sobre benefícios, dosagem e legalidade do CBD para uso humano em Portugal.',
-							icone: '👤',
-							url: '<?php echo esc_js( $pessoas_url ); ?>',
-							cor: 'primary',
-							tamanho: 'medium'
-						},
-						{
-							titulo: 'Calculadora de Dosagem',
-							descricao: 'Calcule a dosagem correta de CBD baseada no peso, condição e tipo de produto.',
-							icone: '📊',
-							url: '<?php echo esc_js( $calculadora_url ); ?>',
-							cor: 'info',
-							tamanho: 'medium'
-						}
-					]
-				};
-			},
-			template: `
-				<template v-for="(card, index) in cards" :key="index">
-					<div class="mui-grid-item mui-grid-md-4 mui-grid-sm-6 mui-grid-xs-12" style="padding: 12px;">
-						<ActionCard 
-							:titulo="card.titulo"
-							:descricao="card.descricao"
-							:icone="card.icone"
-							:url="card.url"
-							:cor="card.cor"
-							:tamanho="card.tamanho"
-						/>
-					</div>
-				</template>
-			`
 		});
 	}
 	

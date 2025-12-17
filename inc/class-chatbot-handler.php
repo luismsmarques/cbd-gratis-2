@@ -249,11 +249,11 @@ class CBD_Chatbot_Handler {
 		$articles = array();
 		
 		try {
-			$args = array(
-				'post_type' => array( 'cbd_article', 'cbd_guide', 'post' ),
-				'posts_per_page' => 3,
-				'post_status' => 'publish',
-			);
+		$args = array(
+			'post_type' => 'post',
+			'posts_per_page' => 3,
+			'post_status' => 'publish',
+		);
 			
 			$tax_query = array();
 			

@@ -14,48 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Register Custom Post Types
  */
 function cbd_ai_register_post_types() {
-	// CBD Articles
-	register_post_type( 'cbd_article', array(
-		'labels' => array(
-			'name' => 'Artigos CBD',
-			'singular_name' => 'Artigo CBD',
-			'add_new' => 'Adicionar Novo',
-			'add_new_item' => 'Adicionar Novo Artigo',
-			'edit_item' => 'Editar Artigo',
-			'new_item' => 'Novo Artigo',
-			'view_item' => 'Ver Artigo',
-			'search_items' => 'Pesquisar Artigos',
-			'not_found' => 'Nenhum artigo encontrado',
-			'not_found_in_trash' => 'Nenhum artigo encontrado no lixo',
-		),
-		'public' => true,
-		'has_archive' => true,
-		'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'author' ),
-		'menu_icon' => 'dashicons-edit',
-		'rewrite' => array( 'slug' => 'artigos-cbd' ),
-	) );
-	
-	// CBD Guides
-	register_post_type( 'cbd_guide', array(
-		'labels' => array(
-			'name' => 'Guias CBD',
-			'singular_name' => 'Guia CBD',
-			'add_new' => 'Adicionar Novo',
-			'add_new_item' => 'Adicionar Novo Guia',
-			'edit_item' => 'Editar Guia',
-			'new_item' => 'Novo Guia',
-			'view_item' => 'Ver Guia',
-			'search_items' => 'Pesquisar Guias',
-			'not_found' => 'Nenhum guia encontrado',
-			'not_found_in_trash' => 'Nenhum guia encontrado no lixo',
-		),
-		'public' => true,
-		'has_archive' => true,
-		'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'author' ),
-		'menu_icon' => 'dashicons-book-alt',
-		'rewrite' => array( 'slug' => 'guias-cbd' ),
-	) );
-	
 	// Legislation Alerts
 	register_post_type( 'legislation_alert', array(
 		'labels' => array(
@@ -105,7 +63,7 @@ add_action( 'init', 'cbd_ai_register_post_types' );
  */
 function cbd_ai_register_taxonomies() {
 	// Animal Type Taxonomy
-	register_taxonomy( 'animal_type', array( 'cbd_article', 'cbd_guide' ), array(
+	register_taxonomy( 'animal_type', array( 'post' ), array(
 		'labels' => array(
 			'name' => 'Tipos de Animal',
 			'singular_name' => 'Tipo de Animal',
@@ -125,7 +83,7 @@ function cbd_ai_register_taxonomies() {
 	) );
 	
 	// CBD Topic Taxonomy
-	register_taxonomy( 'cbd_topic', array( 'cbd_article', 'cbd_guide', 'post' ), array(
+	register_taxonomy( 'cbd_topic', array( 'post' ), array(
 		'labels' => array(
 			'name' => 'Tópicos CBD',
 			'singular_name' => 'Tópico CBD',

@@ -322,7 +322,7 @@ class CBD_Chatbot_Humans_Handler {
 		
 		try {
 			$args = array(
-				'post_type' => array( 'cbd_article', 'cbd_guide', 'post' ),
+				'post_type' => 'post',
 				'posts_per_page' => 3,
 				'post_status' => 'publish',
 			);

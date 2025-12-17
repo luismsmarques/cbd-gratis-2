@@ -216,7 +216,7 @@ class CBD_Chatbot_CBD_Handler {
 	 */
 	private function get_related_articles( $question, $category ) {
 		$args = array(
-			'post_type' => array( 'cbd_article', 'cbd_guide', 'post' ),
+			'post_type' => 'post',
 			'posts_per_page' => 3,
 			'post_status' => 'publish',
 			's' => $question,
