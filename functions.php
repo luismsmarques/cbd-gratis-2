@@ -50,6 +50,118 @@ function cbd_ai_theme_setup() {
 add_action( 'after_setup_theme', 'cbd_ai_theme_setup' );
 
 /**
+ * Get Critical CSS for Above-the-Fold Content
+ * 
+ * Returns minimal CSS needed for initial render (header, trust bar, hero section)
+ * This CSS is inlined in the <head> to prevent render blocking
+ * 
+ * @return string Critical CSS
+ */
+function cbd_ai_get_critical_css() {
+	$critical_css = '
+		/* Critical CSS - Above the Fold */
+		/* Reset & Base */
+		*,::before,::after{box-sizing:border-box}
+		body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;color:#1f2937;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+		h1,h2,h3,h4,h5,h6{font-weight:700;line-height:1.3;color:#111827;letter-spacing:-0.02em;margin:0}
+		
+		/* Layout Essentials */
+		.container{width:100%;margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem}
+		@media (min-width:640px){.container{max-width:640px}}
+		@media (min-width:768px){.container{max-width:768px}}
+		@media (min-width:1024px){.container{max-width:1024px}}
+		@media (min-width:1280px){.container{max-width:1280px}}
+		.flex{display:flex}
+		.grid{display:grid}
+		.hidden{display:none}
+		.items-center{align-items:center}
+		.justify-between{justify-content:space-between}
+		.flex-shrink-0{flex-shrink:0}
+		.flex-1{flex:1 1 0%}
+		.w-full{width:100%}
+		.min-h-screen{min-height:100vh}
+		.flex-grow{flex-grow:1}
+		
+		/* Trust Bar */
+		.trust-bar{background-color:#f9fafb;border-bottom:1px solid #e5e7eb;padding-top:.5rem;padding-bottom:.5rem;font-size:.75rem;line-height:1.5}
+		.trust-bar svg{flex-shrink:0;width:1rem;height:1rem}
+		@media (max-width:767px){.trust-bar{display:none}}
+		
+		/* Header */
+		.site-header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:50;box-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05)}
+		@media (min-width:1024px){.site-header{position:static}}
+		.site-branding{display:flex;align-items:center;flex-shrink:0}
+		.site-branding a{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:inherit}
+		.site-branding .text-2xl{font-size:1.5rem;line-height:2rem}
+		.site-branding .text-3xl{font-size:1.875rem;line-height:2.25rem}
+		@media (min-width:768px){.site-branding .text-2xl{font-size:1.875rem;line-height:2.25rem}.site-branding .text-3xl{font-size:1.875rem;line-height:2.25rem}}
+		
+		/* Navigation */
+		.main-navigation{display:none}
+		@media (min-width:1024px){.main-navigation{display:flex;flex:1 1 0%;justify-content:flex-end;min-width:0}}
+		.mobile-navigation{display:none;padding-bottom:.5rem;border-top:1px solid #e5e7eb;margin-top:.5rem;padding-top:.5rem}
+		@media (min-width:1024px){.mobile-navigation{display:none!important}}
+		#mobile-menu-toggle{display:block;color:#374151;padding:.5rem;flex-shrink:0}
+		@media (min-width:1024px){#mobile-menu-toggle{display:none}}
+		#mobile-menu-toggle svg{width:1.5rem;height:1.5rem}
+		
+		/* Hero Section - Basic Styles */
+		.hero-authority{padding-top:1.5rem;padding-bottom:2.5rem;background:linear-gradient(to bottom,#fff,rgba(0,137,123,0.05),#fff)}
+		@media (min-width:768px){.hero-authority{padding-top:2.5rem;padding-bottom:2.5rem}}
+		.max-w-4xl{max-width:56rem;margin-left:auto;margin-right:auto}
+		.text-center{text-align:center}
+		
+		/* Typography */
+		.mui-typography-h1{font-size:2.25rem;line-height:1.2;font-weight:700;margin-bottom:1.5rem;color:#111827}
+		@media (min-width:768px){.mui-typography-h1{font-size:3rem;line-height:1.1}}
+		
+		/* Colors */
+		.bg-white{background-color:#fff}
+		.bg-gray-50{background-color:#f9fafb}
+		.text-gray-600{color:#4b5563}
+		.text-gray-700{color:#374151}
+		.text-gray-900{color:#111827}
+		.text-cbd-green-600{color:#2d712d}
+		.text-blue-600{color:#2563eb}
+		
+		/* Spacing */
+		.px-4{padding-left:1rem;padding-right:1rem}
+		.py-2{padding-top:.5rem;padding-bottom:.5rem}
+		.py-4{padding-top:1rem;padding-bottom:1rem}
+		.py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+		.mb-4{margin-bottom:1rem}
+		.mb-6{margin-bottom:1.5rem}
+		.mb-8{margin-bottom:2rem}
+		.gap-1{gap:.25rem}
+		.gap-2{gap:.5rem}
+		.gap-4{gap:1rem}
+		
+		/* Utilities */
+		.shadow-sm{box-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05)}
+		.top-0{top:0}
+		.z-50{z-index:50}
+	';
+	
+	// Minify CSS (remove comments, extra whitespace)
+	$critical_css = preg_replace( '/\s+/', ' ', $critical_css );
+	$critical_css = preg_replace( '/\s*([{}:;,])\s*/', '$1', $critical_css );
+	$critical_css = trim( $critical_css );
+	
+	return $critical_css;
+}
+
+/**
+ * Output Critical CSS inline in <head>
+ */
+function cbd_ai_output_critical_css() {
+	$critical_css = cbd_ai_get_critical_css();
+	if ( ! empty( $critical_css ) ) {
+		echo '<style id="cbd-ai-critical-css">' . $critical_css . '</style>' . "\n";
+	}
+}
+add_action( 'wp_head', 'cbd_ai_output_critical_css', 1 );
+
+/**
  * Enqueue Scripts and Styles
  */
 function cbd_ai_theme_scripts() {
@@ -63,6 +175,8 @@ function cbd_ai_theme_scripts() {
 	);
 	
 	// Enqueue styles - load in correct order
+	// Note: Critical CSS is already inlined via cbd_ai_output_critical_css()
+	// These stylesheets are loaded asynchronously via style_loader_tag filter
 	wp_enqueue_style(
 		'cbd-ai-theme-style',
 		get_stylesheet_uri(),
@@ -283,19 +397,6 @@ function cbd_ai_theme_scripts() {
 		}
 	}
 
-	// Enqueue chatbot formatter (shared utility)
-	if ( is_page_template( 'templates/template-chatbot.php' ) ||
-		 is_page_template( 'templates/template-chatbot-humans.php' ) ||
-		 is_page_template( 'templates/template-legislation.php' ) ) {
-		wp_enqueue_script(
-			'cbd-ai-chatbot-formatter',
-			CBD_AI_THEME_URI . '/assets/js/chatbot-formatter.js',
-			array(),
-			CBD_AI_THEME_VERSION,
-			false // Load in header so it's available for components
-		);
-	}
-
 	// Enqueue main script for all pages
 	wp_enqueue_script(
 		'cbd-ai-main',
@@ -306,6 +407,159 @@ function cbd_ai_theme_scripts() {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'cbd_ai_theme_scripts' );
+
+/**
+ * Modify CSS link tags to load asynchronously (non-critical CSS)
+ * Changes media attribute from "all" to "print" initially, then script converts to "all"
+ * 
+ * @param string $html   The link tag HTML
+ * @param string $handle The stylesheet handle
+ * @param string $href   The stylesheet URL
+ * @param string $media  The media attribute
+ * @return string Modified link tag
+ */
+function cbd_ai_modify_css_link_tag( $html, $handle, $href, $media ) {
+	// List of non-critical stylesheets to load asynchronously
+	$async_styles = array(
+		'cbd-ai-theme-style',
+		'cbd-ai-tailwind',
+		'cbd-ai-custom',
+		'cbd-ai-ux-fixes',
+		'cbd-ai-authority-design',
+		'cbd-ai-mui-design-system',
+		'cbd-ai-chatbot-design',
+		'cbd-ai-chatbot-humans-design',
+		'cbd-ai-legislation-chatbot',
+	);
+	
+	// Only modify non-critical stylesheets
+	if ( in_array( $handle, $async_styles, true ) ) {
+		// Change media to "print" so it doesn't block rendering
+		// The inline script will convert it to "all" after load
+		$html = str_replace( 'media=\'all\'', 'media=\'print\'', $html );
+		$html = str_replace( 'media="all"', 'media="print"', $html );
+		// Add onload attribute for browsers that support it
+		$html = str_replace( '>', ' onload="this.media=\'all\'">', $html );
+	}
+	
+	return $html;
+}
+add_filter( 'style_loader_tag', 'cbd_ai_modify_css_link_tag', 10, 4 );
+
+/**
+ * Add defer/async attributes to scripts to prevent render blocking
+ * 
+ * @param string $tag    The script tag HTML
+ * @param string $handle The script handle
+ * @param string $src    The script source URL
+ * @return string Modified script tag
+ */
+function cbd_ai_add_script_attributes( $tag, $handle, $src ) {
+	// Scripts to defer (execute after DOM is parsed, maintain order)
+	// Use defer for scripts that depend on each other or need DOM ready
+	$defer_scripts = array(
+		'cbd-ai-debug-helper',
+		'cbd-ai-chatbot-formatter',
+		'vue-prod', // Vue.js needs to load before components, so use defer to maintain order
+		'cbd-ai-vue-error-handler',
+		'cbd-ai-status-card',
+		'cbd-ai-action-card',
+	);
+	
+	// Scripts to async (execute as soon as downloaded, independent)
+	// Use async only for completely independent scripts
+	$async_scripts = array(
+		// Currently no async scripts - Vue and components need defer for proper order
+	);
+	
+	// Add defer attribute
+	if ( in_array( $handle, $defer_scripts, true ) ) {
+		// Only add defer if not already present
+		if ( strpos( $tag, ' defer' ) === false && strpos( $tag, " defer='" ) === false ) {
+			$tag = str_replace( ' src', ' defer src', $tag );
+		}
+	}
+	
+	// Add async attribute
+	if ( in_array( $handle, $async_scripts, true ) ) {
+		// Only add async if not already present and not defer
+		if ( strpos( $tag, ' async' ) === false && strpos( $tag, " async='" ) === false && strpos( $tag, ' defer' ) === false ) {
+			$tag = str_replace( ' src', ' async src', $tag );
+		}
+	}
+	
+	return $tag;
+}
+add_filter( 'script_loader_tag', 'cbd_ai_add_script_attributes', 10, 3 );
+
+/**
+ * Add script to load async CSS (convert media="print" to media="all" on load)
+ * This ensures non-critical CSS doesn't block rendering
+ */
+function cbd_ai_add_async_css_loader() {
+	?>
+	<script>
+	(function() {
+		// Function to load async CSS
+		function loadAsyncCSS() {
+			var links = document.querySelectorAll('link[media="print"]');
+			for (var i = 0; i < links.length; i++) {
+				links[i].setAttribute('media', 'all');
+			}
+		}
+		
+		// Run immediately if DOM is ready, otherwise wait
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', loadAsyncCSS);
+		} else {
+			loadAsyncCSS();
+		}
+		
+		// Also handle links that load after DOM is ready (with fallback for older browsers)
+		if (typeof MutationObserver !== 'undefined') {
+			var observer = new MutationObserver(function(mutations) {
+				loadAsyncCSS();
+			});
+			
+			if (document.head) {
+				observer.observe(document.head, {
+					childList: true,
+					subtree: true
+				});
+			}
+		} else {
+			// Fallback for older browsers: check periodically
+			setInterval(loadAsyncCSS, 100);
+		}
+	})();
+	</script>
+	<?php
+}
+add_action( 'wp_head', 'cbd_ai_add_async_css_loader', 2 );
+
+/**
+ * Add noscript fallback for async CSS loading
+ * Ensures CSS loads even if JavaScript is disabled
+ */
+function cbd_ai_add_css_noscript_fallback() {
+	?>
+	<noscript>
+		<link rel="stylesheet" href="<?php echo esc_url( get_stylesheet_uri() ); ?>" />
+		<?php
+		// Add other critical stylesheets that were loaded async
+		$tailwind_file = CBD_AI_THEME_PATH . '/assets/css/tailwind-output.css';
+		if ( ! file_exists( $tailwind_file ) ) {
+			$tailwind_file = CBD_AI_THEME_PATH . '/assets/css/tailwind.css';
+		}
+		if ( file_exists( $tailwind_file ) ) {
+			$tailwind_uri = str_replace( CBD_AI_THEME_PATH, CBD_AI_THEME_URI, $tailwind_file );
+			echo '<link rel="stylesheet" href="' . esc_url( $tailwind_uri ) . '" />';
+		}
+		?>
+	</noscript>
+	<?php
+}
+add_action( 'wp_head', 'cbd_ai_add_css_noscript_fallback', 99 );
 
 /**
  * Register Widget Areas
