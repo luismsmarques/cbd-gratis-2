@@ -6,6 +6,38 @@ module.exports = {
     './inc/**/*.php',
     './assets/js/**/*.js',
     './assets/js/**/*.vue',
+    // Include WordPress admin files if they use Tailwind classes
+    './**/*.php',
+  ],
+  // Safelist only critical classes that might be dynamically generated
+  // This prevents removing classes that are essential but not detected by content scan
+  safelist: [
+    // Critical layout classes
+    'container',
+    'mx-auto',
+    'max-w-4xl',
+    'max-w-2xl',
+    'max-w-3xl',
+    // Critical flex/grid utilities
+    'flex',
+    'grid',
+    'hidden',
+    'items-center',
+    'justify-between',
+    // Critical spacing (only most used)
+    'px-4',
+    'py-2',
+    'py-4',
+    'mb-4',
+    'mb-6',
+    'mb-8',
+    // Critical colors
+    'bg-white',
+    'bg-gray-50',
+    'text-gray-600',
+    'text-gray-700',
+    'text-gray-900',
+    'text-cbd-green-600',
   ],
   theme: {
     extend: {
@@ -46,5 +78,13 @@ module.exports = {
     },
   },
   plugins: [],
+  // Enable JIT mode for better performance and smaller output
+  // This is default in Tailwind 3, but explicit is better
+  corePlugins: {
+    // Disable unused core plugins to reduce CSS size
+    // Uncomment if you don't use these features:
+    // preflight: true, // Keep preflight (base styles)
+    // container: true, // Keep container
+  },
 }
 

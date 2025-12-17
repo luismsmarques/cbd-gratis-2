@@ -105,15 +105,52 @@ function cbd_ai_get_critical_css() {
 		@media (min-width:1024px){#mobile-menu-toggle{display:none}}
 		#mobile-menu-toggle svg{width:1.5rem;height:1.5rem}
 		
-		/* Hero Section - Basic Styles */
+		/* Hero Section - Complete Styles */
 		.hero-authority{padding-top:1.5rem;padding-bottom:2.5rem;background:linear-gradient(to bottom,#fff,rgba(0,137,123,0.05),#fff)}
 		@media (min-width:768px){.hero-authority{padding-top:2.5rem;padding-bottom:2.5rem}}
 		.max-w-4xl{max-width:56rem;margin-left:auto;margin-right:auto}
+		.max-w-2xl{max-width:42rem;margin-left:auto;margin-right:auto}
+		.max-w-3xl{max-width:48rem;margin-left:auto;margin-right:auto}
 		.text-center{text-align:center}
+		.mx-auto{margin-left:auto;margin-right:auto}
 		
-		/* Typography */
+		/* MUI Chip Styles (Hero Badge) */
+		.mui-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem .75rem;border-radius:1rem;font-size:.875rem;font-weight:500;line-height:1.5}
+		.mui-chip-success{background-color:#dcf2dc;color:#2d712d}
+		.mui-chip-icon{width:1rem;height:1rem;flex-shrink:0}
+		
+		/* Typography - Expanded */
 		.mui-typography-h1{font-size:2.25rem;line-height:1.2;font-weight:700;margin-bottom:1.5rem;color:#111827}
 		@media (min-width:768px){.mui-typography-h1{font-size:3rem;line-height:1.1}}
+		.mui-typography-h2{font-size:1.875rem;line-height:1.3;font-weight:700;color:#111827}
+		@media (min-width:768px){.mui-typography-h2{font-size:2.25rem}}
+		.mui-typography-body1{font-size:1rem;line-height:1.7;color:#374151}
+		.text-base{font-size:1rem;line-height:1.5rem}
+		.text-sm{font-size:.875rem;line-height:1.25rem}
+		.text-lg{font-size:1.125rem;line-height:1.75rem}
+		.font-medium{font-weight:500}
+		.font-semibold{font-weight:600}
+		.leading-relaxed{line-height:1.625}
+		
+		/* Search Form (Hero) */
+		.mui-text-field{position:relative;display:flex;flex:1;margin:0}
+		.mui-input{width:100%;padding:.65625rem 1rem;font-size:1rem;line-height:1.5;color:#111827;background-color:#fff;border:1px solid #d1d5db;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+		.mui-input-outlined{border:1px solid #d1d5db}
+		.mui-input:focus{outline:0;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+		.mui-button{display:inline-flex;align-items:center;justify-content:center;padding:.65625rem 1.5rem;font-size:1rem;font-weight:500;line-height:1.5;text-align:center;text-decoration:none;white-space:nowrap;border:1px solid transparent;border-radius:.25rem;cursor:pointer;transition:all .15s ease-in-out}
+		.mui-button-contained{color:#fff;background-color:#00897b;box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06)}
+		.mui-button-contained-teal{background-color:#00897b}
+		.mui-button-contained:hover{background-color:#00695c;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)}
+		form[role="search"]{display:flex;gap:0}
+		
+		/* SEO Definitions (Hero) */
+		.seo-definitions{margin-bottom:1.5rem}
+		.seo-definitions p{margin:0 0 1rem}
+		.seo-definitions strong{font-weight:600;color:#111827}
+		
+		/* Inline Flex Utilities */
+		.inline-flex{display:inline-flex}
+		.inline-block{display:inline-block}
 		
 		/* Colors */
 		.bg-white{background-color:#fff}
@@ -410,6 +447,7 @@ add_action( 'wp_enqueue_scripts', 'cbd_ai_theme_scripts' );
 
 /**
  * Modify CSS link tags to load asynchronously (non-critical CSS)
+ * Captures ALL CSS including plugin-generated files (with hash like 2febff6)
  * Changes media attribute from "all" to "print" initially, then script converts to "all"
  * 
  * @param string $html   The link tag HTML
@@ -419,7 +457,12 @@ add_action( 'wp_enqueue_scripts', 'cbd_ai_theme_scripts' );
  * @return string Modified link tag
  */
 function cbd_ai_modify_css_link_tag( $html, $handle, $href, $media ) {
-	// List of non-critical stylesheets to load asynchronously
+	// List of critical stylesheets that should NOT be async (already inline or essential)
+	$critical_handles = array(
+		// No critical handles - all CSS is loaded async except what's inline
+	);
+	
+	// List of known non-critical stylesheets from theme
 	$async_styles = array(
 		'cbd-ai-theme-style',
 		'cbd-ai-tailwind',
@@ -432,19 +475,59 @@ function cbd_ai_modify_css_link_tag( $html, $handle, $href, $media ) {
 		'cbd-ai-legislation-chatbot',
 	);
 	
-	// Only modify non-critical stylesheets
+	// Skip if already marked as critical
+	if ( in_array( $handle, $critical_handles, true ) ) {
+		return $html;
+	}
+	
+	// Check if this is a stylesheet link (not preload or other)
+	if ( strpos( $html, 'rel=' ) === false || strpos( $html, 'stylesheet' ) === false ) {
+		// Not a stylesheet, might be preload - handle separately
+		return $html;
+	}
+	
+	// Apply async loading to:
+	// 1. Known theme stylesheets
+	// 2. Plugin-generated CSS (detected by hash in filename or plugin paths)
+	// 3. Any CSS that's not already async
+	$should_async = false;
+	
 	if ( in_array( $handle, $async_styles, true ) ) {
-		// Change media to "print" so it doesn't block rendering
-		// The inline script will convert it to "all" after load
-		$html = str_replace( 'media=\'all\'', 'media=\'print\'', $html );
-		$html = str_replace( 'media="all"', 'media="print"', $html );
-		// Add onload attribute for browsers that support it
-		$html = str_replace( '>', ' onload="this.media=\'all\'">', $html );
+		$should_async = true;
+	} elseif ( empty( $handle ) || strpos( $handle, 'cbd-ai-' ) === false ) {
+		// Likely a plugin stylesheet - make async
+		// Check for common plugin paths or hash patterns
+		if ( 
+			preg_match( '/[a-f0-9]{8,}\.css/i', $href ) || // Hash in filename (like 2febff6.css)
+			strpos( $href, '/wp-content/plugins/' ) !== false ||
+			strpos( $href, '/wp-content/cache/' ) !== false ||
+			strpos( $href, '/wp-content/uploads/' ) !== false
+		) {
+			$should_async = true;
+		}
+	}
+	
+	// Apply async loading technique
+	if ( $should_async ) {
+		// Skip if already has media="print" (already processed)
+		if ( strpos( $html, 'media="print"' ) === false && strpos( $html, "media='print'" ) === false ) {
+			// Change media to "print" so it doesn't block rendering
+			$html = preg_replace( '/media=[\'"]all[\'"]/', 'media="print"', $html );
+			// If no media attribute, add it
+			if ( strpos( $html, 'media=' ) === false ) {
+				$html = str_replace( 'rel=', 'media="print" rel=', $html );
+			}
+			// Add onload attribute for browsers that support it
+			if ( strpos( $html, 'onload=' ) === false ) {
+				$html = str_replace( '>', ' onload="this.media=\'all\';this.onload=null;">', $html );
+			}
+		}
 	}
 	
 	return $html;
 }
-add_filter( 'style_loader_tag', 'cbd_ai_modify_css_link_tag', 10, 4 );
+// Use high priority to capture all CSS, including from plugins
+add_filter( 'style_loader_tag', 'cbd_ai_modify_css_link_tag', 999, 4 );
 
 /**
  * Add defer/async attributes to scripts to prevent render blocking
@@ -493,18 +576,63 @@ function cbd_ai_add_script_attributes( $tag, $handle, $src ) {
 add_filter( 'script_loader_tag', 'cbd_ai_add_script_attributes', 10, 3 );
 
 /**
+ * Preload critical CSS resources
+ * Uses rel="preload" for CSS that's essential but not inline
+ */
+function cbd_ai_preload_critical_css() {
+	// Preload Tailwind CSS if it exists (it's large but needed)
+	$tailwind_file = CBD_AI_THEME_PATH . '/assets/css/tailwind-output.css';
+	if ( ! file_exists( $tailwind_file ) ) {
+		$tailwind_file = CBD_AI_THEME_PATH . '/assets/css/tailwind.css';
+	}
+	
+	if ( file_exists( $tailwind_file ) ) {
+		$tailwind_uri = str_replace( CBD_AI_THEME_PATH, CBD_AI_THEME_URI, $tailwind_file );
+		echo '<link rel="preload" href="' . esc_url( $tailwind_uri ) . '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' . "\n";
+		echo '<noscript><link rel="stylesheet" href="' . esc_url( $tailwind_uri ) . '"></noscript>' . "\n";
+	}
+}
+add_action( 'wp_head', 'cbd_ai_preload_critical_css', 1 );
+
+/**
  * Add script to load async CSS (convert media="print" to media="all" on load)
+ * Enhanced to capture dynamically added CSS from plugins
  * This ensures non-critical CSS doesn't block rendering
  */
 function cbd_ai_add_async_css_loader() {
 	?>
 	<script>
 	(function() {
-		// Function to load async CSS
+		// Function to load async CSS - enhanced to handle all cases
 		function loadAsyncCSS() {
+			// Convert all print media links to all
 			var links = document.querySelectorAll('link[media="print"]');
 			for (var i = 0; i < links.length; i++) {
-				links[i].setAttribute('media', 'all');
+				var link = links[i];
+				// Only convert if it's a stylesheet
+				if (link.rel === 'stylesheet' || link.getAttribute('rel') === 'stylesheet') {
+					link.setAttribute('media', 'all');
+					// Remove onload handler to prevent re-execution
+					if (link.onload) {
+						link.onload = null;
+					}
+				}
+			}
+			
+			// Also handle preload links that need to become stylesheets
+			var preloads = document.querySelectorAll('link[rel="preload"][as="style"]');
+			for (var j = 0; j < preloads.length; j++) {
+				var preload = preloads[j];
+				// Check if it has onload handler (should convert to stylesheet)
+				if (preload.onload || preload.getAttribute('onload')) {
+					// Already handled by onload attribute
+					continue;
+				}
+				// Convert preload to stylesheet after a short delay
+				setTimeout(function(pl) {
+					pl.setAttribute('rel', 'stylesheet');
+					pl.removeAttribute('as');
+				}, 50, preload);
 			}
 		}
 		
@@ -515,45 +643,94 @@ function cbd_ai_add_async_css_loader() {
 			loadAsyncCSS();
 		}
 		
-		// Also handle links that load after DOM is ready (with fallback for older browsers)
+		// Enhanced observer to catch dynamically added CSS (from plugins, etc.)
 		if (typeof MutationObserver !== 'undefined') {
 			var observer = new MutationObserver(function(mutations) {
-				loadAsyncCSS();
+				var shouldReload = false;
+				mutations.forEach(function(mutation) {
+					if (mutation.addedNodes.length > 0) {
+						for (var k = 0; k < mutation.addedNodes.length; k++) {
+							var node = mutation.addedNodes[k];
+							if (node.nodeName === 'LINK' && 
+								(node.getAttribute('rel') === 'stylesheet' || node.getAttribute('rel') === 'preload')) {
+								shouldReload = true;
+								break;
+							}
+						}
+					}
+				});
+				if (shouldReload) {
+					loadAsyncCSS();
+				}
 			});
 			
 			if (document.head) {
 				observer.observe(document.head, {
 					childList: true,
-					subtree: true
+					subtree: true,
+					attributes: true,
+					attributeFilter: ['media', 'rel']
 				});
 			}
 		} else {
 			// Fallback for older browsers: check periodically
 			setInterval(loadAsyncCSS, 100);
 		}
+		
+		// Also run on window load to catch late-loading CSS
+		window.addEventListener('load', loadAsyncCSS);
 	})();
 	</script>
 	<?php
 }
-add_action( 'wp_head', 'cbd_ai_add_async_css_loader', 2 );
+add_action( 'wp_head', 'cbd_ai_add_async_css_loader', 3 );
 
 /**
  * Add noscript fallback for async CSS loading
  * Ensures CSS loads even if JavaScript is disabled
+ * Includes all stylesheets that were loaded asynchronously
  */
 function cbd_ai_add_css_noscript_fallback() {
 	?>
 	<noscript>
-		<link rel="stylesheet" href="<?php echo esc_url( get_stylesheet_uri() ); ?>" />
 		<?php
-		// Add other critical stylesheets that were loaded async
+		// Theme stylesheet
+		echo '<link rel="stylesheet" href="' . esc_url( get_stylesheet_uri() ) . '" />' . "\n";
+		
+		// Tailwind CSS
 		$tailwind_file = CBD_AI_THEME_PATH . '/assets/css/tailwind-output.css';
 		if ( ! file_exists( $tailwind_file ) ) {
 			$tailwind_file = CBD_AI_THEME_PATH . '/assets/css/tailwind.css';
 		}
 		if ( file_exists( $tailwind_file ) ) {
 			$tailwind_uri = str_replace( CBD_AI_THEME_PATH, CBD_AI_THEME_URI, $tailwind_file );
-			echo '<link rel="stylesheet" href="' . esc_url( $tailwind_uri ) . '" />';
+			echo '<link rel="stylesheet" href="' . esc_url( $tailwind_uri ) . '" />' . "\n";
+		}
+		
+		// Other theme stylesheets
+		$theme_stylesheets = array(
+			'custom.css',
+			'ux-fixes.css',
+			'authority-design.css',
+			'mui-design-system.css',
+		);
+		
+		foreach ( $theme_stylesheets as $stylesheet ) {
+			$file_path = CBD_AI_THEME_PATH . '/assets/css/' . $stylesheet;
+			if ( file_exists( $file_path ) ) {
+				$file_uri = CBD_AI_THEME_URI . '/assets/css/' . $stylesheet;
+				echo '<link rel="stylesheet" href="' . esc_url( $file_uri ) . '" />' . "\n";
+			}
+		}
+		
+		// Conditional stylesheets based on current page
+		if ( is_page_template( 'templates/template-chatbot.php' ) ||
+			 is_page_template( 'templates/template-chatbot-humans.php' ) ||
+			 is_page_template( 'templates/template-chatbot-cbd.php' ) ) {
+			$chatbot_css = CBD_AI_THEME_URI . '/assets/css/chatbot-design.css';
+			if ( file_exists( CBD_AI_THEME_PATH . '/assets/css/chatbot-design.css' ) ) {
+				echo '<link rel="stylesheet" href="' . esc_url( $chatbot_css ) . '" />' . "\n";
+			}
 		}
 		?>
 	</noscript>
