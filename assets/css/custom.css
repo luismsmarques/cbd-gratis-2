@@ -881,5 +881,17 @@ section {
 		min-width: 0;
 		flex: 0 0 auto;
 	}
+	
+	/* Blog Articles Section - Force 3 columns on desktop */
+	.blog-articles-section .grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+		gap: 2rem;
+	}
+	
+	.blog-articles-section .grid > article {
+		min-width: 0;
+		flex: 0 0 auto;
+	}
 }
 
