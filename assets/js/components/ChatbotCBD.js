@@ -117,17 +117,17 @@ window.ChatbotCBD = {
         <div class="mui-text-field" style="display: flex; gap: 8px; align-items: flex-end;">
           <div style="flex: 1;">
             <label for="chat-input" class="mui-input-label" style="display: none;">Digite sua pergunta</label>
-          <input 
+            <input 
               id="chat-input"
-            type="text" 
-            v-model="currentMessage" 
-            @keyup.enter="sendMessage"
-            placeholder="Digite sua pergunta sobre CBD..."
+              type="text" 
+              v-model="currentMessage" 
+              @keyup.enter="sendMessage"
+              placeholder="Digite sua pergunta sobre CBD..."
               class="mui-input"
-            :disabled="loading"
-            ref="chatInput"
+              :disabled="loading"
+              ref="chatInput"
               style="width: 100%;"
-          />
+            />
           </div>
           <button 
             type="submit" 
@@ -148,7 +148,7 @@ window.ChatbotCBD = {
           <div class="mui-alert-message">
             <p class="mui-typography-caption" style="margin: 0;">
               <strong>Importante:</strong> Este chatbot fornece informações gerais. Sempre consulte um profissional de saúde ou veterinário antes de usar CBD.
-        </p>
+            </p>
           </div>
         </div>
       </form>

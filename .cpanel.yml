@@ -27,4 +27,3 @@ deployment:
     
     # 6. Limpar cache do WordPress (opcional - descomente se necessário)
     # - rm -rf ../../cache/* 2>&1 || echo "Cache cleanup skipped"
-
