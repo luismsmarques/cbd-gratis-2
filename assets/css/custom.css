@@ -6,6 +6,45 @@
 	visibility: hidden !important;
 }
 
+/* Correção de espaçamento do header em mobile */
+@media (max-width: 767px) {
+	.site-header {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	.site-header .container > div {
+		padding-top: 0.75rem !important;
+		padding-bottom: 0.75rem !important;
+	}
+	
+	.site-header .flex.items-center.justify-between {
+		padding-top: 0.5rem !important;
+		padding-bottom: 0.5rem !important;
+		min-height: auto !important;
+	}
+	
+	.mobile-navigation {
+		margin-top: 0.5rem !important;
+		padding-top: 0.75rem !important;
+		padding-bottom: 0.75rem !important;
+	}
+	
+	/* Reduzir espaçamento do logo em mobile */
+	.site-branding {
+		padding: 0 !important;
+	}
+	
+	.site-branding a {
+		padding: 0 !important;
+	}
+	
+	/* Reduzir tamanho do logo em mobile */
+	.site-branding .text-2xl {
+		font-size: 1.25rem !important;
+	}
+}
+
 /* CTA Button Dark Green Background */
 .group\/cta {
 	background: linear-gradient(to right, #166534, #14532d, #0f2817) !important;
