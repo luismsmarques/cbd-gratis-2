@@ -2,19 +2,42 @@
 deployment:
   tasks:
     - |
-      # Define o caminho de destino do tema WordPress
-      # IMPORTANTE: Se o repositório já está na pasta do tema, este script apenas ajusta permissões
-      # Se o repositório está em outro local, descomente e ajuste a linha DEPLOYPATH abaixo
+      # Script de deployment para tema WordPress
+      # Este script garante que todos os arquivos estão presentes e com permissões corretas
       
-      # Se o repositório NÃO está na pasta do tema, descomente e ajuste:
-      # DEPLOYPATH="/home/$USER/public_html/wp-content/themes/cbd-ai-theme"
-      # mkdir -p "$DEPLOYPATH"
-      # /bin/cp -R * "$DEPLOYPATH/" 2>/dev/null || true
+      # Verifica se estamos na pasta correta (deve conter style.css e functions.php)
+      if [ ! -f "style.css" ] || [ ! -f "functions.php" ]; then
+        echo "ERRO: Arquivos do tema não encontrados. Verifique se o repositório está na pasta correta."
+        exit 1
+      fi
+      
+      # Garante que a pasta assets existe
+      mkdir -p assets/css assets/js/assets/js/components 2>/dev/null || true
       
       # Ajusta permissões: 755 para diretórios, 644 para arquivos
-      find . -type d -not -path './.git*' -exec chmod 755 {} \;
-      find . -type f -not -path './.git*' -exec chmod 644 {} \;
+      # Exclui pasta .git e arquivos ocultos
+      find . -type d -not -path './.git*' -not -path './.cpanel*' -exec chmod 755 {} \; 2>/dev/null || true
+      find . -type f -not -path './.git*' -not -path './.cpanel*' -exec chmod 644 {} \; 2>/dev/null || true
       
       # Garante que arquivos executáveis tenham permissão correta
       find . -name "*.sh" -exec chmod 755 {} \; 2>/dev/null || true
+      
+      # Verifica arquivos críticos do tema
+      CRITICAL_FILES=("style.css" "functions.php" "index.php" "header.php" "footer.php")
+      for file in "${CRITICAL_FILES[@]}"; do
+        if [ ! -f "$file" ]; then
+          echo "AVISO: Arquivo crítico não encontrado: $file"
+        fi
+      done
+      
+      # Verifica se os assets principais existem
+      if [ ! -d "assets/css" ]; then
+        echo "AVISO: Pasta assets/css não encontrada"
+      fi
+      
+      if [ ! -d "assets/js" ]; then
+        echo "AVISO: Pasta assets/js não encontrada"
+      fi
+      
+      echo "Deployment concluído com sucesso!"
 

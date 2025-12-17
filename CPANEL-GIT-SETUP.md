@@ -112,6 +112,39 @@ Se o repositório for privado, você precisará configurar SSH:
 - Depois faça **Deploy HEAD Commit**
 - Verifique se há conflitos de merge
 
+### Erros 404 - Arquivos CSS/JS não encontrados
+Este é um problema comum que pode ter várias causas:
+
+1. **Verificar se o repositório foi clonado corretamente:**
+   - Acesse **File Manager** no cPanel
+   - Navegue até `/public_html/wp-content/themes/cbd-ai-theme`
+   - Verifique se os arquivos `style.css`, `functions.php` e a pasta `assets/` existem
+
+2. **Verificar se o deployment foi executado:**
+   - No Git Version Control, clique em **Manage**
+   - Vá para **Pull or Deploy**
+   - Clique em **Update from Remote** (aguarde concluir)
+   - Clique em **Deploy HEAD Commit** (aguarde concluir)
+
+3. **Verificar permissões dos arquivos:**
+   - No File Manager, selecione a pasta `cbd-ai-theme`
+   - Clique em **Permissions** (ou **Permissões**)
+   - Pastas devem ter permissão **755**
+   - Arquivos devem ter permissão **644**
+
+4. **Verificar se os arquivos existem no repositório GitHub:**
+   - Acesse: https://github.com/luismsmarques/cbd-gratis-2
+   - Verifique se os arquivos `style.css` e `assets/` estão presentes
+
+5. **Se os arquivos não existem no servidor:**
+   - No File Manager, verifique se há uma pasta `.git` dentro de `cbd-ai-theme`
+   - Se não houver, o repositório não foi clonado corretamente
+   - Recrie o repositório no Git Version Control
+
+6. **Limpar cache do WordPress:**
+   - Se usar plugin de cache, limpe o cache
+   - Ou adicione `?nocache=1` na URL para testar sem cache
+
 ## 📚 Referências
 
 - [Documentação Oficial cPanel Git Version Control](https://docs.cpanel.net/cpanel/files/git-version-control/)
