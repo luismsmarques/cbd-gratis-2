@@ -232,7 +232,9 @@ window.Chatbot = {
           });
         }
       } catch (error) {
-        console.error('Error:', error);
+        if (typeof window.CBDDebug !== 'undefined') {
+          window.CBDDebug.error('Error:', error);
+        }
         this.messages.push({
           type: 'assistant',
           text: 'Desculpe, ocorreu um erro de conexão. Por favor, tente novamente.'

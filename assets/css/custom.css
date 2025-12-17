@@ -1,4 +1,19 @@
-/* Custom Styles for CBD AI Theme */
+/**
+ * Custom Styles for CBD AI Theme
+ * 
+ * Este arquivo contém estilos específicos do tema que não fazem parte do Design System MUI.
+ * 
+ * ORGANIZAÇÃO:
+ * - Estilos específicos do tema (não componentes MUI)
+ * - Correções de UX/UI específicas
+ * - Overrides quando necessário
+ * 
+ * NOTA: Classes utilitárias Tailwind (rounded-*, shadow-*, etc.) devem ser usadas
+ * diretamente do tailwind-output.css. Não duplicar aqui.
+ * 
+ * Para tokens de design, consulte DESIGN-TOKENS.md
+ * Para componentes MUI, use mui-design-system.css
+ */
 
 /* Ocultar CTA de Monetização/Afiliação na Homepage */
 #affiliate-cta-section {
@@ -46,6 +61,7 @@
 }
 
 /* CTA Button Dark Green Background */
+/* Note: Using hardcoded colors for specific brand gradients - consider creating --mui-green-dark-* variables if used elsewhere */
 .group\/cta {
 	background: linear-gradient(to right, #166534, #14532d, #0f2817) !important;
 }
@@ -284,8 +300,8 @@ html {
 
 .transition-shadow {
   transition-property: box-shadow;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition-timing-function: var(--mui-transition-ease);
+  transition-duration: var(--mui-transition-fast);
 }
 
 .hover\:shadow-lg:hover {
@@ -297,7 +313,7 @@ html {
 }
 
 .rounded-full {
-  border-radius: 9999px;
+  border-radius: var(--mui-radius-full);
 }
 
 .opacity-90 {
@@ -521,25 +537,10 @@ section {
   color: #dc2626;
 }
 
-.rounded-2xl {
-  border-radius: 1rem;
-}
-
-.rounded-xl {
-  border-radius: 0.75rem;
-}
-
-.shadow-xl {
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-}
-
-.shadow-2xl {
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-}
-
-.hover\:shadow-2xl:hover {
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-}
+/* Removed: .rounded-2xl, .rounded-xl, .shadow-xl, .shadow-2xl 
+ * These classes are provided by Tailwind CSS (tailwind-output.css)
+ * Use Tailwind classes directly or create MUI-specific variants if needed
+ */
 
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));

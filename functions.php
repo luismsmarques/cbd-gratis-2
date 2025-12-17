@@ -53,6 +53,15 @@ add_action( 'after_setup_theme', 'cbd_ai_theme_setup' );
  * Enqueue Scripts and Styles
  */
 function cbd_ai_theme_scripts() {
+	// Enqueue Debug Helper FIRST - must load before all other scripts
+	wp_enqueue_script(
+		'cbd-ai-debug-helper',
+		CBD_AI_THEME_URI . '/assets/js/debug-helper.js',
+		array(), // No dependencies - must load first
+		CBD_AI_THEME_VERSION,
+		false // Load in header
+	);
+	
 	// Enqueue styles - load in correct order
 	wp_enqueue_style(
 		'cbd-ai-theme-style',
@@ -233,6 +242,15 @@ function cbd_ai_theme_scripts() {
 			array( 'cbd-ai-chatbot-formatter' ), // Depend on formatter
 			'3.4.0',
 			false
+		);
+
+		// Enqueue Vue Error Handler - must load after Vue but before components
+		wp_enqueue_script(
+			'cbd-ai-vue-error-handler',
+			CBD_AI_THEME_URI . '/assets/js/vue-error-handler.js',
+			array( 'vue-prod' ), // Depend on Vue
+			CBD_AI_THEME_VERSION,
+			false // Load in header
 		);
 
 		// Localize script for REST API - make available globally

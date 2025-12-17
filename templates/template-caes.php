@@ -783,55 +783,72 @@ if ( ! $legislacao_page ) {
 				return;
 			}
 			
-			const { createApp } = Vue;
 			const container = document.getElementById('caes-tabs-app');
 			if (!container) return;
 			
-			const app = createApp({
-				data() {
-					return {
-						activeTab: 'dosagem',
-						tabs: [
-							{ id: 'dosagem', label: 'Dosagem' },
-							{ id: 'seguranca', label: 'Segurança' },
-							{ id: 'condicoes', label: 'Condições' }
-						]
-					};
-				},
-				methods: {
-					switchTab(tabId) {
-						this.activeTab = tabId;
-						// Hide all tab contents
-						document.querySelectorAll('[id$="-tab-content"]').forEach(el => {
-							el.style.display = 'none';
-						});
-						// Show active tab content
-						const activeContent = document.getElementById(tabId + '-tab-content');
-						if (activeContent) {
-							activeContent.style.display = 'block';
+			// Check if already mounted
+			if (container.__vue_app__) {
+				return;
+			}
+			
+			const { createApp } = Vue;
+			
+			try {
+				const app = createApp({
+					data() {
+						return {
+							activeTab: 'dosagem',
+							tabs: [
+								{ id: 'dosagem', label: 'Dosagem' },
+								{ id: 'seguranca', label: 'Segurança' },
+								{ id: 'condicoes', label: 'Condições' }
+							]
+						};
+					},
+					methods: {
+						switchTab(tabId) {
+							this.activeTab = tabId;
+							// Hide all tab contents
+							document.querySelectorAll('[id$="-tab-content"]').forEach(el => {
+								el.style.display = 'none';
+							});
+							// Show active tab content
+							const activeContent = document.getElementById(tabId + '-tab-content');
+							if (activeContent) {
+								activeContent.style.display = 'block';
+							}
 						}
-					}
-				},
-				mounted() {
-					// Ensure initial tab is shown
-					this.switchTab('dosagem');
-				},
-				template: `
-					<div>
-						<div class="mui-tabs">
-							<button
-								v-for="tab in tabs"
-								:key="tab.id"
-								:class="['mui-tab', { 'mui-tab-active': activeTab === tab.id }]"
-								@click="switchTab(tab.id)"
-							>
-								{{ tab.label }}
-							</button>
+					},
+					mounted() {
+						// Ensure initial tab is shown
+						this.switchTab('dosagem');
+					},
+					template: `
+						<div>
+							<div class="mui-tabs">
+								<button
+									v-for="tab in tabs"
+									:key="tab.id"
+									:class="['mui-tab', { 'mui-tab-active': activeTab === tab.id }]"
+									@click="switchTab(tab.id)"
+								>
+									{{ tab.label }}
+								</button>
+							</div>
 						</div>
-					</div>
-				`
-			});
-			app.mount('#caes-tabs-app');
+					`
+				});
+				app.mount('#caes-tabs-app');
+			} catch (error) {
+				if (typeof window.CBDDebug !== 'undefined') {
+					window.CBDDebug.error('Erro ao inicializar tabs:', error);
+				}
+				// Fallback: show default tab content
+				const defaultContent = document.getElementById('dosagem-tab-content');
+				if (defaultContent) {
+					defaultContent.style.display = 'block';
+				}
+			}
 		}
 		
 		if (document.readyState === 'loading') {

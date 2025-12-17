@@ -548,87 +548,72 @@ wp_enqueue_script(
 <script>
 (function() {
 	function initHomepageComponents() {
-		if (typeof Vue === 'undefined') {
+		// Check if Vue Helper is available
+		if (typeof window.CBDVueHelper === 'undefined') {
 			setTimeout(initHomepageComponents, 100);
 			return;
 		}
 		
-		const { createApp } = Vue;
+		// Initialize StatusCard using Vue Helper
+		window.CBDVueHelper.initComponent('StatusCard', 'status-card-app', {
+			data() {
+				return {
+					status: '<?php echo $has_alert ? "warning" : "success"; ?>',
+					titulo: '<?php echo $has_alert ? "Alerta Legislativo Ativo" : "Status Legislativo: Estável"; ?>',
+					mensagem: '<?php echo $has_alert ? esc_js( wp_trim_words( $recent_alerts[0]['title'], 15 ) ) : "Nenhum alerta legislativo significativo encontrado no momento."; ?>',
+					dataAtualizacao: '<?php echo date_i18n( 'd/m/Y H:i' ); ?>'
+				};
+			},
+			template: '<StatusCard :status="status" :titulo="titulo" :mensagem="mensagem" :dataAtualizacao="dataAtualizacao" />'
+		});
 		
-		// Initialize StatusCard
-		const statusCardContainer = document.getElementById('status-card-app');
-		if (statusCardContainer && typeof window.StatusCard !== 'undefined') {
-			const statusApp = createApp({
-				components: {
-					StatusCard: window.StatusCard
-				},
-				data() {
-					return {
-						status: '<?php echo $has_alert ? "warning" : "success"; ?>',
-						titulo: '<?php echo $has_alert ? "Alerta Legislativo Ativo" : "Status Legislativo: Estável"; ?>',
-						mensagem: '<?php echo $has_alert ? esc_js( wp_trim_words( $recent_alerts[0]['title'], 15 ) ) : "Nenhum alerta legislativo significativo encontrado no momento."; ?>',
-						dataAtualizacao: '<?php echo date_i18n( 'd/m/Y H:i' ); ?>'
-					};
-				},
-				template: '<StatusCard :status="status" :titulo="titulo" :mensagem="mensagem" :dataAtualizacao="dataAtualizacao" />'
-			});
-			statusApp.mount('#status-card-app');
-		}
-		
-		// Initialize ActionCards
-		const actionCardsContainer = document.getElementById('action-cards-app');
-		if (actionCardsContainer && typeof window.ActionCard !== 'undefined') {
-			const actionCardsApp = createApp({
-				components: {
-					ActionCard: window.ActionCard
-				},
-				data() {
-					return {
-						cards: [
-							{
-								titulo: 'CBD para Animais',
-								descricao: 'Guias completos sobre CBD para cães e gatos, incluindo dosagem, benefícios e segurança.',
-								icone: '🐕',
-								url: '<?php echo esc_js( $animais_url ); ?>',
-								cor: 'teal',
-								tamanho: 'medium'
-							},
-							{
-								titulo: 'CBD para Pessoas',
-								descricao: 'Guia completo sobre benefícios, dosagem e legalidade do CBD para uso humano em Portugal.',
-								icone: '👤',
-								url: '<?php echo esc_js( $pessoas_url ); ?>',
-								cor: 'primary',
-								tamanho: 'medium'
-							},
-							{
-								titulo: 'Calculadora de Dosagem',
-								descricao: 'Calcule a dosagem correta de CBD baseada no peso, condição e tipo de produto.',
-								icone: '📊',
-								url: '<?php echo esc_js( $calculadora_url ); ?>',
-								cor: 'info',
-								tamanho: 'medium'
-							}
-						]
-					};
-				},
-				template: `
-					<template v-for="(card, index) in cards" :key="index">
-						<div class="mui-grid-item mui-grid-md-4 mui-grid-sm-6 mui-grid-xs-12" style="padding: 12px;">
-							<ActionCard 
-								:titulo="card.titulo"
-								:descricao="card.descricao"
-								:icone="card.icone"
-								:url="card.url"
-								:cor="card.cor"
-								:tamanho="card.tamanho"
-							/>
-						</div>
-					</template>
-				`
-			});
-			actionCardsApp.mount('#action-cards-app');
-		}
+		// Initialize ActionCards using Vue Helper
+		window.CBDVueHelper.initComponent('ActionCard', 'action-cards-app', {
+			data() {
+				return {
+					cards: [
+						{
+							titulo: 'CBD para Animais',
+							descricao: 'Guias completos sobre CBD para cães e gatos, incluindo dosagem, benefícios e segurança.',
+							icone: '🐕',
+							url: '<?php echo esc_js( $animais_url ); ?>',
+							cor: 'teal',
+							tamanho: 'medium'
+						},
+						{
+							titulo: 'CBD para Pessoas',
+							descricao: 'Guia completo sobre benefícios, dosagem e legalidade do CBD para uso humano em Portugal.',
+							icone: '👤',
+							url: '<?php echo esc_js( $pessoas_url ); ?>',
+							cor: 'primary',
+							tamanho: 'medium'
+						},
+						{
+							titulo: 'Calculadora de Dosagem',
+							descricao: 'Calcule a dosagem correta de CBD baseada no peso, condição e tipo de produto.',
+							icone: '📊',
+							url: '<?php echo esc_js( $calculadora_url ); ?>',
+							cor: 'info',
+							tamanho: 'medium'
+						}
+					]
+				};
+			},
+			template: `
+				<template v-for="(card, index) in cards" :key="index">
+					<div class="mui-grid-item mui-grid-md-4 mui-grid-sm-6 mui-grid-xs-12" style="padding: 12px;">
+						<ActionCard 
+							:titulo="card.titulo"
+							:descricao="card.descricao"
+							:icone="card.icone"
+							:url="card.url"
+							:cor="card.cor"
+							:tamanho="card.tamanho"
+						/>
+					</div>
+				</template>
+			`
+		});
 	}
 	
 	if (document.readyState === 'loading') {

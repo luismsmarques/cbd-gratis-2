@@ -346,60 +346,22 @@ wp_enqueue_script(
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-	console.log('CBD AI: Script de inicialização carregado');
+	if (typeof window.CBDDebug !== 'undefined') {
+		window.CBDDebug.log('CBD AI: Script de inicialização carregado');
+	}
 	
+	// Use Vue Helper for safe initialization
 	function initChatbotCBD() {
-		console.log('CBD AI: Tentando inicializar ChatbotCBD...');
-		console.log('CBD AI: Vue disponível?', typeof Vue !== 'undefined');
-		console.log('CBD AI: Componente disponível?', typeof window.ChatbotCBD !== 'undefined');
-		console.log('CBD AI: cbdAIData disponível?', typeof window.cbdAIData !== 'undefined');
-		
-		// Check if Vue is loaded
-		if (typeof Vue === 'undefined') {
-			console.warn('CBD AI: Vue.js não foi carregado ainda');
-			return false;
+		// Check if Vue Helper is available
+		if (typeof window.CBDVueHelper === 'undefined') {
+			setTimeout(initChatbotCBD, 100);
+			return;
 		}
 		
-		// Check if component is loaded
-		if (typeof window.ChatbotCBD === 'undefined') {
-			console.warn('CBD AI: Componente ChatbotCBD não foi carregado ainda');
-			return false;
-		}
-		
-		// Check if container exists
-		const container = document.getElementById('chatbot-cbd-app');
-		if (!container) {
-			console.error('CBD AI: Container #chatbot-cbd-app não encontrado');
-			return false;
-		}
-		
-		// Check if already mounted
-		if (container.__vue_app__) {
-			console.warn('CBD AI: Componente já foi montado');
-			return true;
-		}
-		
-		const { createApp } = Vue;
-		
-		try {
-			console.log('CBD AI: Criando aplicação Vue...');
-			const app = createApp({
-				components: {
-					ChatbotCBD: window.ChatbotCBD
-				},
-				template: '<ChatbotCBD />'
-			});
-			
-			console.log('CBD AI: Montando aplicação no container...');
-			app.mount('#chatbot-cbd-app');
-			console.log('CBD AI: ✅ ChatbotCBD montado com sucesso!');
-			return true;
-		} catch (error) {
-			console.error('CBD AI: ❌ Erro ao montar aplicação Vue:', error);
-			console.error('CBD AI: Mensagem:', error.message);
-			console.error('CBD AI: Stack trace:', error.stack);
-			return false;
-		}
+		// Initialize ChatbotCBD using Vue Helper
+		window.CBDVueHelper.initComponent('ChatbotCBD', 'chatbot-cbd-app', {
+			template: '<ChatbotCBD />'
+		});
 	}
 	
 	// Wait for everything to be ready
@@ -408,9 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (typeof Vue !== 'undefined' && typeof window.ChatbotCBD !== 'undefined') {
 			// Small delay to ensure DOM is ready
 			setTimeout(function() {
-				if (!initChatbotCBD()) {
-					console.error('CBD AI: Falha na inicialização');
-				}
+				initChatbotCBD();
 			}, 100);
 		} else {
 			// Retry after a short delay
@@ -421,17 +381,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	// Start initialization when DOM is ready
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
-			console.log('CBD AI: DOM carregado, iniciando...');
+			if (typeof window.CBDDebug !== 'undefined') {
+				window.CBDDebug.log('CBD AI: DOM carregado, iniciando...');
+			}
 			setTimeout(waitAndInit, 300);
 		});
 	} else {
-		console.log('CBD AI: DOM já carregado, iniciando...');
+		if (typeof window.CBDDebug !== 'undefined') {
+			window.CBDDebug.log('CBD AI: DOM já carregado, iniciando...');
+		}
 		setTimeout(waitAndInit, 300);
 	}
 	
 	// Also listen for script load events
 	window.addEventListener('load', function() {
-		console.log('CBD AI: Window load event, verificando novamente...');
+		if (typeof window.CBDDebug !== 'undefined') {
+			window.CBDDebug.log('CBD AI: Window load event, verificando novamente...');
+		}
 		setTimeout(function() {
 			if (typeof Vue !== 'undefined' && typeof window.ChatbotCBD !== 'undefined') {
 				const container = document.getElementById('chatbot-cbd-app');

@@ -188,7 +188,9 @@ window.SEOOptimizer = {
           this.metaDescription = data.meta_description;
         }
       } catch (error) {
-        console.error('Error analyzing content:', error);
+        if (typeof window.CBDDebug !== 'undefined') {
+          window.CBDDebug.error('Error analyzing content:', error);
+        }
         alert('Erro ao analisar conteúdo. Por favor, tente novamente.');
       } finally {
         this.loading = false;

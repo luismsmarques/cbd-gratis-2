@@ -537,14 +537,11 @@ if ( $legislacao_page ) {
 	<script>
 	document.addEventListener('DOMContentLoaded', function() {
 		function initAnimaisActionCards() {
-			if (typeof Vue === 'undefined' || typeof window.ActionCard === 'undefined') {
+			// Check if Vue Helper is available
+			if (typeof window.CBDVueHelper === 'undefined') {
 				setTimeout(initAnimaisActionCards, 100);
 				return;
 			}
-			
-			const { createApp } = Vue;
-			const container = document.getElementById('animais-action-cards-app');
-			if (!container) return;
 			
 			const caes_url = '<?php 
 				$caes_page = get_page_by_path( 'cbd-para-caes' );
@@ -562,10 +559,8 @@ if ( $legislacao_page ) {
 				echo esc_js( $gatos_page ? get_permalink( $gatos_page->ID ) : home_url( '/cbd-para-gatos/' ) );
 			?>';
 			
-			const app = createApp({
-				components: {
-					ActionCard: window.ActionCard
-				},
+			// Initialize ActionCards using Vue Helper
+			window.CBDVueHelper.initComponent('ActionCard', 'animais-action-cards-app', {
 				template: `
 					<ActionCard 
 						titulo="CBD para Cães"
@@ -591,7 +586,6 @@ if ( $legislacao_page ) {
 					};
 				}
 			});
-			app.mount('#animais-action-cards-app');
 		}
 		
 		if (document.readyState === 'loading') {

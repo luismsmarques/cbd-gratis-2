@@ -154,15 +154,12 @@ wp_enqueue_script(
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 	// Initialize StatusCard
-	function initStatusCard() {
-		if (typeof Vue === 'undefined' || typeof window.StatusCard === 'undefined') {
-			setTimeout(initStatusCard, 100);
+	function initComponents() {
+		// Check if Vue Helper is available
+		if (typeof window.CBDVueHelper === 'undefined') {
+			setTimeout(initComponents, 100);
 			return;
 		}
-		
-		const { createApp } = Vue;
-		const container = document.getElementById('legislation-status-card-app');
-		if (!container) return;
 		
 		<?php
 		$monitor = new CBD_Legislation_Monitor();
@@ -170,10 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		$has_alert = ! empty( $recent_alerts ) && isset( $recent_alerts[0] );
 		?>
 		
-		const statusApp = createApp({
-			components: {
-				StatusCard: window.StatusCard
-			},
+		// Initialize StatusCard using Vue Helper
+		window.CBDVueHelper.initComponent('StatusCard', 'legislation-status-card-app', {
 			data() {
 				return {
 					status: '<?php echo $has_alert ? "warning" : "success"; ?>',
@@ -184,39 +179,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			},
 			template: '<StatusCard :status="status" :titulo="titulo" :mensagem="mensagem" :dataAtualizacao="dataAtualizacao" />'
 		});
-		statusApp.mount('#legislation-status-card-app');
-	}
-	
-	function initLegislationChatbot() {
-		if (typeof Vue === 'undefined') {
-			setTimeout(initLegislationChatbot, 100);
-			return;
-		}
 		
-		if (typeof window.ChatbotLegislation === 'undefined') {
-			setTimeout(initLegislationChatbot, 100);
-			return;
-		}
-		
-		const { createApp } = Vue;
-		
-		try {
-			const app = createApp({
-				components: {
-					ChatbotLegislation: window.ChatbotLegislation
-				},
-				template: '<ChatbotLegislation />'
-			});
-			
-			app.mount('#legislation-chatbot-app');
-		} catch (error) {
-			console.error('Erro ao montar aplicação Vue:', error);
-		}
+		// Initialize ChatbotLegislation using Vue Helper
+		window.CBDVueHelper.initComponent('ChatbotLegislation', 'legislation-chatbot-app', {
+			template: '<ChatbotLegislation />'
+		});
 	}
 	
 	// Initialize components
-	setTimeout(initStatusCard, 200);
-	setTimeout(initLegislationChatbot, 300);
+	setTimeout(initComponents, 200);
 });
 </script>
 

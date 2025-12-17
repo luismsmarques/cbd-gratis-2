@@ -93,7 +93,9 @@ window.LegislationAlert = {
         const data = await response.json();
         this.alerts = data || [];
       } catch (error) {
-        console.error('Error fetching alerts:', error);
+        if (typeof window.CBDDebug !== 'undefined') {
+          window.CBDDebug.error('Error fetching alerts:', error);
+        }
         this.alerts = [];
       } finally {
         this.loading = false;

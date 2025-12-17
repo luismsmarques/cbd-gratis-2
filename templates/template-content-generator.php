@@ -143,7 +143,9 @@ const ContentGenerator = {
 					alert('Erro ao gerar conteúdo: ' + (data.message || 'Erro desconhecido'));
 				}
 			} catch (error) {
-				console.error('Error:', error);
+				if (typeof window.CBDDebug !== 'undefined') {
+					window.CBDDebug.error('Error:', error);
+				}
 				alert('Erro ao gerar conteúdo. Por favor, tente novamente.');
 			} finally {
 				this.loading = false;

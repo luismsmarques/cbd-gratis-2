@@ -180,9 +180,11 @@ window.ChatbotHumans = {
       this.scrollToBottom();
       
       try {
-        console.log('CBD AI: Enviando mensagem:', userMessage);
-        console.log('CBD AI: API URL:', this.apiUrl + 'chatbot-humans');
-        console.log('CBD AI: Nonce:', this.nonce ? 'Presente' : 'Ausente');
+        if (typeof window.CBDDebug !== 'undefined') {
+          window.CBDDebug.log('CBD AI: Enviando mensagem:', userMessage);
+          window.CBDDebug.log('CBD AI: API URL:', this.apiUrl + 'chatbot-humans');
+          window.CBDDebug.log('CBD AI: Nonce:', this.nonce ? 'Presente' : 'Ausente');
+        }
         
         const response = await fetch(this.apiUrl + 'chatbot-humans', {
           method: 'POST',
@@ -197,7 +199,9 @@ window.ChatbotHumans = {
           })
         });
         
-        console.log('CBD AI: Resposta recebida, status:', response.status);
+        if (typeof window.CBDDebug !== 'undefined') {
+          window.CBDDebug.log('CBD AI: Resposta recebida, status:', response.status);
+        }
         
         // Check if response is OK
         if (!response.ok) {
@@ -232,7 +236,9 @@ window.ChatbotHumans = {
           const text = await response.text();
           data = JSON.parse(text);
         } catch (parseError) {
-          console.error('JSON Parse Error:', parseError);
+          if (typeof window.CBDDebug !== 'undefined') {
+            window.CBDDebug.error('JSON Parse Error:', parseError);
+          }
           this.messages.push({
             type: 'assistant',
             text: 'Erro ao processar a resposta do servidor. Por favor, tente novamente ou verifique se a API Key está configurada.'
@@ -254,7 +260,9 @@ window.ChatbotHumans = {
           });
         }
       } catch (error) {
-        console.error('Error:', error);
+        if (typeof window.CBDDebug !== 'undefined') {
+          window.CBDDebug.error('Error:', error);
+        }
         this.messages.push({
           type: 'assistant',
           text: 'Erro de conexão. Verifique sua conexão com a internet e tente novamente. Se o problema persistir, verifique se a API Key está configurada corretamente.'
