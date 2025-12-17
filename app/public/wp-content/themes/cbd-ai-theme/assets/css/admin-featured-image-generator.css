@@ -1,0 +1,94 @@
+/**
+ * Featured Image Generator Admin Styles
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+#cbd-featured-image-generator {
+	padding: 10px 0;
+}
+
+#cbd-featured-image-generator .cbd-image-generator-controls {
+	margin-top: 10px;
+}
+
+#cbd-featured-image-generator .cbd-current-image {
+	padding: 10px;
+	background: #f0f0f1;
+	border-radius: 4px;
+	margin-bottom: 15px;
+}
+
+#cbd-featured-image-generator .cbd-current-image img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 4px;
+}
+
+#cbd-generate-image-btn {
+	position: relative;
+}
+
+#cbd-generate-image-btn .spinner {
+	float: none;
+	margin: 0 5px 0 0;
+	visibility: visible;
+}
+
+#cbd-image-generator-status {
+	margin-top: 15px;
+	padding: 10px;
+	border-radius: 4px;
+}
+
+#cbd-image-generator-status.notice-success {
+	background: #d1e7dd;
+	border-left: 4px solid #0f5132;
+	color: #0f5132;
+}
+
+#cbd-image-generator-status.notice-error {
+	background: #f8d7da;
+	border-left: 4px solid #842029;
+	color: #842029;
+}
+
+#cbd-image-generator-status.notice-info {
+	background: #cff4fc;
+	border-left: 4px solid #055160;
+	color: #055160;
+}
+
+#cbd-image-generator-preview {
+	margin-top: 15px;
+	padding: 10px;
+	background: #f0f0f1;
+	border-radius: 4px;
+}
+
+#cbd-image-generator-preview img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 4px;
+}
+
+#cbd-featured-image-generator .description {
+	margin-bottom: 15px;
+	color: #646970;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+#cbd-custom-prompt {
+	resize: vertical;
+	min-height: 60px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+#cbd-custom-prompt:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: 2px solid transparent;
+}
+

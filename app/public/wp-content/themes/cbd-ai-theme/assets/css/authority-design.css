@@ -1,0 +1,738 @@
+/**
+ * Authority Design - Professional Magazine/Health Portal Style
+ * 
+ * Design profissional tipo revista especializada/portal de saúde
+ * Focado em confiança, credibilidade e autoridade
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+/* ============================================
+   TYPOGRAPHY - Professional & Readable
+   ============================================ */
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+	line-height: 1.7;
+	color: #1f2937;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 700;
+	line-height: 1.3;
+	color: #111827;
+	letter-spacing: -0.02em;
+}
+
+/* ============================================
+   HEADER & NAVIGATION - Professional Top Bar
+   ============================================ */
+
+/* Trust Bar */
+.trust-bar {
+	font-size: 0.75rem;
+	line-height: 1.5;
+}
+
+.trust-bar svg {
+	flex-shrink: 0;
+}
+
+/* Main Header */
+.site-header {
+	background: #ffffff;
+	backdrop-filter: blur(10px);
+}
+
+.site-branding a {
+	text-decoration: none;
+	transition: opacity 0.2s;
+}
+
+.site-branding a:hover {
+	opacity: 0.8;
+}
+
+/* Navigation Links - Desktop */
+@media (min-width: 1024px) {
+	.main-navigation {
+		flex: 1;
+		display: flex;
+		justify-content: flex-end;
+		min-width: 0;
+		overflow: visible;
+	}
+	
+	.main-navigation ul {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		flex-wrap: nowrap;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	
+	.main-navigation li {
+		position: relative;
+		margin: 0;
+		white-space: nowrap;
+	}
+	
+	.main-navigation .nav-link {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		color: #374151;
+		font-weight: 500;
+		font-size: 0.9375rem;
+		text-decoration: none;
+		border-radius: 0.5rem;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+		position: relative;
+	}
+	
+	.main-navigation .nav-link:hover {
+		color: #2d712d;
+		background-color: #f0f9f0;
+	}
+	
+	.main-navigation .nav-link .dropdown-arrow {
+		transition: transform 0.2s ease;
+		flex-shrink: 0;
+		margin-left: 0.25rem;
+	}
+	
+	.main-navigation .has-dropdown:hover .dropdown-arrow,
+	.main-navigation .has-dropdown:focus-within .dropdown-arrow {
+		transform: rotate(180deg);
+	}
+	
+	/* Dropdown Menu - Desktop */
+	.main-navigation .has-dropdown {
+		position: relative;
+	}
+	
+	.main-navigation .dropdown-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		background: white;
+		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+		border-radius: 0.5rem;
+		padding: 0.5rem 0;
+		min-width: 200px;
+		border: 1px solid #e5e7eb;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(-10px);
+		transition: all 0.2s ease;
+		z-index: 1000;
+		margin-top: 0.5rem;
+		list-style: none;
+		margin-left: 0;
+	}
+	
+	.main-navigation .has-dropdown:hover .dropdown-menu,
+	.main-navigation .has-dropdown:focus-within .dropdown-menu {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+		display: block;
+	}
+	
+	.main-navigation .dropdown-menu li {
+		width: 100%;
+		margin: 0;
+	}
+	
+	.main-navigation .dropdown-menu a {
+		display: block;
+		padding: 0.75rem 1rem;
+		color: #374151;
+		text-decoration: none;
+		font-size: 0.875rem;
+		transition: all 0.15s ease;
+		border-radius: 0;
+	}
+	
+	.main-navigation .dropdown-menu a:hover {
+		background-color: #f9fafb;
+		color: #2d712d;
+	}
+	
+	/* Ensure menu items don't wrap */
+	.main-navigation ul li {
+		flex-shrink: 0;
+	}
+}
+
+/* Navigation Links - Mobile */
+@media (max-width: 1023px) {
+	.nav-link {
+		position: relative;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	
+	.dropdown-menu {
+		display: none;
+		padding-left: 1rem;
+		margin-top: 0.5rem;
+	}
+	
+	.menu-item-has-children.active .dropdown-menu {
+		display: block;
+	}
+}
+
+/* Mobile Menu */
+#mobile-menu-toggle {
+	transition: transform 0.2s ease;
+}
+
+#mobile-menu-toggle[aria-expanded="true"] {
+	transform: rotate(90deg);
+}
+
+.mobile-navigation {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3s ease;
+}
+
+.mobile-navigation:not(.hidden) {
+	max-height: 1000px;
+}
+
+/* Hide mobile menu on desktop */
+@media (min-width: 1024px) {
+	.mobile-navigation {
+		display: none !important;
+	}
+	
+	#mobile-menu-toggle {
+		display: none !important;
+	}
+}
+
+/* ============================================
+   HERO SECTION - Authority & Trust
+   ============================================ */
+
+.hero-authority {
+	background: linear-gradient(to bottom, #ffffff 0%, #f0f9f0 50%, #ffffff 100%);
+}
+
+.hero-authority h1 {
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+/* Search Bar - Central Element */
+.hero-authority form {
+	position: relative;
+}
+
+.hero-authority input[type="search"] {
+	font-size: 1rem;
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.hero-authority input[type="search"]:focus {
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.hero-authority button[type="submit"] {
+	transition: all 0.2s ease;
+}
+
+.hero-authority button[type="submit"]:hover {
+	transform: scale(1.05);
+}
+
+/* Quick Links */
+.hero-authority .flex-wrap a {
+	transition: all 0.2s ease;
+	border-width: 1px;
+}
+
+.hero-authority .flex-wrap a:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* ============================================
+   LEGAL ALERT WIDGET - Trust Indicator
+   ============================================ */
+
+.legal-alert-section {
+	background: linear-gradient(to bottom, #eff6ff, #dbeafe);
+}
+
+.legal-alert-section .bg-white {
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.legal-alert-section h3 {
+	font-size: 1.25rem;
+}
+
+.legal-alert-section h4 a {
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.legal-alert-section h4 a:hover {
+	text-decoration: underline;
+}
+
+/* ============================================
+   GUIDES SECTION - Professional Grid
+   ============================================ */
+
+.guide-card {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	border-width: 1px;
+}
+
+.guide-card:hover {
+	transform: translateY(-4px);
+	border-color: #2d712d;
+}
+
+.guide-card img {
+	transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.guide-card:hover img {
+	transform: scale(1.05);
+}
+
+.guide-card h3 a {
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+/* ============================================
+   AFFILIATE SECTION - Non-Intrusive
+   ============================================ */
+
+.affiliate-section {
+	background: #f9fafb;
+}
+
+.affiliate-banner {
+	transition: all 0.2s ease;
+	text-decoration: none;
+	color: inherit;
+}
+
+.affiliate-banner:hover {
+	transform: translateY(-2px);
+	border-color: #2d712d;
+}
+
+.affiliate-banner a {
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.affiliate-banner:hover a {
+	text-decoration: underline;
+}
+
+/* ============================================
+   CATEGORY CARDS - Authority Design
+   ============================================ */
+
+.category-card {
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.category-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(to right, transparent, currentColor, transparent);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.category-card:hover::before {
+	opacity: 0.3;
+}
+
+.category-card:nth-child(1)::before {
+	color: #2d712d;
+}
+
+.category-card:nth-child(2)::before {
+	color: #2563eb;
+}
+
+.category-card:nth-child(3)::before {
+	color: #9333ea;
+}
+
+.category-card a {
+	text-decoration: none;
+	transition: gap 0.2s ease;
+}
+
+/* ============================================
+   BUTTONS - Professional CTAs
+   ============================================ */
+
+.btn-cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	border: none;
+}
+
+.btn-cta:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.btn-cta:active {
+	transform: translateY(0);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - Mobile First
+   ============================================ */
+
+@media (max-width: 767px) {
+	.hero-authority h1 {
+		font-size: 2rem;
+		line-height: 1.2;
+	}
+	
+	.hero-authority input[type="search"] {
+		font-size: 0.875rem;
+		padding: 0.75rem 3rem 0.75rem 1rem;
+	}
+	
+	.legal-alert-section .flex-col {
+		gap: 1rem;
+	}
+	
+	.legal-alert-section .btn-cta {
+		width: 100%;
+		justify-content: center;
+	}
+	
+	.guides-grid,
+	.affiliate-banners {
+		grid-template-columns: 1fr;
+	}
+	
+	.category-card {
+		padding: 1.5rem;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.guides-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	
+	.affiliate-banners {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	
+	.affiliate-banners .affiliate-banner:last-child {
+		grid-column: 1 / -1;
+		max-width: 50%;
+		margin: 0 auto;
+	}
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+/* Focus states */
+*:focus-visible {
+	outline: 2px solid #2d712d;
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* Skip to content link */
+.skip-link {
+	position: absolute;
+	top: -40px;
+	left: 0;
+	background: #2d712d;
+	color: white;
+	padding: 8px 16px;
+	text-decoration: none;
+	z-index: 100;
+}
+
+.skip-link:focus {
+	top: 0;
+}
+
+/* ARIA labels for icons */
+[aria-label] {
+	cursor: pointer;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+	.site-header,
+	.trust-bar,
+	.affiliate-section,
+	.btn-cta,
+	.mobile-navigation {
+		display: none;
+	}
+	
+	.hero-authority,
+	.legal-alert-section,
+	.guides-section {
+		page-break-inside: avoid;
+	}
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.loading-skeleton {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* ============================================
+   SINGLE POST LAYOUT - Article Design
+   ============================================ */
+
+/* Article sidebar */
+.content-area .grid {
+	align-items: start;
+}
+
+/* Chatbot widget in sidebar */
+.chatbot-widget {
+	position: relative;
+}
+
+.chatbot-widget::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(to right, #2d712d, #3d8f3d);
+}
+
+/* Dosage calculator widget */
+.dosage-calculator {
+	transition: all 0.2s ease;
+}
+
+.dosage-calculator:hover {
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+	border-color: #2d712d;
+}
+
+/* Related articles widget */
+.related-widget ul li {
+	border-bottom: 1px solid #e5e7eb;
+	padding-bottom: 1rem;
+}
+
+.related-widget ul li:last-child {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+
+.related-widget a {
+	text-decoration: none;
+}
+
+/* Newsletter widget */
+.newsletter-widget form input {
+	font-size: 0.875rem;
+}
+
+.newsletter-widget form button {
+	font-size: 0.875rem;
+}
+
+/* Affiliate CTA in article */
+.affiliate-cta {
+	position: relative;
+}
+
+.affiliate-cta::before {
+	content: '💡';
+	position: absolute;
+	top: -12px;
+	right: 20px;
+	background: white;
+	padding: 4px 8px;
+	border-radius: 50%;
+	font-size: 1.5rem;
+}
+
+/* Sticky sidebar */
+.sticky {
+	position: sticky;
+	top: 6rem;
+	z-index: 10;
+}
+
+@media (max-width: 1023px) {
+	.sticky {
+		position: relative;
+		top: 0;
+	}
+}
+
+/* Article content typography */
+.entry-content {
+	font-size: 1.125rem;
+	line-height: 1.8;
+	color: #374151;
+}
+
+.entry-content h2 {
+	font-size: 2rem;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+	color: #111827;
+}
+
+.entry-content h3 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+	color: #111827;
+}
+
+.entry-content p {
+	margin-bottom: 1.5rem;
+}
+
+.entry-content ul,
+.entry-content ol {
+	margin-bottom: 1.5rem;
+	padding-left: 2rem;
+}
+
+.entry-content li {
+	margin-bottom: 0.5rem;
+}
+
+.entry-content a {
+	color: #2d712d;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.entry-content a:hover {
+	color: #255a25;
+	text-decoration-thickness: 2px;
+}
+
+.entry-content blockquote {
+	border-left: 4px solid #2d712d;
+	padding-left: 1.5rem;
+	margin: 2rem 0;
+	font-style: italic;
+	color: #4b5563;
+}
+
+.entry-content img {
+	margin: 2rem auto;
+	border-radius: 0.5rem;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.line-clamp-2 {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.line-clamp-3 {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.text-balance {
+	text-wrap: balance;
+}
+
+/* Grid utilities */
+.grid-cols-1 {
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 1024px) {
+	.lg\:grid-cols-12 {
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+	}
+	
+	.lg\:col-span-8 {
+		grid-column: span 8 / span 8;
+	}
+	
+	.lg\:col-span-4 {
+		grid-column: span 4 / span 4;
+	}
+}
+
+/* Spacing utilities */
+.space-y-6 > * + * {
+	margin-top: 1.5rem;
+}
+
+.space-y-4 > * + * {
+	margin-top: 1rem;
+}
+
+.space-y-3 > * + * {
+	margin-top: 0.75rem;
+}
+

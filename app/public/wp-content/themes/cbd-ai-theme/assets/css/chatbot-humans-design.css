@@ -1,0 +1,81 @@
+/**
+ * Chatbot Humans Page Design - Professional & Conversion-Focused
+ * 
+ * Design profissional para maximizar confiança e conversão
+ * Tema azul para diferenciar do chatbot de animais (verde)
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+/* ============================================
+   COLOR OVERRIDES FOR HUMANS THEME
+   ============================================ */
+
+/* Override green colors with blue for humans theme */
+.prompt-btn:hover {
+	background: #eff6ff;
+	border-color: #2563eb;
+	color: #2563eb;
+}
+
+.user-avatar {
+	background: #2563eb;
+}
+
+.user-bubble {
+	background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+}
+
+.assistant-name {
+	color: #2563eb;
+}
+
+.dosage-card {
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	border-left: 4px solid #2563eb;
+}
+
+.related-link {
+	color: #2563eb;
+}
+
+.related-link:hover {
+	background: #eff6ff;
+	color: #1e40af;
+}
+
+.chat-input:focus {
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.filter-select:focus,
+.filter-input:focus {
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.send-button {
+	background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+}
+
+.send-button:hover:not(.disabled) {
+	background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+	box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.chat-input:focus,
+.filter-select:focus,
+.filter-input:focus,
+.prompt-btn:focus,
+.send-button:focus {
+	outline: 2px solid #2563eb;
+	outline-offset: 2px;
+}
+
+.quick-links-widget a:hover {
+	background: #eff6ff;
+}
+

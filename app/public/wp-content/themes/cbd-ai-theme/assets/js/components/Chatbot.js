@@ -1,0 +1,375 @@
+/**
+ * Chatbot Component (Vue 3 - CDN Version)
+ * Design profissional focado em confiança e conversão
+ */
+window.Chatbot = {
+  template: `
+    <div class="chatbot-container">
+      <!-- Chat Messages Area -->
+      <div class="chat-messages" ref="messagesContainer">
+        <!-- Initial Welcome Message -->
+        <div v-if="messages.length === 1" class="welcome-message">
+          <div class="assistant-message">
+            <div class="message-avatar">
+              <span class="avatar-icon">🤖</span>
+            </div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="assistant-name">IA Especialista CBD</span>
+                <span class="message-time">{{ getCurrentTime() }}</span>
+              </div>
+              <div class="message-text">
+                Olá! Sou a sua IA Especialista em CBD para Animais. Posso ajudar com questões sobre dosagem, benefícios, segurança ou legalidade do CBD para o seu pet. Qual é a sua primeira pergunta?
+              </div>
+            </div>
+          </div>
+          
+          <!-- Prompt Starters -->
+          <div class="prompt-starters">
+            <h4 class="prompt-title">💡 Sugestões de Perguntas:</h4>
+            <div class="prompt-buttons">
+              <button 
+                v-for="(prompt, index) in promptStarters" 
+                :key="index"
+                @click="sendPrompt(prompt)"
+                class="prompt-btn"
+                type="button"
+              >
+                {{ prompt }}
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div 
+          v-for="(message, index) in messages.slice(1)" 
+          :key="index"
+          :class="['chat-message-wrapper', message.type === 'user' ? 'user-message' : 'assistant-message']"
+        >
+          <div v-if="message.type === 'assistant'" class="message-avatar">
+            <span class="avatar-icon">🤖</span>
+          </div>
+          
+          <div class="message-bubble" :class="message.type === 'user' ? 'user-bubble' : 'assistant-bubble'">
+            <div v-if="message.type === 'assistant'" class="message-header">
+              <span class="assistant-name">IA Especialista CBD</span>
+              <span class="message-time">{{ getCurrentTime() }}</span>
+            </div>
+            <div class="message-text formatted-text" v-html="formatMessage(message.text)"></div>
+            
+            <!-- Dosage Info -->
+            <div v-if="message.dosage_info" class="dosage-card">
+              <div class="dosage-header">
+                <svg class="w-5 h-5 text-cbd-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+                <strong>Informação de Dosagem</strong>
+              </div>
+              <p class="dosage-text">{{ message.dosage_info.recommendation }}</p>
+            </div>
+            
+            <!-- Related Articles -->
+            <div v-if="message.related_articles && message.related_articles.length > 0" class="related-articles">
+              <div class="related-header">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <strong>Artigos Relacionados:</strong>
+              </div>
+              <ul class="related-list">
+                <li v-for="article in message.related_articles" :key="article.url">
+                  <a :href="article.url" class="related-link">
+                    {{ article.title }}
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div v-if="message.type === 'user'" class="message-avatar user-avatar">
+            <span class="avatar-icon">👤</span>
+          </div>
+        </div>
+        
+        <!-- Loading Indicator -->
+        <div v-if="loading" class="assistant-message loading-message">
+          <div class="message-avatar">
+            <span class="avatar-icon">🤖</span>
+          </div>
+          <div class="message-bubble assistant-bubble">
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <span class="loading-text">Pensando...</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Input Form -->
+      <form @submit.prevent="sendMessage" class="chat-input-form">
+        <!-- Animal Type & Weight (Optional) -->
+        <div class="input-filters">
+          <select v-model="animalType" class="filter-select">
+            <option value="">🐾 Tipo de animal (opcional)</option>
+            <option value="cão">🐕 Cão</option>
+            <option value="gato">🐱 Gato</option>
+            <option value="outros">🐾 Outros</option>
+          </select>
+          <input 
+            type="number" 
+            v-model.number="weight" 
+            placeholder="Peso (kg)" 
+            step="0.1"
+            min="0"
+            class="filter-input"
+          />
+        </div>
+        
+        <!-- Main Input -->
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            v-model="currentMessage" 
+            @keyup.enter="sendMessage"
+            placeholder="Digite sua pergunta sobre CBD para animais..."
+            class="chat-input"
+            :disabled="loading"
+            ref="chatInput"
+          />
+          <button 
+            type="submit" 
+            class="send-button"
+            :disabled="loading || !currentMessage.trim()"
+            :class="{ 'disabled': loading || !currentMessage.trim() }"
+          >
+            <svg v-if="!loading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            <div v-else class="spinner-small"></div>
+          </button>
+        </div>
+        
+        <!-- Disclaimer -->
+        <p class="input-disclaimer">
+          ⚠️ <strong>Importante:</strong> Este chatbot fornece informações gerais. Sempre consulte um veterinário antes de usar CBD no seu animal.
+        </p>
+      </form>
+    </div>
+  `,
+  data() {
+    return {
+      messages: [
+        {
+          type: 'assistant',
+          text: ''
+        }
+      ],
+      currentMessage: '',
+      animalType: '',
+      weight: null,
+      loading: false,
+      apiUrl: window.cbdAIData?.apiUrl || '/wp-json/cbd-ai/v1/',
+      nonce: window.cbdAIData?.nonce || '',
+      promptStarters: [
+        'Qual é a dose para um cão de 15kg com ansiedade?',
+        'O CBD é seguro para gatos?',
+        'Quais as interações medicamentosas?',
+        'Onde posso comprar CBD legalmente em Portugal?'
+      ]
+    }
+  },
+  methods: {
+    async sendMessage() {
+      if (!this.currentMessage.trim() || this.loading) {
+        return;
+      }
+      
+      const userMessage = this.currentMessage.trim();
+      this.currentMessage = '';
+      
+      // Add user message
+      this.messages.push({
+        type: 'user',
+        text: userMessage
+      });
+      
+      this.loading = true;
+      this.scrollToBottom();
+      
+      try {
+        const response = await fetch(this.apiUrl + 'chatbot', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-WP-Nonce': this.nonce
+          },
+          body: JSON.stringify({
+            question: userMessage,
+            animal_type: this.animalType || '',
+            weight: this.weight || 0
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          this.messages.push({
+            type: 'assistant',
+            text: data.message,
+            dosage_info: data.dosage_info,
+            related_articles: data.related_articles
+          });
+        } else {
+          this.messages.push({
+            type: 'assistant',
+            text: data.message || 'Desculpe, ocorreu um erro ao processar sua pergunta.'
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        this.messages.push({
+          type: 'assistant',
+          text: 'Desculpe, ocorreu um erro de conexão. Por favor, tente novamente.'
+        });
+      } finally {
+        this.loading = false;
+        this.scrollToBottom();
+        this.$nextTick(() => {
+          if (this.$refs.chatInput) {
+            this.$refs.chatInput.focus();
+          }
+        });
+      }
+    },
+    sendPrompt(prompt) {
+      this.currentMessage = prompt;
+      this.sendMessage();
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        if (this.$refs.messagesContainer) {
+          this.$refs.messagesContainer.scrollTop = this.$refs.messagesContainer.scrollHeight;
+        }
+      });
+    },
+    getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    },
+    formatMessage(text) {
+      // Use shared formatter if available, otherwise use local implementation
+      if (typeof window.CBDChatbotFormatter !== 'undefined' && window.CBDChatbotFormatter.format) {
+        return window.CBDChatbotFormatter.format(text);
+      }
+      
+      // Fallback to local implementation
+      if (!text || typeof text !== 'string') {
+        return '';
+      }
+      
+      let formatted = text;
+      const div = document.createElement('div');
+      div.textContent = formatted;
+      formatted = div.innerHTML;
+      
+      const lines = formatted.split('\n');
+      const result = [];
+      let inList = false;
+      let listType = null;
+      let listItems = [];
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        if (!line) {
+          if (inList) {
+            const tag = listType === 'ol' ? 'ol' : 'ul';
+            result.push(`<${tag} class="message-list">${listItems.join('')}</${tag}>`);
+            listItems = [];
+            inList = false;
+            listType = null;
+          }
+          continue;
+        }
+        
+        const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
+        if (numberedMatch) {
+          if (!inList || listType !== 'ol') {
+            if (inList) {
+              const tag = listType === 'ol' ? 'ol' : 'ul';
+              result.push(`<${tag} class="message-list">${listItems.join('')}</${tag}>`);
+              listItems = [];
+            }
+            inList = true;
+            listType = 'ol';
+          }
+          listItems.push(`<li>${numberedMatch[2]}</li>`);
+          continue;
+        }
+        
+        const bulletMatch = line.match(/^[\*\-\+]\s+(.+)$/);
+        if (bulletMatch) {
+          if (!inList || listType !== 'ul') {
+            if (inList) {
+              const tag = listType === 'ol' ? 'ol' : 'ul';
+              result.push(`<${tag} class="message-list">${listItems.join('')}</${tag}>`);
+              listItems = [];
+            }
+            inList = true;
+            listType = 'ul';
+          }
+          listItems.push(`<li>${bulletMatch[1]}</li>`);
+          continue;
+        }
+        
+        if (inList) {
+          const tag = listType === 'ol' ? 'ol' : 'ul';
+          result.push(`<${tag} class="message-list">${listItems.join('')}</${tag}>`);
+          listItems = [];
+          inList = false;
+          listType = null;
+        }
+        
+        let processedLine = line;
+        processedLine = processedLine.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+        
+        if (processedLine.match(/^###\s+/)) {
+          processedLine = processedLine.replace(/^###\s+(.+)$/, '<h3>$1</h3>');
+          result.push(processedLine);
+        } else if (processedLine.match(/^##\s+/)) {
+          processedLine = processedLine.replace(/^##\s+(.+)$/, '<h2>$1</h2>');
+          result.push(processedLine);
+        } else if (processedLine.match(/^#\s+/)) {
+          processedLine = processedLine.replace(/^#\s+(.+)$/, '<h2>$1</h2>');
+          result.push(processedLine);
+        } else {
+          result.push(`<p>${processedLine}</p>`);
+        }
+      }
+      
+      if (inList) {
+        const tag = listType === 'ol' ? 'ol' : 'ul';
+        result.push(`<${tag} class="message-list">${listItems.join('')}</${tag}>`);
+      }
+      
+      return result.join('');
+    }
+  },
+  mounted() {
+    this.scrollToBottom();
+    this.$nextTick(() => {
+      if (this.$refs.chatInput) {
+        this.$refs.chatInput.focus();
+      }
+    });
+  }
+};
+
+// Also make available as const for compatibility
+const Chatbot = window.Chatbot;

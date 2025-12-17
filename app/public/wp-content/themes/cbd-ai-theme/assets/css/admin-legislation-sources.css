@@ -1,0 +1,137 @@
+/**
+ * Admin Styles for Legislation Sources
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+/* Statistics Boxes */
+.cbd-sources-stats {
+	display: flex;
+	gap: 1rem;
+	margin: 1.5rem 0;
+	flex-wrap: wrap;
+}
+
+.stat-box {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	padding: 1rem 1.5rem;
+	min-width: 150px;
+	text-align: center;
+}
+
+.stat-number {
+	display: block;
+	font-size: 2rem;
+	font-weight: 600;
+	color: #2271b1;
+	margin-bottom: 0.25rem;
+}
+
+.stat-label {
+	display: block;
+	font-size: 0.875rem;
+	color: #646970;
+}
+
+/* Status Labels */
+.status-active {
+	color: #00a32a;
+	font-weight: 600;
+}
+
+.status-inactive {
+	color: #d63638;
+	font-weight: 600;
+}
+
+.status-success {
+	color: #00a32a;
+}
+
+.status-error {
+	color: #d63638;
+}
+
+.status-no_changes {
+	color: #646970;
+}
+
+.status-unknown {
+	color: #8c8f94;
+}
+
+/* Form Styles */
+.form-table th {
+	width: 200px;
+}
+
+.form-table .description {
+	font-style: italic;
+	color: #646970;
+	margin-top: 0.25rem;
+}
+
+.required {
+	color: #d63638;
+}
+
+/* Test Button Loading State */
+.test-source.loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.test-source.loading::after {
+	content: '...';
+	animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+	0%, 20% { content: '.'; }
+	40% { content: '..'; }
+	60%, 100% { content: '...'; }
+}
+
+/* Table Improvements */
+.wp-list-table td {
+	vertical-align: middle;
+}
+
+.wp-list-table .text-center {
+	text-align: center;
+	padding: 2rem;
+}
+
+.wp-list-table .text-muted {
+	color: #646970;
+	font-style: italic;
+}
+
+.wp-list-table small {
+	display: block;
+	margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+	.cbd-sources-stats {
+		flex-direction: column;
+	}
+	
+	.stat-box {
+		width: 100%;
+	}
+	
+	.wp-list-table {
+		font-size: 0.875rem;
+	}
+	
+	.wp-list-table th,
+	.wp-list-table td {
+		padding: 0.5rem;
+	}
+}
+

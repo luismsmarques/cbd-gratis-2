@@ -1,0 +1,761 @@
+/**
+ * UX/UI Fixes - Correções de Imagens, Alinhamentos e Responsividade
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+/* ============================================
+   CORREÇÕES DE IMAGENS
+   ============================================ */
+
+/* Limitar tamanho máximo de todas as imagens */
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Imagens em posts e páginas */
+.entry-content img,
+.post-thumbnail img,
+.article-card img,
+.posts-grid img {
+	max-width: 100%;
+	height: auto;
+	object-fit: cover;
+}
+
+/* Thumbnails de posts - tamanho fixo e controlado */
+.post-thumbnail img,
+.article-card img,
+.posts-grid img {
+	max-height: 400px;
+	width: 100%;
+	object-fit: cover;
+}
+
+/* Imagens grandes em single posts */
+.single .post-thumbnail img {
+	max-height: 500px;
+	width: 100%;
+	object-fit: cover;
+}
+
+/* Imagens em cards de artigos */
+.article-card img {
+	max-height: 250px;
+	height: 250px;
+	width: 100%;
+	object-fit: cover;
+}
+
+/* Imagens em grid de posts */
+.posts-grid img {
+	max-height: 200px;
+	height: 200px;
+	width: 100%;
+	object-fit: cover;
+}
+
+/* Prevenir imagens muito grandes em conteúdo */
+.entry-content img {
+	max-width: 100%;
+	max-height: 600px;
+	height: auto;
+	margin: 1.5rem auto;
+	border-radius: 0.5rem;
+}
+
+/* ============================================
+   CORREÇÕES DE ALINHAMENTO
+   ============================================ */
+
+/* Container principal - garantir largura máxima */
+.container {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+	.container {
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.container {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
+}
+
+/* Alinhamento de texto centralizado */
+.text-center {
+	text-align: center;
+}
+
+/* Alinhamento de flex items */
+.flex {
+	display: flex;
+}
+
+.items-center {
+	align-items: center;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.justify-between {
+	justify-content: space-between;
+}
+
+/* Learning Path - Grid Layout (Novo Design) */
+.learning-path-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+	.learning-path-grid {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+	}
+}
+
+.learning-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 400px;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.learning-card:hover {
+	transform: translateY(-4px);
+}
+
+.learning-card .flex-1 {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.learning-card ul {
+	flex: 1;
+}
+
+.learning-card a {
+	margin-top: auto;
+}
+
+/* Learning steps - layout antigo (removido problemas) */
+.learning-step {
+	display: flex;
+	flex-direction: column;
+}
+
+@media (min-width: 768px) {
+	.learning-step {
+		flex-direction: row;
+	}
+	
+	.learning-step.flex-row-reverse {
+		flex-direction: row-reverse;
+	}
+}
+
+.learning-step > div {
+	width: 100%;
+}
+
+@media (min-width: 768px) {
+	.learning-step .flex-shrink-0 {
+		flex-shrink: 0;
+		width: auto;
+	}
+	
+	.learning-step .flex-1 {
+		flex: 1;
+	}
+}
+
+/* Cards - garantir alinhamento vertical */
+.tool-card,
+.article-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.tool-card > *,
+.article-card > * {
+	flex-shrink: 0;
+}
+
+.tool-card .btn-premium,
+.article-card a:last-child {
+	margin-top: auto;
+}
+
+/* Grid de artigos - alinhar cards */
+.articles-section .grid {
+	display: grid;
+	align-items: stretch;
+}
+
+.articles-section .article-card {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+/* ============================================
+   CORREÇÕES DE RESPONSIVIDADE
+   ============================================ */
+
+/* Títulos muito grandes em mobile */
+h1 {
+	font-size: 2rem;
+	line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+	h1 {
+		font-size: 2.5rem;
+	}
+}
+
+@media (min-width: 768px) {
+	h1 {
+		font-size: 3rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	h1 {
+		font-size: 3.5rem;
+	}
+}
+
+/* Hero section - ajustar espaçamento em mobile */
+.hero-premium {
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+	.hero-premium {
+		padding-top: 5rem;
+		padding-bottom: 5rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.hero-premium {
+		padding-top: 6rem;
+		padding-bottom: 6rem;
+	}
+}
+
+/* Seções - reduzir padding em mobile */
+section {
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+	section {
+		padding-top: 5rem;
+		padding-bottom: 5rem;
+	}
+}
+
+/* Espaçamento entre elementos em mobile */
+@media (max-width: 767px) {
+	.mb-16 {
+		margin-bottom: 2rem;
+	}
+	
+	.mb-12 {
+		margin-bottom: 1.5rem;
+	}
+	
+	.gap-8 {
+		gap: 1.5rem;
+	}
+	
+	.py-20 {
+		padding-top: 2rem;
+		padding-bottom: 2rem;
+	}
+	
+	.py-28 {
+		padding-top: 3rem;
+		padding-bottom: 3rem;
+	}
+}
+
+/* Botões - melhor tamanho em mobile */
+.btn-premium {
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem;
+	white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+	.btn-premium {
+		padding: 1rem 2rem;
+		font-size: 1.125rem;
+	}
+}
+
+/* Cards de ferramentas - melhor layout em mobile */
+.tools-section .grid {
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+	.tools-section .grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.tools-section .grid {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+	}
+}
+
+/* Learning steps - melhor espaçamento */
+.learning-step {
+	margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+	.learning-step {
+		margin-bottom: 4rem;
+	}
+}
+
+.learning-step:last-child {
+	margin-bottom: 0;
+}
+
+/* ============================================
+   CORREÇÕES DE TIPOGRAFIA
+   ============================================ */
+
+/* Texto muito grande em mobile */
+.text-5xl {
+	font-size: 2rem;
+	line-height: 1.2;
+}
+
+.text-6xl {
+	font-size: 2.5rem;
+	line-height: 1.2;
+}
+
+.text-7xl {
+	font-size: 3rem;
+	line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+	.text-5xl {
+		font-size: 3rem;
+	}
+	
+	.text-6xl {
+		font-size: 3.75rem;
+	}
+	
+	.text-7xl {
+		font-size: 4.5rem;
+	}
+}
+
+/* Parágrafos - melhor legibilidade */
+p {
+	line-height: 1.7;
+	max-width: 65ch;
+}
+
+.text-center p {
+	max-width: none;
+}
+
+/* ============================================
+   CORREÇÕES DE ESPAÇAMENTO
+   ============================================ */
+
+/* Reduzir espaçamentos excessivos */
+.max-w-5xl {
+	max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+	.max-w-5xl {
+		max-width: 64rem;
+	}
+}
+
+.max-w-7xl {
+	max-width: 100%;
+}
+
+@media (min-width: 1280px) {
+	.max-w-7xl {
+		max-width: 80rem;
+	}
+}
+
+/* Grid gaps - reduzir em mobile */
+.grid {
+	gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+	.grid {
+		gap: 2rem;
+	}
+}
+
+/* ============================================
+   CORREÇÕES DE LAYOUT
+   ============================================ */
+
+/* Garantir que conteúdo não ultrapasse viewport */
+body {
+	overflow-x: hidden;
+}
+
+/* Cards - melhor comportamento */
+.card,
+.tool-card,
+.article-card {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* Flex containers - prevenir quebra */
+.flex {
+	flex-wrap: wrap;
+}
+
+@media (min-width: 640px) {
+	.flex {
+		flex-wrap: nowrap;
+	}
+}
+
+/* ============================================
+   CORREÇÕES ESPECÍFICAS DO TEMPLATE
+   ============================================ */
+
+/* Hero badges - melhor alinhamento */
+.hero-premium .flex-wrap {
+	justify-content: center;
+	gap: 1rem;
+}
+
+@media (min-width: 640px) {
+	.hero-premium .flex-wrap {
+		gap: 2rem;
+	}
+}
+
+/* Learning step icons - tamanho consistente */
+.learning-step .w-24 {
+	width: 4rem;
+	height: 4rem;
+}
+
+@media (min-width: 768px) {
+	.learning-step .w-24 {
+		width: 6rem;
+		height: 6rem;
+	}
+}
+
+/* Learning card icons - tamanho fixo e consistente */
+.learning-card .w-16 {
+	width: 4rem;
+	height: 4rem;
+	flex-shrink: 0;
+}
+
+/* Garantir que cards tenham altura igual */
+.learning-path-grid .learning-card {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Espaçamento interno consistente */
+.learning-card > div:first-child {
+	margin-bottom: 1.5rem;
+}
+
+/* Lista de itens - melhor espaçamento */
+.learning-card ul {
+	margin-bottom: 1.5rem;
+}
+
+.learning-card ul li {
+	margin-bottom: 0.75rem;
+}
+
+.learning-card ul li:last-child {
+	margin-bottom: 0;
+}
+
+/* Botões nos cards - melhor estilo */
+.learning-card a {
+	width: 100%;
+	text-align: center;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+
+.learning-card a:hover {
+	transform: translateX(4px);
+}
+
+/* Responsividade dos cards */
+@media (max-width: 1023px) {
+	.learning-card {
+		min-height: auto;
+	}
+	
+	.learning-card .w-16 {
+		width: 3.5rem;
+		height: 3.5rem;
+	}
+	
+	.learning-card h3 {
+		font-size: 1.25rem;
+	}
+}
+
+/* Garantir que texto não quebre layout */
+.learning-card h3 {
+	word-wrap: break-word;
+	hyphens: auto;
+}
+
+.learning-card p {
+	word-wrap: break-word;
+}
+
+.learning-card ul li span {
+	word-wrap: break-word;
+}
+
+/* Melhorias específicas para o novo layout de cards */
+.learning-card {
+	position: relative;
+	overflow: hidden;
+}
+
+.learning-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(to right, transparent, currentColor, transparent);
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.learning-card:hover::before {
+	opacity: 0.2;
+}
+
+.learning-card:nth-child(1)::before {
+	color: #2d712d;
+}
+
+.learning-card:nth-child(2)::before {
+	color: #2563eb;
+}
+
+.learning-card:nth-child(3)::before {
+	color: #9333ea;
+}
+
+/* Espaçamento consistente entre elementos */
+.learning-card > * {
+	margin-bottom: 0;
+}
+
+.learning-card .flex.items-start {
+	margin-bottom: 1.5rem;
+}
+
+.learning-card .flex-1 {
+	margin-bottom: 0;
+}
+
+/* Garantir que badges não quebrem */
+.learning-card span.inline-block {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+/* Melhorar legibilidade das listas */
+.learning-card ul li {
+	line-height: 1.6;
+}
+
+.learning-card ul li svg {
+	margin-top: 0.125rem;
+}
+
+/* Botões com melhor contraste e visibilidade */
+.learning-card a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem;
+	font-weight: 600;
+	border: none;
+	cursor: pointer;
+}
+
+.learning-card a svg {
+	transition: transform 0.2s ease;
+}
+
+.learning-card a:hover svg {
+	transform: translateX(2px);
+}
+
+/* Responsividade adicional */
+@media (max-width: 640px) {
+	.learning-card {
+		padding: 1.25rem;
+	}
+	
+	.learning-card .w-16 {
+		width: 3rem;
+		height: 3rem;
+		font-size: 1.25rem;
+	}
+	
+	.learning-card h3 {
+		font-size: 1.125rem;
+		line-height: 1.4;
+	}
+	
+	.learning-card p {
+		font-size: 0.875rem;
+	}
+	
+	.learning-card ul li span {
+		font-size: 0.875rem;
+	}
+}
+
+/* Garantir altura mínima consistente */
+@media (min-width: 1024px) {
+	.learning-path-grid .learning-card {
+		min-height: 500px;
+	}
+}
+
+/* Melhorar espaçamento entre cards */
+.learning-path-grid {
+	margin-top: 2rem;
+}
+
+@media (min-width: 1024px) {
+	.learning-path-grid {
+		margin-top: 3rem;
+	}
+}
+
+/* Tool cards icons - tamanho consistente */
+.tool-card .w-16 {
+	width: 3.5rem;
+	height: 3.5rem;
+}
+
+@media (min-width: 768px) {
+	.tool-card .w-16 {
+		width: 4rem;
+		height: 4rem;
+	}
+}
+
+/* Article cards - altura consistente */
+.articles-section .article-card {
+	min-height: 400px;
+}
+
+@media (min-width: 768px) {
+	.articles-section .article-card {
+		min-height: 450px;
+	}
+}
+
+/* ============================================
+   ACESSIBILIDADE
+   ============================================ */
+
+/* Foco visível */
+*:focus {
+	outline: 2px solid #3d8f3d;
+	outline-offset: 2px;
+}
+
+/* Contraste de texto */
+.text-gray-600 {
+	color: #4b5563;
+}
+
+.text-gray-700 {
+	color: #374151;
+}
+
+/* Links - melhor visibilidade */
+a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+a:hover {
+	text-decoration-thickness: 2px;
+}
+
+/* ============================================
+   CORREÇÕES DE PERFORMANCE
+   ============================================ */
+
+/* Lazy loading para imagens */
+img {
+	loading: lazy;
+}
+
+/* Otimizar transições */
+.transition-all {
+	transition-property: transform, box-shadow, opacity;
+	transition-duration: 200ms;
+	transition-timing-function: ease-out;
+}
+
