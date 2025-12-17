@@ -2,21 +2,12 @@
 deployment:
   tasks:
     - export DEPLOYPATH=$HOME/public_html/wp-content/themes
-    - export SOURCE_DIR=$(find $HOME -type d -name "cbd-gratis" -path "*/repositories/*" 2>/dev/null | head -1)
-    - |
-      if [ -z "$SOURCE_DIR" ]; then
-        SOURCE_DIR=$(pwd)
-      fi
+    - export REPO_ROOT=$(pwd)
     - /bin/rm -rf $DEPLOYPATH/cbd-ai-theme
     - /bin/mkdir -p $DEPLOYPATH
-    - |
-      if [ -d "$SOURCE_DIR/app/public/wp-content/themes/cbd-ai-theme" ]; then
-        /bin/cp -R "$SOURCE_DIR/app/public/wp-content/themes/cbd-ai-theme" "$DEPLOYPATH/"
-      elif [ -d "app/public/wp-content/themes/cbd-ai-theme" ]; then
-        /bin/cp -R app/public/wp-content/themes/cbd-ai-theme "$DEPLOYPATH/"
-      else
-        echo "Erro: Não foi possível encontrar cbd-ai-theme"
-        exit 1
-      fi
+    - /bin/cp -R $REPO_ROOT $DEPLOYPATH/cbd-ai-theme
+    - /bin/rm -rf $DEPLOYPATH/cbd-ai-theme/.git
+    - /bin/rm -f $DEPLOYPATH/cbd-ai-theme/.gitignore
+    - /bin/rm -f $DEPLOYPATH/cbd-ai-theme/.cpanel.yml
     - /bin/chmod -R 755 $DEPLOYPATH/cbd-ai-theme
     - /bin/find $DEPLOYPATH/cbd-ai-theme -type f -exec chmod 644 {} \;
