@@ -281,26 +281,26 @@ get_header();
 </section>
 
 <!-- Section B: Featured Guides - WordPress Posts -->
-<section class="guides-section py-16 md:py-20" style="background: linear-gradient(to bottom, #ffffff, #fafafa, #ffffff);">
-	<div class="mui-container">
+<section class="guides-section py-12 md:py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50" id="guias-praticos">
+	<div class="container mx-auto px-4">
 		<div class="max-w-7xl mx-auto">
-			<!-- Section Header - MUI Typography -->
-			<div class="text-center mb-12">
-				<div class="mui-chip mui-chip-primary" style="margin-bottom: 16px; display: inline-flex;">
-					<svg class="mui-chip-icon" style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<!-- Section Header -->
+			<div class="text-center mb-8 md:mb-12">
+				<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold uppercase tracking-wide mb-4">
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
 					</svg>
 					<span>Guias Práticos</span>
 				</div>
-				<h2 class="mui-typography-h2" style="margin-bottom: 16px;">
+				<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
 					Guias Completos de CBD: Dosagem, Segurança e Benefícios
 				</h2>
-				<p class="mui-typography-body1" style="max-width: 768px; margin: 0 auto; color: var(--mui-gray-600);">
+				<p class="text-lg text-gray-600 max-w-2xl mx-auto">
 					Explore os nossos guias especializados sobre CBD para pessoas e animais. Informação validada por AI e baseada em evidências científicas.
 				</p>
 			</div>
 			
-			<!-- Posts Grid - MUI Cards -->
+			<!-- Posts Grid -->
 			<?php
 			$recent_posts = new WP_Query( array(
 				'post_type' => 'post',
@@ -312,46 +312,63 @@ get_header();
 			
 			if ( $recent_posts->have_posts() ) :
 			?>
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					<?php while ( $recent_posts->have_posts() ) : $recent_posts->the_post(); ?>
-						<article class="mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300">
+						<article 
+							class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+							itemscope 
+							itemtype="https://schema.org/Article"
+						>
+							<!-- Featured Image -->
 							<?php if ( has_post_thumbnail() ) : ?>
-								<a href="<?php the_permalink(); ?>" class="block overflow-hidden" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
-									<?php the_post_thumbnail( 'medium_large', array( 
-										'class' => 'w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105',
-										'loading' => 'lazy'
-									) ); ?>
-								</a>
+								<div class="w-full h-48 overflow-hidden bg-gray-100 group/image">
+									<a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>" class="block h-full">
+										<?php the_post_thumbnail( 'medium_large', array( 
+											'class' => 'w-full h-full object-cover transition-transform duration-300 group-hover/image:scale-105',
+											'loading' => 'lazy'
+										) ); ?>
+									</a>
+								</div>
 							<?php endif; ?>
 							
-							<div class="mui-card-content">
-								<h3 class="mui-typography-h6 mb-2">
-									<a href="<?php the_permalink(); ?>" class="hover:text-blue-600 transition-colors">
+							<!-- Card Content -->
+							<div class="p-6" itemprop="articleBody">
+								<h3 class="text-lg font-bold text-gray-900 mb-4 leading-tight line-clamp-2 group-hover:text-blue-700 transition-colors" itemprop="headline">
+									<a href="<?php the_permalink(); ?>">
 										<?php the_title(); ?>
 									</a>
 								</h3>
 								
-								<p class="mui-typography-body2 mb-4" style="color: var(--mui-gray-600);">
-									<?php echo esc_html( wp_trim_words( get_the_excerpt() ?: get_the_content(), 20 ) ); ?>
+								<p class="text-sm text-gray-600 mb-5 leading-relaxed line-clamp-3" itemprop="description">
+									<?php echo esc_html( wp_trim_words( get_the_excerpt() ?: get_the_content(), 25 ) ); ?>
 								</p>
 								
-								<div class="flex items-center justify-between">
-									<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="mui-typography-caption" style="color: var(--mui-gray-500);">
-										<?php echo esc_html( get_the_date( 'd/m/Y' ) ); ?>
-									</time>
-									<a href="<?php the_permalink(); ?>" class="mui-button mui-button-text mui-button-small">
-										Ler mais
-										<svg style="width: 14px; height: 14px; margin-left: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+								<?php if ( has_category() ) : ?>
+									<div class="flex items-center gap-2 text-xs text-gray-500 mb-5 pb-5 border-b border-gray-100">
+										<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
 										</svg>
-									</a>
-								</div>
+										<span><?php echo get_the_category_list( ', ' ); ?></span>
+									</div>
+								<?php endif; ?>
+								
+								<a 
+									href="<?php the_permalink(); ?>" 
+									class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 group-hover:gap-3 transition-all"
+									itemprop="url"
+									aria-label="Ler artigo completo: <?php echo esc_attr( get_the_title() ); ?>"
+								>
+									<span>Ler mais</span>
+									<svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+									</svg>
+								</a>
 							</div>
 						</article>
 					<?php endwhile; ?>
 				</div>
 				
-				<!-- Link to Blog Archive -->
+				<!-- CTA to Blog Archive -->
 				<?php
 				$posts_page_id = get_option( 'page_for_posts' );
 				$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
@@ -359,11 +376,16 @@ get_header();
 				<div class="text-center">
 					<a 
 						href="<?php echo esc_url( $posts_page_url ); ?>" 
-						class="mui-button mui-button-contained mui-button-primary mui-button-large"
+						class="group/cta inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-green-800 via-green-900 to-green-950 text-white rounded-xl font-bold text-base md:text-lg hover:from-green-900 hover:via-green-950 hover:to-black transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:shadow-lg"
+						style="background: linear-gradient(to right, #166534, #14532d, #0f2817);"
+						aria-label="Ver todos os artigos no blog"
 					>
-						Ver Todos os Artigos
-						<svg style="width: 20px; height: 20px; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+						</svg>
+						<span>Ver Todos os Artigos</span>
+						<svg class="w-5 h-5 group-hover/cta:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
 						</svg>
 					</a>
 				</div>
@@ -371,10 +393,29 @@ get_header();
 				wp_reset_postdata();
 			else :
 			?>
-				<div class="text-center py-12">
-					<p class="mui-typography-body1" style="color: var(--mui-gray-600);">
-						Ainda não há artigos publicados. Volte em breve!
-					</p>
+				<!-- No Posts State -->
+				<div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden max-w-2xl mx-auto">
+					<div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 md:px-8 py-6">
+						<div class="flex items-center gap-4">
+							<div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
+								<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+								</svg>
+							</div>
+							<div class="flex-1">
+								<h3 class="text-xl md:text-2xl font-bold text-white mb-1">Guias Práticos</h3>
+								<p class="text-sm text-blue-100">Artigos especializados sobre CBD</p>
+							</div>
+						</div>
+					</div>
+					<div class="p-6 md:p-8 text-center">
+						<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg mb-4">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+							</svg>
+							<span class="font-semibold">Ainda não há artigos publicados. Volte em breve!</span>
+						</div>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>
