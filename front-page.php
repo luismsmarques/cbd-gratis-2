@@ -86,35 +86,6 @@ get_header();
 				</form>
 			</div>
 			
-			<!-- Strategic Internal Links (SEO) - MUI Chips -->
-			<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
-				<?php
-				$strategic_links = cbd_ai_get_strategic_internal_links();
-				foreach ( $strategic_links as $link ) :
-				?>
-					<a 
-						href="<?php echo esc_url( $link['url'] ); ?>" 
-						class="mui-chip mui-chip-clickable"
-						title="<?php echo esc_attr( $link['title'] ); ?>"
-						style="text-decoration: none;"
-					>
-						<?php 
-						if ( strpos( $link['anchor'], 'caes' ) !== false ) {
-							echo '🐕 CBD para Cães';
-						} elseif ( strpos( $link['anchor'], 'legislacao' ) !== false || strpos( $link['anchor'], 'monitor' ) !== false ) {
-							echo '⚖️ Legalidade em Portugal';
-						} elseif ( strpos( $link['anchor'], 'humanos' ) !== false ) {
-							echo '👤 CBD para Humanos';
-						} elseif ( strpos( $link['anchor'], 'chatbot' ) !== false ) {
-							echo '💬 Chatbot Especialista';
-						} else {
-							echo esc_html( $link['title'] );
-						}
-						?>
-					</a>
-				<?php endforeach; ?>
-			</div>
-			
 			<!-- StatusCard Component - Monitor de Legislação -->
 			<?php
 			$recent_alerts = cbd_ai_get_recent_legal_alerts( 1 );
