@@ -302,6 +302,8 @@ if ( $humanos_page ) {
 			</div>
 			
 			<!-- CTA de Conversão/Afiliação (Monetização) - MUI Alert -->
+			<!-- OCULTO: Seção de monetização desativada -->
+			<!--
 			<div id="affiliate-cta-section" class="hidden">
 				<div class="mui-alert mui-alert-success mui-alert-elevated">
 					<div class="mui-alert-icon">✓</div>
@@ -324,6 +326,7 @@ if ( $humanos_page ) {
 					</a>
 				</div>
 			</div>
+			-->
 			</div>
 			
 		</div>
@@ -440,6 +443,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 // Show affiliate CTA after user interaction
+	// OCULTO: Código de monetização desativado
+	/*
 	let messageCount = 0;
 	const ctaSection = document.getElementById('affiliate-cta-section');
 	
@@ -462,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (chatContainer) {
 		observer.observe(chatContainer, { childList: true, subtree: true });
 	}
+	*/
 });
 </script>
 

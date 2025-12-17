@@ -1,5 +1,11 @@
 /* Custom Styles for CBD AI Theme */
 
+/* Ocultar CTA de Monetização/Afiliação na Homepage */
+#affiliate-cta-section {
+	display: none !important;
+	visibility: hidden !important;
+}
+
 /* CTA Button Dark Green Background */
 .group\/cta {
 	background: linear-gradient(to right, #166534, #14532d, #0f2817) !important;
