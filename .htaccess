@@ -1,0 +1,33 @@
+# Proteção para pasta do tema WordPress
+# Permite acesso a arquivos estáticos (CSS, JS, imagens)
+
+# Permitir acesso a arquivos estáticos
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Proteger arquivos sensíveis
+<FilesMatch "^(\.htaccess|\.git|\.cpanel|\.env|composer\.json|composer\.lock|package\.json|package-lock\.json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Permitir acesso ao style.css (necessário para WordPress reconhecer o tema)
+<Files "style.css">
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Permitir acesso ao functions.php (necessário para WordPress)
+<Files "functions.php">
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Proteger pasta .git
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^\.git - [F,L]
+</IfModule>
+

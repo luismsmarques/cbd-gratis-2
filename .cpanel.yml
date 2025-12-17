@@ -16,8 +16,19 @@ deployment:
       
       # Ajusta permissões: 755 para diretórios, 644 para arquivos
       # Exclui pasta .git e arquivos ocultos
+      # IMPORTANTE: Permissões corretas evitam erro 403
       find . -type d -not -path './.git*' -not -path './.cpanel*' -exec chmod 755 {} \; 2>/dev/null || true
       find . -type f -not -path './.git*' -not -path './.cpanel*' -exec chmod 644 {} \; 2>/dev/null || true
+      
+      # Garante permissões específicas para arquivos críticos
+      [ -f "style.css" ] && chmod 644 style.css
+      [ -f "functions.php" ] && chmod 644 functions.php
+      [ -f ".htaccess" ] && chmod 644 .htaccess
+      
+      # Garante que pastas de assets têm permissão correta
+      [ -d "assets" ] && chmod 755 assets
+      [ -d "assets/css" ] && chmod 755 assets/css
+      [ -d "assets/js" ] && chmod 755 assets/js
       
       # Garante que arquivos executáveis tenham permissão correta
       find . -name "*.sh" -exec chmod 755 {} \; 2>/dev/null || true
