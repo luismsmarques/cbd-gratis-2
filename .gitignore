@@ -1,0 +1,63 @@
+# Dependências Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+*.map
+
+# Arquivos compilados (manter apenas os source files no git)
+# Descomente se quiser ignorar os arquivos compilados:
+# assets/css/tailwind-output.css
+# assets/js/*.js.map
+
+# Arquivos do sistema operacional
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+tmp/
+temp/
+.cache/
+
+# Variáveis de ambiente (se houver)
+.env
+.env.local
+.env.*.local
+
+# Arquivos do WordPress (geralmente não estão no tema)
+# wp-config.php
+# .htaccess
+
+# Arquivos específicos do cPanel
+.cpanel.yml.backup
+
+# Arquivos de backup
+*.backup
+*.bak
+*.old
+

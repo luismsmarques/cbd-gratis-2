@@ -1,0 +1,453 @@
+/**
+ * Legislation Monitor Page Design - Formal & Professional
+ * 
+ * Design formal tipo dashboard jurídico/governamental
+ * Focado em confiança, rigor e credibilidade
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.legislation-monitor-page {
+	background: linear-gradient(to bottom, #f9fafb, #ffffff);
+	min-height: calc(100vh - 200px);
+}
+
+/* ============================================
+   STATUS ALERT CARD
+   ============================================ */
+
+.status-card {
+	animation: fadeInDown 0.5s ease;
+}
+
+@keyframes fadeInDown {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.alert-card {
+	position: relative;
+	overflow: hidden;
+}
+
+.alert-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(to right, #f59e0b, #eab308, #f59e0b);
+	animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+.status-card-stable {
+	position: relative;
+}
+
+.status-card-stable::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(to right, #10b981, #34d399, #10b981);
+}
+
+/* ============================================
+   HISTORY TABLE
+   ============================================ */
+
+.history-table-wrapper {
+	overflow: hidden;
+}
+
+.table-header {
+	position: relative;
+}
+
+.table-container {
+	max-height: 600px;
+	overflow-y: auto;
+}
+
+.table-container::-webkit-scrollbar {
+	width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+	background: #f1f5f9;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
+}
+
+.legislation-table {
+	border-collapse: collapse;
+	font-size: 0.875rem;
+}
+
+.table-header-cell {
+	padding: 1rem 1.5rem;
+	text-align: left;
+	font-weight: 600;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #374151;
+}
+
+.table-row {
+	transition: background-color 0.15s ease;
+}
+
+.table-row:hover {
+	background-color: #f9fafb;
+}
+
+.table-cell {
+	padding: 1rem 1.5rem;
+	vertical-align: top;
+	color: #374151;
+}
+
+.table-cell:first-child {
+	font-weight: 500;
+}
+
+/* ============================================
+   SOURCE BADGES
+   ============================================ */
+
+.source-badge {
+	display: inline-block;
+	padding: 0.375rem 0.75rem;
+	border-radius: 0.375rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.025em;
+}
+
+.source-infarmed {
+	background: #dbeafe;
+	color: #1e40af;
+}
+
+.source-dre {
+	background: #fef3c7;
+	color: #92400e;
+}
+
+.source-eu {
+	background: #e0e7ff;
+	color: #3730a3;
+}
+
+.source-gop {
+	background: #fce7f3;
+	color: #9f1239;
+}
+
+/* ============================================
+   IMPACT BADGES
+   ============================================ */
+
+.impact-badge {
+	display: inline-block;
+	padding: 0.375rem 0.75rem;
+	border-radius: 0.375rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.025em;
+}
+
+.impact-high {
+	background: #fee2e2;
+	color: #991b1b;
+	border: 1px solid #fecaca;
+}
+
+.impact-medium {
+	background: #fef3c7;
+	color: #92400e;
+	border: 1px solid #fde68a;
+}
+
+.impact-low {
+	background: #d1fae5;
+	color: #065f46;
+	border: 1px solid #a7f3d0;
+}
+
+.impact-prescription {
+	background: #e0e7ff;
+	color: #3730a3;
+	border: 1px solid #c7d2fe;
+}
+
+/* ============================================
+   TABLE LINKS
+   ============================================ */
+
+.table-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: #eff6ff;
+	color: #2563eb;
+	border-radius: 0.375rem;
+	font-size: 0.875rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+	border: 1px solid #dbeafe;
+}
+
+.table-link:hover {
+	background: #2563eb;
+	color: white;
+	border-color: #2563eb;
+	transform: translateX(2px);
+}
+
+.table-link:active {
+	transform: translateX(0);
+}
+
+/* ============================================
+   SIDEBAR WIDGETS
+   ============================================ */
+
+.about-widget {
+	position: sticky;
+	top: 6rem;
+}
+
+.about-widget .prose {
+	color: #374151;
+}
+
+.about-widget ul {
+	margin: 0;
+	padding: 0;
+}
+
+.premium-widget {
+	position: sticky;
+	top: 6rem;
+	background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.premium-widget a {
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+.premium-widget a:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.stats-widget {
+	position: sticky;
+	top: 6rem;
+}
+
+.stat-item {
+	padding-bottom: 0.5rem;
+}
+
+.stat-item:last-child {
+	padding-bottom: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1023px) {
+	.legislation-monitor-page {
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+	}
+	
+	.table-container {
+		max-height: 500px;
+	}
+	
+	.table-header-cell,
+	.table-cell {
+		padding: 0.75rem 1rem;
+		font-size: 0.8125rem;
+	}
+	
+	.about-widget,
+	.premium-widget,
+	.stats-widget {
+		position: relative;
+		top: 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.legislation-monitor-page h1 {
+		font-size: 1.75rem;
+		line-height: 1.3;
+	}
+	
+	.alert-card,
+	.status-card-stable {
+		padding: 1.25rem;
+	}
+	
+	.table-container {
+		max-height: 400px;
+		font-size: 0.75rem;
+	}
+	
+	.table-header-cell {
+		padding: 0.5rem 0.75rem;
+		font-size: 0.7rem;
+	}
+	
+	.table-cell {
+		padding: 0.75rem 0.5rem;
+		font-size: 0.75rem;
+	}
+	
+	.source-badge,
+	.impact-badge {
+		font-size: 0.65rem;
+		padding: 0.25rem 0.5rem;
+	}
+	
+	.table-link {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+	}
+	
+	/* Hide some columns on mobile */
+	.table-header-cell:nth-child(3),
+	.table-cell:nth-child(3) {
+		display: none;
+	}
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+	.legislation-monitor-page {
+		background: white;
+	}
+	
+	.premium-widget,
+	.stats-widget,
+	.table-link {
+		display: none;
+	}
+	
+	.table-container {
+		overflow: visible;
+		max-height: none;
+	}
+	
+	.table-row {
+		page-break-inside: avoid;
+	}
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.table-link:focus,
+.premium-widget a:focus {
+	outline: 2px solid #2563eb;
+	outline-offset: 2px;
+	border-radius: 0.25rem;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.table-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem;
+}
+
+.table-loading-spinner {
+	width: 40px;
+	height: 40px;
+	border: 4px solid #e5e7eb;
+	border-top-color: #2563eb;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+	padding: 3rem 1.5rem;
+	text-align: center;
+}
+
+.empty-state svg {
+	margin: 0 auto 1rem;
+	opacity: 0.5;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.font-mono {
+	font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+.text-balance {
+	text-wrap: balance;
+}
+

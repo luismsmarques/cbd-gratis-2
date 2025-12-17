@@ -1,0 +1,734 @@
+/**
+ * Legislation Monitor UX/UI Fixes
+ * Correções de pequenos erros de UX/UI
+ *
+ * @package CBD_AI_Theme
+ * @since 1.0.0
+ */
+
+/* ============================================
+   HEADER FIXES
+   ============================================ */
+
+.legislation-monitor-page header {
+	margin-bottom: 2rem;
+}
+
+.legislation-monitor-page header h1 {
+	line-height: 1.2;
+	margin-bottom: 0.5rem;
+}
+
+.legislation-monitor-page header p {
+	line-height: 1.6;
+	margin-top: 0.5rem;
+}
+
+/* ============================================
+   STATUS CARD FIXES
+   ============================================ */
+
+.status-card {
+	margin-bottom: 2rem;
+}
+
+.status-card-stable,
+.alert-card {
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
+.status-card-stable .flex,
+.alert-card .flex {
+	align-items: flex-start;
+	gap: 1.5rem;
+}
+
+.status-card-stable h2,
+.alert-card h2 {
+	line-height: 1.3;
+	margin-bottom: 0.75rem;
+}
+
+/* Fix para ícone de check no status estável */
+.status-card-stable .w-16 {
+	width: 4rem;
+	height: 4rem;
+	flex-shrink: 0;
+}
+
+.status-card-stable svg,
+.alert-card svg {
+	width: 2rem;
+	height: 2rem;
+}
+
+/* Espaçamento interno do card */
+.status-card-stable > div,
+.alert-card > div {
+	padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+	.status-card-stable > div,
+	.alert-card > div {
+		padding: 2rem;
+	}
+}
+
+/* ============================================
+   TABLE FIXES
+   ============================================ */
+
+.history-table-wrapper {
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
+.table-header {
+	padding: 1.25rem 1.5rem;
+}
+
+.table-header h2 {
+	margin-bottom: 0.25rem;
+	line-height: 1.3;
+}
+
+.table-header p {
+	margin: 0;
+	opacity: 0.9;
+}
+
+.table-container {
+	max-height: 600px;
+	overflow-y: auto;
+	overflow-x: auto;
+}
+
+/* Fix para células da tabela */
+.table-cell {
+	padding: 1rem 1.25rem;
+	vertical-align: middle;
+	min-width: 0;
+	word-wrap: break-word;
+}
+
+.table-header-cell {
+	padding: 1rem 1.25rem;
+	white-space: nowrap;
+	min-width: 0;
+}
+
+/* Fix para larguras das colunas */
+@media (min-width: 1024px) {
+	.legislation-table {
+		table-layout: fixed;
+	}
+	
+	/* Fix para primeira coluna (Data) */
+	.table-cell:first-child,
+	.table-header-cell:first-child {
+		width: 12%;
+		min-width: 120px;
+	}
+	
+	/* Fix para coluna de Origem */
+	.table-cell:nth-child(2),
+	.table-header-cell:nth-child(2) {
+		width: 12%;
+		min-width: 110px;
+	}
+	
+	/* Fix para coluna de Resumo */
+	.table-cell:nth-child(3),
+	.table-header-cell:nth-child(3) {
+		width: 40%;
+		min-width: 200px;
+	}
+	
+	/* Fix para coluna de Impacto */
+	.table-cell:nth-child(4),
+	.table-header-cell:nth-child(4) {
+		width: 18%;
+		min-width: 130px;
+	}
+	
+	/* Fix para coluna de Ações */
+	.table-cell:last-child,
+	.table-header-cell:last-child {
+		width: 18%;
+		min-width: 120px;
+		text-align: center;
+	}
+}
+
+/* Melhorar legibilidade do resumo */
+.table-cell p {
+	margin: 0;
+	line-height: 1.5;
+	max-width: 100%;
+	word-wrap: break-word;
+}
+
+/* Fix para badges na tabela */
+.table-cell .source-badge,
+.table-cell .impact-badge {
+	white-space: nowrap;
+	display: inline-block;
+}
+
+/* Fix para links na tabela */
+.table-cell .table-link {
+	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* Fix para flex containers na tabela */
+.table-cell .flex {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+
+.table-cell .flex.flex-col {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+/* ============================================
+   SIDEBAR FIXES
+   ============================================ */
+
+/* Removido - usando .sidebar-area */
+
+/* Fix para widgets da sidebar */
+.sidebar-area {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	width: 100%;
+}
+
+.about-widget,
+.premium-widget,
+.stats-widget {
+	border-radius: 0.75rem;
+	padding: 1.5rem;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.about-widget h3,
+.premium-widget h3,
+.stats-widget h3 {
+	margin-bottom: 1rem;
+	line-height: 1.3;
+}
+
+/* Fix para lista de fontes */
+.about-widget ul {
+	margin-top: 0.5rem;
+	padding-left: 1.25rem;
+	margin-bottom: 0;
+}
+
+.about-widget li {
+	margin-bottom: 0.25rem;
+	line-height: 1.5;
+}
+
+.about-widget li:last-child {
+	margin-bottom: 0;
+}
+
+/* Fix para card premium */
+.premium-widget {
+	background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.premium-widget p {
+	margin-bottom: 1rem;
+	line-height: 1.6;
+}
+
+.premium-widget a {
+	display: block;
+	width: 100%;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	border-radius: 0.5rem;
+	text-decoration: none;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+
+/* Fix para estatísticas */
+.stats-widget .stat-item {
+	padding-bottom: 1rem;
+}
+
+.stats-widget .stat-item:last-child {
+	padding-bottom: 0;
+	border-top: 1px solid #e5e7eb;
+	padding-top: 1rem;
+	margin-top: 0.5rem;
+}
+
+.stats-widget .stat-item > div {
+	margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   RESPONSIVE FIXES
+   ============================================ */
+
+@media (max-width: 1023px) {
+	.legislation-monitor-page {
+		padding-top: 1.5rem;
+		padding-bottom: 1.5rem;
+	}
+	
+	.legislation-monitor-page header {
+		margin-bottom: 1.5rem;
+	}
+	
+	.status-card {
+		margin-bottom: 1.5rem;
+	}
+	
+	/* Grid em tablet */
+	.legislation-monitor-page .grid.grid-cols-1.lg\:grid-cols-12 {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+	
+	.legislation-monitor-page .lg\:col-span-9,
+	.legislation-monitor-page .lg\:col-span-3 {
+		grid-column: span 12 / span 12;
+	}
+	
+	.table-container {
+		max-height: 500px;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	
+	.table-cell,
+	.table-header-cell {
+		padding: 0.875rem 1rem;
+		font-size: 0.875rem;
+		min-width: auto;
+	}
+	
+	.about-widget,
+	.premium-widget,
+	.stats-widget {
+		padding: 1.25rem;
+	}
+	
+	/* Sidebar em tablet */
+	.sidebar-area {
+		order: -1;
+		margin-bottom: 1rem;
+		position: relative;
+		top: 0;
+		max-height: none;
+		overflow-y: visible;
+	}
+}
+
+@media (max-width: 767px) {
+	.legislation-monitor-page header h1 {
+		font-size: 1.75rem;
+		line-height: 1.2;
+	}
+	
+	.legislation-monitor-page header p {
+		font-size: 1rem;
+	}
+	
+	.status-card-stable,
+	.alert-card {
+		padding: 1.25rem !important;
+	}
+	
+	.status-card-stable .w-16,
+	.alert-card .w-16 {
+		width: 3rem;
+		height: 3rem;
+	}
+	
+	.status-card-stable svg,
+	.alert-card svg {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+	
+	.status-card-stable h2,
+	.alert-card h2 {
+		font-size: 1.5rem;
+	}
+	
+	.table-container {
+		max-height: 400px;
+		font-size: 0.8125rem;
+	}
+	
+	.table-header {
+		padding: 1rem;
+	}
+	
+	.table-header h2 {
+		font-size: 1.125rem;
+	}
+	
+	.table-header p {
+		font-size: 0.75rem;
+	}
+	
+	.table-cell,
+	.table-header-cell {
+		padding: 0.75rem 0.5rem;
+		font-size: 0.8125rem;
+	}
+	
+	/* Ocultar coluna de resumo em mobile */
+	.table-header-cell:nth-child(3),
+	.table-cell:nth-child(3) {
+		display: none;
+	}
+	
+	/* Ajustar larguras mínimas em mobile */
+	.table-cell:first-child,
+	.table-header-cell:first-child {
+		min-width: 100px;
+		width: auto;
+	}
+	
+	.table-cell:nth-child(2),
+	.table-header-cell:nth-child(2) {
+		min-width: 100px;
+		width: auto;
+	}
+	
+	.table-cell:nth-child(4),
+	.table-header-cell:nth-child(4) {
+		min-width: 100px;
+		width: auto;
+	}
+	
+	.table-cell:last-child,
+	.table-header-cell:last-child {
+		min-width: 100px;
+		width: auto;
+	}
+	
+	/* Sidebar em mobile */
+	.sidebar-area {
+		order: -1;
+		margin-bottom: 1.5rem;
+		position: relative;
+		top: 0;
+		max-height: none;
+		overflow-y: visible;
+	}
+	
+	.source-badge,
+	.impact-badge {
+		font-size: 0.6875rem;
+		padding: 0.25rem 0.5rem;
+	}
+	
+	.table-link {
+		padding: 0.5rem 0.75rem;
+		font-size: 0.75rem;
+	}
+	
+	.about-widget,
+	.premium-widget,
+	.stats-widget {
+		padding: 1rem;
+	}
+}
+
+/* ============================================
+   ALINHAMENTO E ESPAÇAMENTO FIXES
+   ============================================ */
+
+/* Garantir alinhamento consistente */
+.legislation-monitor-page .container {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+	.legislation-monitor-page .container {
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+	}
+}
+
+/* Fix para grid */
+.legislation-monitor-page .grid {
+	display: grid;
+	gap: 1.5rem;
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+	.legislation-monitor-page .grid {
+		grid-template-columns: 1fr 300px;
+		gap: 2rem;
+	}
+}
+
+/* Fix específico para Main Content Grid */
+.main-content-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+	width: 100%;
+}
+
+@media (min-width: 1024px) {
+	.main-content-grid {
+		grid-template-columns: 1fr 300px;
+		gap: 2rem;
+		align-items: start;
+	}
+}
+
+@media (min-width: 1280px) {
+	.main-content-grid {
+		grid-template-columns: 1fr 320px;
+		gap: 2.5rem;
+	}
+}
+
+/* Main Content Area */
+.main-content-area {
+	width: 100%;
+	min-width: 0;
+}
+
+/* Sidebar Area */
+.sidebar-area {
+	width: 100%;
+	min-width: 0;
+}
+
+@media (min-width: 1024px) {
+	.main-content-area {
+		width: 100%;
+		min-width: 0;
+	}
+	
+	.sidebar-area {
+		width: 100%;
+		min-width: 0;
+		position: sticky;
+		top: 2rem;
+		align-self: start;
+		max-height: calc(100vh - 4rem);
+		overflow-y: auto;
+	}
+	
+	/* Scrollbar para sidebar sticky */
+	.sidebar-area::-webkit-scrollbar {
+		width: 6px;
+	}
+	
+	.sidebar-area::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	
+	.sidebar-area::-webkit-scrollbar-thumb {
+		background: #cbd5e1;
+		border-radius: 3px;
+	}
+	
+	.sidebar-area::-webkit-scrollbar-thumb:hover {
+		background: #94a3b8;
+	}
+}
+
+/* Fix para espaçamento entre seções */
+.legislation-monitor-page > div > div {
+	padding-top: 0;
+}
+
+/* ============================================
+   TIPOGRAFIA FIXES
+   ============================================ */
+
+.legislation-monitor-page {
+	font-size: 1rem;
+	line-height: 1.6;
+}
+
+.legislation-monitor-page h1 {
+	font-weight: 700;
+	letter-spacing: -0.025em;
+}
+
+.legislation-monitor-page h2 {
+	font-weight: 700;
+	letter-spacing: -0.015em;
+}
+
+.legislation-monitor-page h3 {
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+
+/* ============================================
+   CORES E CONTRASTE FIXES
+   ============================================ */
+
+/* Melhorar contraste do texto */
+.legislation-monitor-page .text-gray-700 {
+	color: #374151;
+}
+
+.legislation-monitor-page .text-gray-600 {
+	color: #4b5563;
+}
+
+.legislation-monitor-page .text-gray-500 {
+	color: #6b7280;
+}
+
+/* Fix para links */
+.table-link {
+	color: #2563eb;
+}
+
+.table-link:hover {
+	color: white;
+}
+
+/* ============================================
+   BORDAS E SOMBRAS FIXES
+   ============================================ */
+
+.history-table-wrapper {
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	width: 100%;
+	overflow: hidden;
+}
+
+/* Fix para tabela responsiva */
+.legislation-table {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+@media (max-width: 1023px) {
+	.legislation-table {
+		table-layout: auto;
+		min-width: 800px;
+	}
+}
+
+/* Garantir que a tabela não quebre o layout */
+.table-container {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	position: relative;
+}
+
+.history-table-wrapper {
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Fix para garantir que o wrapper não ultrapasse limites */
+.main-content-area {
+	overflow: hidden;
+}
+
+.main-content-area > * {
+	max-width: 100%;
+}
+
+.about-widget,
+.stats-widget {
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.premium-widget {
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================
+   EMPTY STATE FIXES
+   ============================================ */
+
+.table-cell .flex {
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.table-cell svg {
+	opacity: 0.4;
+}
+
+/* ============================================
+   SCROLLBAR FIXES
+   ============================================ */
+
+.table-container::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+	background: #f1f5f9;
+	border-radius: 5px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 5px;
+	border: 2px solid #f1f5f9;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
+}
+
+/* ============================================
+   FOCUS STATES
+   ============================================ */
+
+.table-link:focus,
+.premium-widget a:focus {
+	outline: 2px solid #2563eb;
+	outline-offset: 2px;
+	border-radius: 0.375rem;
+}
+
+/* ============================================
+   PRINT FIXES
+   ============================================ */
+
+@media print {
+	.status-card,
+	.about-widget,
+	.premium-widget,
+	.stats-widget {
+		page-break-inside: avoid;
+	}
+	
+	.table-row {
+		page-break-inside: avoid;
+	}
+}
+

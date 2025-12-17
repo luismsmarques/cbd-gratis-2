@@ -1,0 +1,30 @@
+---
+# Configuração de Deployment para cPanel Git Version Control
+# Este arquivo define as tarefas executadas automaticamente após cada pull/deploy
+# O cPanel executa estes comandos a partir do diretório do repositório
+
+deployment:
+  tasks:
+    # 1. Carregar Node.js via NVM (se disponível) ou usar PATH padrão
+    - |
+      if [ -s "$HOME/.nvm/nvm.sh" ]; then
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+        nvm use default 2>/dev/null || nvm use node 2>/dev/null || true
+      fi
+    
+    # 2. Instalar dependências Node.js
+    - npm install --production=false 2>&1 || echo "npm install skipped or failed"
+    
+    # 3. Compilar assets com Vite
+    - npm run build 2>&1 || echo "Vite build skipped or failed"
+    
+    # 4. Compilar Tailwind CSS
+    - npm run tailwind:build 2>&1 || echo "Tailwind build skipped or failed"
+    
+    # 5. Definir permissões corretas para arquivos do tema
+    - chmod -R 755 . 2>&1 || echo "chmod skipped"
+    
+    # 6. Limpar cache do WordPress (opcional - descomente se necessário)
+    # - rm -rf ../../cache/* 2>&1 || echo "Cache cleanup skipped"
+
