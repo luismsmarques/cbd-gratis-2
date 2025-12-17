@@ -1,13 +1,9 @@
 ---
 deployment:
   tasks:
-    - /bin/rm -rf $HOME/public_html/wp-content/themes/cbd-ai-theme
-    - /bin/mkdir -p $HOME/public_html/wp-content/themes
-    - /bin/cp -R app/public/wp-content/themes/cbd-ai-theme $HOME/public_html/wp-content/themes/
-    - /bin/chmod -R 755 $HOME/public_html/wp-content/themes/cbd-ai-theme
-    - /bin/find $HOME/public_html/wp-content/themes/cbd-ai-theme -type f -exec chmod 644 {} \;
-    - /bin/rm -rf $HOME/public_html/app
-    - /bin/rm -f $HOME/public_html/deploy.sh
-    - /bin/rm -rf $HOME/public_html/.git
-    - /bin/rm -f $HOME/public_html/.gitignore
-    - /bin/rm -f $HOME/public_html/.cpanel.yml
+    - export DEPLOYPATH=$HOME/public_html/wp-content/themes
+    - /bin/rm -rf $DEPLOYPATH/cbd-ai-theme
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R app/public/wp-content/themes/cbd-ai-theme $DEPLOYPATH/
+    - /bin/chmod -R 755 $DEPLOYPATH/cbd-ai-theme
+    - /bin/find $DEPLOYPATH/cbd-ai-theme -type f -exec chmod 644 {} \;
