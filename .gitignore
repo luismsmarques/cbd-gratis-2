@@ -69,3 +69,6 @@ app/public/wp-content/themes/functions.php
 app/public/wp-content/themes/templates/
 app/public/.htaccess
 
+# Scripts de deploy (não devem ser copiados para o servidor)
+deploy.sh
+
