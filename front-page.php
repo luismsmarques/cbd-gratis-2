@@ -401,193 +401,84 @@ get_header();
 			</div>
 			
 			<?php
-			// Get page URLs
-			$animais_page = get_page_by_path( 'cbd-animais' );
-			$animais_url = $animais_page ? get_permalink( $animais_page->ID ) : home_url( '/cbd-animais/' );
+			// Get WordPress categories with posts
+			$categories = get_categories( array(
+				'orderby' => 'count',
+				'order' => 'DESC',
+				'hide_empty' => true,
+				'number' => 8, // Limit to 8 categories
+			) );
 			
-			$monitor_page = get_page_by_path( 'monitor-legislacao' );
-			$monitor_url = $monitor_page ? get_permalink( $monitor_page->ID ) : home_url( '/monitor-legislacao/' );
+			// Color palette for category cards
+			$category_colors = array(
+				array( 'bg' => 'from-cbd-green-500', 'to' => 'to-cbd-green-600', 'text' => 'text-cbd-green-600', 'border' => 'border-cbd-green-500', 'gradient' => 'from-cbd-green-100' ),
+				array( 'bg' => 'from-blue-500', 'to' => 'to-blue-600', 'text' => 'text-blue-600', 'border' => 'border-blue-500', 'gradient' => 'from-blue-100' ),
+				array( 'bg' => 'from-purple-500', 'to' => 'to-purple-600', 'text' => 'text-purple-600', 'border' => 'border-purple-500', 'gradient' => 'from-purple-100' ),
+				array( 'bg' => 'from-emerald-500', 'to' => 'to-emerald-600', 'text' => 'text-emerald-600', 'border' => 'border-emerald-500', 'gradient' => 'from-emerald-100' ),
+				array( 'bg' => 'from-orange-500', 'to' => 'to-orange-600', 'text' => 'text-orange-600', 'border' => 'border-orange-500', 'gradient' => 'from-orange-100' ),
+				array( 'bg' => 'from-teal-500', 'to' => 'to-teal-600', 'text' => 'text-teal-600', 'border' => 'border-teal-500', 'gradient' => 'from-teal-100' ),
+				array( 'bg' => 'from-pink-500', 'to' => 'to-pink-600', 'text' => 'text-pink-600', 'border' => 'border-pink-500', 'gradient' => 'from-pink-100' ),
+				array( 'bg' => 'from-indigo-500', 'to' => 'to-indigo-600', 'text' => 'text-indigo-600', 'border' => 'border-indigo-500', 'gradient' => 'from-indigo-100' ),
+			);
 			
-			// Get chatbot CBD page (try multiple slugs)
-			$chatbot_cbd_page = get_page_by_path( 'chatbot-cbd' );
-			if ( ! $chatbot_cbd_page ) {
-				$chatbot_cbd_page = get_page_by_path( 'chatbot' );
-			}
-			$chatbot_cbd_url = $chatbot_cbd_page ? get_permalink( $chatbot_cbd_page->ID ) : home_url( '/chatbot-cbd/' );
-			
-			// Get category archive URL for Cânhamo & Ciência (posts)
-			$ciencia_category = get_category_by_slug( 'ciencia' );
-			if ( ! $ciencia_category ) {
-				$ciencia_category = get_category_by_slug( 'canhamo' );
-			}
-			$posts_page_id = get_option( 'page_for_posts' );
-			$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
-			$ciencia_url = $ciencia_category ? get_category_link( $ciencia_category->term_id ) : $posts_page_url;
+			if ( ! empty( $categories ) ) :
 			?>
-			
-			<div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
-				<!-- Category 1: CBD para Animais -->
-				<a href="<?php echo esc_url( $animais_url ); ?>" class="category-card group relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-cbd-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-					<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-cbd-green-100 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-					<div class="relative z-10">
-						<div class="w-20 h-20 bg-gradient-to-br from-cbd-green-500 to-cbd-green-600 rounded-2xl flex items-center justify-center text-white text-4xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
-							🐕
-						</div>
-						<h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-cbd-green-600 transition-colors">CBD para Animais</h3>
-						<p class="text-gray-700 mb-6 leading-relaxed text-base">
-							Guias completos sobre CBD para cães e gatos, incluindo dosagem, benefícios e segurança.
-						</p>
-						<ul class="space-y-3 mb-8 text-sm text-gray-700">
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-cbd-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Guia de dosagem por peso</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-cbd-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Benefícios e casos de uso</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-cbd-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>FAQ e dúvidas comuns</span>
-							</li>
-						</ul>
-						<span class="inline-flex items-center gap-2 text-cbd-green-600 font-bold group-hover:gap-3 transition-all group/link">
-							Explorar seção
-							<svg class="w-5 h-5 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-							</svg>
-						</span>
-					</div>
-				</a>
-				
-				<!-- Category 2: Monitor Legislação -->
-				<a href="<?php echo esc_url( $monitor_url ); ?>" class="category-card group relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-blue-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-					<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-					<div class="relative z-10">
-						<div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-4xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
-							⚖️
-						</div>
-						<h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">Monitor Legislação</h3>
-						<p class="text-gray-700 mb-6 leading-relaxed text-base">
-							Monitorização contínua da legislação portuguesa e europeia sobre CBD e cannabis medicinal.
-						</p>
-						<ul class="space-y-3 mb-8 text-sm text-gray-700">
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Alertas legislativos em tempo real</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Legislação atual explicada</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Documentos oficiais sumarizados</span>
-							</li>
-						</ul>
-						<span class="inline-flex items-center gap-2 text-blue-600 font-bold group-hover:gap-3 transition-all group/link">
-							Ver legislação
-							<svg class="w-5 h-5 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-							</svg>
-						</span>
-					</div>
-				</a>
-				
-				<!-- Category 3: Cânhamo & Ciência -->
-				<a href="<?php echo esc_url( $ciencia_url ); ?>" class="category-card group relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-purple-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-					<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-					<div class="relative z-10">
-						<div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-4xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
-							🔬
-						</div>
-						<h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-purple-600 transition-colors">Cânhamo & Ciência</h3>
-						<p class="text-gray-700 mb-6 leading-relaxed text-base">
-							Informação científica e educativa sobre cânhamo, cannabis e seus compostos.
-						</p>
-						<ul class="space-y-3 mb-8 text-sm text-gray-700">
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Diferenças: Cânhamo vs Cannabis</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Estudos científicos</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Informação educativa</span>
-							</li>
-						</ul>
-						<span class="inline-flex items-center gap-2 text-purple-600 font-bold group-hover:gap-3 transition-all group/link">
-							Explorar ciência
-							<svg class="w-5 h-5 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-							</svg>
-						</span>
-					</div>
-				</a>
-				
-				<!-- Category 4: AI CBD Chatbot -->
-				<a href="<?php echo esc_url( $chatbot_cbd_url ); ?>" class="category-card group relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-emerald-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-					<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-					<div class="relative z-10">
-						<div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white text-4xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
-							💊
-						</div>
-						<h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors">
-							AI CBD
-						</h3>
-						<p class="text-gray-700 mb-6 leading-relaxed text-base">
-							Chatbot Especialista em CBD. Faça perguntas sobre CBD. Nossa IA especializada está aqui para ajudar com dosagem, benefícios, segurança, legalidade e muito mais!
-						</p>
-						<ul class="space-y-3 mb-8 text-sm text-gray-700">
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Dosagem personalizada</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Benefícios e segurança</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<svg class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-								</svg>
-								<span>Legalidade em Portugal</span>
-							</li>
-						</ul>
-						<span class="inline-flex items-center gap-2 text-emerald-600 font-bold group-hover:gap-3 transition-all group/link">
-							Falar com IA
-							<svg class="w-5 h-5 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-							</svg>
-						</span>
-					</div>
-				</a>
-			</div>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+					<?php foreach ( $categories as $index => $category ) : 
+						$color_index = $index % count( $category_colors );
+						$colors = $category_colors[ $color_index ];
+						$category_url = get_category_link( $category->term_id );
+						$category_description = ! empty( $category->description ) ? wp_trim_words( $category->description, 15 ) : sprintf( 'Explore %d artigo(s) sobre %s.', $category->count, $category->name );
+					?>
+						<a 
+							href="<?php echo esc_url( $category_url ); ?>" 
+							class="category-card group relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-<?php echo str_replace( 'border-', '', $colors['border'] ); ?> hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+						>
+							<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br <?php echo esc_attr( $colors['gradient'] ); ?> to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+							<div class="relative z-10">
+								<div class="w-20 h-20 bg-gradient-to-br <?php echo esc_attr( $colors['bg'] ); ?> <?php echo esc_attr( $colors['to'] ); ?> rounded-2xl flex items-center justify-center text-white text-4xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg">
+									<?php 
+									// Get category icon from description or use default
+									$icon = '📋';
+									if ( ! empty( $category->description ) && preg_match( '/[\x{1F300}-\x{1F9FF}]/u', $category->description, $matches ) ) {
+										$icon = $matches[0];
+									}
+									echo $icon;
+									?>
+								</div>
+								<h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:<?php echo esc_attr( $colors['text'] ); ?> transition-colors">
+									<?php echo esc_html( $category->name ); ?>
+								</h3>
+								<p class="text-gray-700 mb-6 leading-relaxed text-base">
+									<?php echo esc_html( $category_description ); ?>
+								</p>
+								<div class="flex items-center justify-between mb-4">
+									<span class="text-sm text-gray-600 font-medium">
+										<?php 
+										printf( 
+											_n( '%d artigo', '%d artigos', $category->count, 'cbd-ai-theme' ), 
+											$category->count 
+										); 
+										?>
+									</span>
+								</div>
+								<span class="inline-flex items-center gap-2 <?php echo esc_attr( $colors['text'] ); ?> font-bold group-hover:gap-3 transition-all group/link">
+									Explorar categoria
+									<svg class="w-5 h-5 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+									</svg>
+								</span>
+							</div>
+						</a>
+					<?php endforeach; ?>
+				</div>
+			<?php else : ?>
+				<div class="text-center py-12">
+					<p class="mui-typography-body1" style="color: var(--mui-gray-600);">
+						Ainda não há categorias com posts. Crie categorias e publique artigos para vê-las aqui!
+					</p>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>
