@@ -28,11 +28,16 @@ get_header();
 						</header>
 						
 						<?php if ( has_post_thumbnail() ) : ?>
-							<div class="post-thumbnail mb-6 overflow-hidden rounded-lg">
-								<?php the_post_thumbnail( 'large', array( 
-									'class' => 'w-full h-auto max-h-[500px] object-cover rounded-lg',
-									'loading' => 'lazy'
-								) ); ?>
+							<div class="post-thumbnail mb-6 overflow-hidden rounded-lg" style="aspect-ratio: 16/9; max-height: 500px;">
+								<?php 
+								cbd_ai_the_post_thumbnail_with_dimensions( 
+									'large', 
+									array( 
+										'class' => 'w-full h-full object-cover rounded-lg'
+									),
+									false // Don't lazy load above-fold featured image
+								);
+								?>
 							</div>
 						<?php endif; ?>
 						
@@ -142,10 +147,15 @@ get_header();
 									<li>
 										<a href="<?php the_permalink(); ?>" class="flex gap-3 group">
 											<?php if ( has_post_thumbnail() ) : ?>
-												<?php the_post_thumbnail( 'thumbnail', array( 
-													'class' => 'w-16 h-16 object-cover rounded-lg flex-shrink-0',
-													'loading' => 'lazy'
-												) ); ?>
+												<?php 
+												cbd_ai_the_post_thumbnail_with_dimensions( 
+													'thumbnail', 
+													array( 
+														'class' => 'w-16 h-16 object-cover rounded-lg flex-shrink-0'
+													),
+													true
+												);
+												?>
 											<?php endif; ?>
 											<div class="flex-1 min-w-0">
 												<h4 class="font-semibold text-sm text-gray-900 group-hover:text-cbd-green-600 transition-colors line-clamp-2">

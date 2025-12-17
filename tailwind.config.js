@@ -68,8 +68,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Merriweather', 'Georgia', 'serif'],
+        // Using system fonts only to prevent FOUT (Flash of Unstyled Text)
+        // If custom fonts are needed, load them with font-display: swap
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        serif: ['Georgia', '"Times New Roman"', 'Times', 'serif'],
       },
       spacing: {
         '18': '4.5rem',

@@ -50,6 +50,111 @@ function cbd_ai_theme_setup() {
 add_action( 'after_setup_theme', 'cbd_ai_theme_setup' );
 
 /**
+ * Get image with dimensions to prevent layout shifts
+ * 
+ * @param int    $post_id Post ID
+ * @param string $size    Image size (default: 'medium_large')
+ * @param string $classes CSS classes
+ * @param bool   $lazy    Use lazy loading (default: true for below fold)
+ * @return string HTML img tag with dimensions
+ */
+function cbd_ai_get_image_with_dimensions( $post_id, $size = 'medium_large', $classes = '', $lazy = true ) {
+	$image_id = get_post_thumbnail_id( $post_id );
+	if ( ! $image_id ) {
+		return '';
+	}
+	
+	$image_data = wp_get_attachment_image_src( $image_id, $size );
+	if ( ! $image_data ) {
+		return '';
+	}
+	
+	list( $src, $width, $height ) = $image_data;
+	$alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+	
+	// Calculate aspect ratio
+	$aspect_ratio = $width && $height ? $width / $height : 16 / 9;
+	
+	// Build attributes
+	$attrs = array(
+		'src' => esc_url( $src ),
+		'width' => (int) $width,
+		'height' => (int) $height,
+		'alt' => esc_attr( $alt ?: '' ),
+		'class' => esc_attr( $classes ),
+		'style' => 'aspect-ratio: ' . esc_attr( $width ) . '/' . esc_attr( $height ) . ';',
+	);
+	
+	if ( $lazy ) {
+		$attrs['loading'] = 'lazy';
+	}
+	
+	// Build HTML
+	$html = '<img';
+	foreach ( $attrs as $key => $value ) {
+		$html .= ' ' . $key . '="' . $value . '"';
+	}
+	$html .= '>';
+	
+	return $html;
+}
+
+/**
+ * Wrapper for the_post_thumbnail with dimensions
+ * 
+ * @param string|array $size    Image size
+ * @param string|array $attr    Image attributes
+ * @param bool         $lazy    Use lazy loading
+ */
+function cbd_ai_the_post_thumbnail_with_dimensions( $size = 'post-thumbnail', $attr = '', $lazy = true ) {
+	global $post;
+	if ( ! $post || ! has_post_thumbnail( $post->ID ) ) {
+		return;
+	}
+	
+	// Parse attributes
+	if ( is_string( $attr ) ) {
+		$attr = array( 'class' => $attr );
+	}
+	if ( ! is_array( $attr ) ) {
+		$attr = array();
+	}
+	
+	$image_id = get_post_thumbnail_id( $post->ID );
+	$image_data = wp_get_attachment_image_src( $image_id, $size );
+	
+	if ( ! $image_data ) {
+		the_post_thumbnail( $size, $attr );
+		return;
+	}
+	
+	list( $src, $width, $height ) = $image_data;
+	$alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+	$classes = isset( $attr['class'] ) ? $attr['class'] : '';
+	
+	// Calculate aspect ratio
+	$aspect_ratio_style = $width && $height ? 'aspect-ratio: ' . $width . '/' . $height . ';' : '';
+	
+	// Merge with existing style
+	if ( isset( $attr['style'] ) ) {
+		$attr['style'] = $aspect_ratio_style . ' ' . $attr['style'];
+	} else {
+		$attr['style'] = $aspect_ratio_style;
+	}
+	
+	// Add dimensions
+	$attr['width'] = (int) $width;
+	$attr['height'] = (int) $height;
+	
+	if ( $lazy ) {
+		$attr['loading'] = 'lazy';
+	}
+	
+	// Output image
+	echo wp_get_attachment_image( $image_id, $size, false, $attr );
+}
+
+/**
  * Get Critical CSS for Above-the-Fold Content
  * 
  * Returns minimal CSS needed for initial render (header, trust bar, hero section)
@@ -177,6 +282,19 @@ function cbd_ai_get_critical_css() {
 		.shadow-sm{box-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05)}
 		.top-0{top:0}
 		.z-50{z-index:50}
+		
+		/* Anti-Layout Shift Rules */
+		/* Images - Prevent layout shift with aspect-ratio */
+		img{max-width:100%;height:auto;display:block}
+		img[width][height]{aspect-ratio:attr(width)/attr(height)}
+		/* Containers for dynamic content - reserve space */
+		#status-card-app{min-height:120px}
+		.status-card-skeleton{min-height:120px;background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+		@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+		/* Content visibility for below-fold sections */
+		.site-main>section:not(:first-child){content-visibility:auto}
+		/* Prevent shifts from font loading */
+		body{font-display:swap}
 	';
 	
 	// Minify CSS (remove comments, extra whitespace)

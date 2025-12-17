@@ -92,7 +92,10 @@ get_header();
 			$monitor_url = cbd_ai_get_monitor_legislacao_url();
 			$has_alert = ! empty( $recent_alerts ) && isset( $recent_alerts[0] );
 			?>
-			<div id="status-card-app" style="max-width: 800px; margin: 32px auto 0;"></div>
+			<div id="status-card-app" style="min-height: 120px; max-width: 800px; margin: 32px auto 0;">
+				<!-- Skeleton loader while Vue component loads -->
+				<div class="status-card-skeleton" style="display: none; border-radius: 8px; margin: 0 auto;"></div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -127,33 +130,33 @@ get_header();
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					<?php foreach ( $recent_alerts as $index => $alert ) : 
 						$alert_date = strtotime( $alert['date'] );
-						$alert_date_iso = date( 'c', $alert_date );
-						$is_new = isset( $alert['is_new'] ) && $alert['is_new'];
-						$alert_id = isset( $alert['id'] ) ? $alert['id'] : 0;
-						$featured_image = $alert_id ? get_the_post_thumbnail( $alert_id, 'medium_large', array( 'class' => 'w-full h-48 object-cover' ) ) : '';
-					?>
-						<article 
-							class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
-							itemscope 
-							itemtype="https://schema.org/Article"
-						>
-							
-							<!-- Featured Image -->
-							<?php if ( $featured_image ) : ?>
-								<div class="w-full h-48 overflow-hidden bg-gray-100 group/image">
-									<a href="<?php echo esc_url( $alert['url'] ); ?>" aria-label="<?php echo esc_attr( $alert['title'] ); ?>" class="block h-full">
-										<?php 
-										// Replace class attribute to add hover effect
-										$featured_image_with_hover = str_replace( 
-											'class="', 
-											'class="w-full h-full object-cover transition-transform duration-300 group-hover/image:scale-105 ', 
-											$featured_image 
-										);
-										echo $featured_image_with_hover; 
-										?>
-									</a>
-								</div>
-							<?php endif; ?>
+					$alert_date_iso = date( 'c', $alert_date );
+					$is_new = isset( $alert['is_new'] ) && $alert['is_new'];
+					$alert_id = isset( $alert['id'] ) ? $alert['id'] : 0;
+				?>
+					<article 
+						class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+						itemscope 
+						itemtype="https://schema.org/Article"
+					>
+						
+						<!-- Featured Image -->
+						<?php if ( $alert_id && has_post_thumbnail( $alert_id ) ) : ?>
+							<div class="w-full h-48 overflow-hidden bg-gray-100 group/image" style="aspect-ratio: 16/9; min-height: 192px;">
+								<a href="<?php echo esc_url( $alert['url'] ); ?>" aria-label="<?php echo esc_attr( $alert['title'] ); ?>" class="block h-full">
+									<?php 
+									cbd_ai_the_post_thumbnail_with_dimensions( 
+										'medium_large', 
+										array( 
+											'class' => 'w-full h-full object-cover transition-transform duration-300 group-hover/image:scale-105',
+											'loading' => 'lazy'
+										),
+										true
+									);
+									?>
+								</a>
+							</div>
+						<?php endif; ?>
 							
 							<!-- Card Content -->
 							<div class="p-6" itemprop="articleBody">
@@ -290,12 +293,17 @@ get_header();
 					?>
 						<article class="mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300" itemscope itemtype="https://schema.org/Article">
 							<?php if ( has_post_thumbnail() ) : ?>
-								<a href="<?php the_permalink(); ?>" class="block overflow-hidden" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
-									<?php the_post_thumbnail( 'medium_large', array( 
-										'class' => 'w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105',
-										'loading' => 'lazy',
-										'itemprop' => 'image'
-									) ); ?>
+								<a href="<?php the_permalink(); ?>" class="block overflow-hidden" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0; aspect-ratio: 16/9; min-height: 192px;">
+									<?php 
+									cbd_ai_the_post_thumbnail_with_dimensions( 
+										'medium_large', 
+										array( 
+											'class' => 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-105',
+											'itemprop' => 'image'
+										),
+										true
+									);
+									?>
 								</a>
 							<?php else : ?>
 								<!-- Placeholder when no thumbnail -->
@@ -433,12 +441,29 @@ wp_enqueue_script(
 		});
 	}
 	
+	// Show skeleton while loading
+	var skeleton = document.querySelector('#status-card-app .status-card-skeleton');
+	if (skeleton) {
+		skeleton.style.display = 'block';
+	}
+	
+	// Initialize faster to reduce layout shift
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
-			setTimeout(initHomepageComponents, 300);
+			setTimeout(function() {
+				initHomepageComponents();
+				if (skeleton) {
+					skeleton.style.display = 'none';
+				}
+			}, 100);
 		});
 	} else {
-		setTimeout(initHomepageComponents, 300);
+		setTimeout(function() {
+			initHomepageComponents();
+			if (skeleton) {
+				skeleton.style.display = 'none';
+			}
+		}, 100);
 	}
 })();
 </script>
