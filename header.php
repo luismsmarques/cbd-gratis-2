@@ -39,7 +39,7 @@
 	<header id="masthead" class="site-header bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
 		<div class="container mx-auto px-4">
 			<!-- Logo and Mobile Menu -->
-			<div class="flex items-center justify-between py-4 gap-4">
+			<div class="flex items-center justify-between py-2 md:py-4 gap-2 md:gap-4">
 				<div class="site-branding flex items-center flex-shrink-0">
 					<?php if ( has_custom_logo() ) : ?>
 						<?php the_custom_logo(); ?>
@@ -74,7 +74,7 @@
 			</div>
 			
 			<!-- Mobile Navigation -->
-			<nav id="mobile-navigation" class="mobile-navigation hidden lg:hidden pb-4 border-t border-gray-200 mt-4 pt-4">
+			<nav id="mobile-navigation" class="mobile-navigation hidden lg:hidden pb-2 md:pb-4 border-t border-gray-200 mt-2 md:mt-4 pt-2 md:pt-4">
 				<?php
 				wp_nav_menu( array(
 					'theme_location' => 'primary',
