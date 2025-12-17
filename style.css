@@ -25,7 +25,7 @@ body {
 
 /* Ensure container has proper spacing */
 .site-main {
-	padding: 2rem 0;
+	padding: 0;
 }
 
 /* Fix for WordPress admin bar */
