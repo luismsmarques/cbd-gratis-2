@@ -283,12 +283,13 @@ get_header();
 			
 			if ( $blog_posts->have_posts() ) :
 			?>
-				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+				<div class="mui-grid" style="margin: -12px;">
 					<?php while ( $blog_posts->have_posts() ) : $blog_posts->the_post(); 
 						$post_categories = get_the_category();
 						$primary_category = ! empty( $post_categories ) ? $post_categories[0] : null;
 					?>
-						<article class="mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300" itemscope itemtype="https://schema.org/Article">
+						<div class="mui-grid-item mui-grid-xs-12 mui-grid-sm-6 mui-grid-md-4" style="padding: 12px;">
+							<article class="mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300" itemscope itemtype="https://schema.org/Article">
 							<?php if ( has_post_thumbnail() ) : ?>
 								<a href="<?php the_permalink(); ?>" class="block overflow-hidden" style="border-radius: var(--mui-radius-md) var(--mui-radius-md) 0 0;">
 									<?php the_post_thumbnail( 'medium_large', array( 
@@ -366,6 +367,7 @@ get_header();
 								</div>
 							</div>
 						</article>
+						</div>
 					<?php endwhile; ?>
 				</div>
 				
