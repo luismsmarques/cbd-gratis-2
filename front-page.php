@@ -283,7 +283,7 @@ get_header();
 			
 			if ( $blog_posts->have_posts() ) :
 			?>
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 					<?php while ( $blog_posts->have_posts() ) : $blog_posts->the_post(); 
 						$post_categories = get_the_category();
 						$primary_category = ! empty( $post_categories ) ? $post_categories[0] : null;
