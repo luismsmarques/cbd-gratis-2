@@ -275,7 +275,7 @@ get_header();
 			// Get recent posts with categories
 			$blog_posts = new WP_Query( array(
 				'post_type' => 'post',
-				'posts_per_page' => 9,
+				'posts_per_page' => 3,
 				'post_status' => 'publish',
 				'orderby' => 'date',
 				'order' => 'DESC',
