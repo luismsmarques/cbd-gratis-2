@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/public_html/wp-content/themes
+    - export DEPLOYPATH=/home/surfwave/cbd.gratis/wp-content/themes
     - export REPO_ROOT=$(pwd)
     - /bin/rm -rf $DEPLOYPATH/cbd-ai-theme
     - /bin/mkdir -p $DEPLOYPATH
