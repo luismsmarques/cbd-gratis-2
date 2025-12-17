@@ -359,7 +359,7 @@ get_header();
 			$ciencia_url = $ciencia_category ? get_category_link( $ciencia_category->term_id ) : $posts_page_url;
 			?>
 			
-			<div class="grid grid-cols-4 gap-6 md:gap-8">
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
 				<!-- Category 1: CBD para Animais -->
 				<a href="<?php echo esc_url( $animais_url ); ?>" class="category-card group relative bg-white rounded-2xl border-2 border-gray-200 p-8 hover:border-cbd-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
 					<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-cbd-green-100 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
