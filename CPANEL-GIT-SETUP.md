@@ -1,189 +1,119 @@
-# Guia de Configuração - Git Version Control no cPanel
+# Configuração Git Version Control no cPanel
 
-Este guia explica como configurar o Git Version Control do cPanel para atualizar automaticamente o tema WordPress no servidor.
+Este guia explica como configurar o Git Version Control no cPanel para fazer deployment automático do tema WordPress.
 
 ## 📋 Pré-requisitos
 
 1. Acesso ao cPanel com Git Version Control habilitado
-2. Node.js instalado no servidor (geralmente via cPanel ou SSH)
-3. Repositório Git configurado (GitHub, GitLab, Bitbucket, etc.)
+2. Repositório GitHub configurado: `https://github.com/luismsmarques/cbd-gratis-2`
+3. Caminho do tema no servidor: `/home/USUARIO/public_html/wp-content/themes/cbd-ai-theme`
 
-## 🚀 Passo a Passo
+## 🚀 Passos para Configuração
 
-### 1. Preparar o Repositório Local
+### 1. Acessar Git Version Control no cPanel
 
-No seu ambiente de desenvolvimento local, execute:
+1. Faça login no cPanel
+2. Navegue até **Files** > **Git™ Version Control**
 
-```bash
-cd wp-content/themes/cbd-ai-theme
+### 2. Criar/Clonar Repositório
 
-# Inicializar repositório Git (se ainda não foi feito)
-git init
+1. Clique em **Create** no canto superior direito
+2. Ative o toggle **Clone a Repository**
+3. No campo **Clone URL**, insira:
+   ```
+   https://github.com/luismsmarques/cbd-gratis-2.git
+   ```
+4. No campo **Repository Path**, insira o caminho completo do tema:
+   ```
+   /home/USUARIO/public_html/wp-content/themes/cbd-ai-theme
+   ```
+   > ⚠️ **Importante**: Substitua `USUARIO` pelo seu nome de usuário do cPanel
 
-# Adicionar todos os arquivos (exceto os ignorados pelo .gitignore)
-git add .
+5. No campo **Repository Name**, insira:
+   ```
+   cbd-ai-theme
+   ```
 
-# Fazer o primeiro commit
-git commit -m "Configuração inicial do tema CBD AI"
-
-# Adicionar o repositório remoto (substitua pela URL do seu repositório)
-git remote add origin https://github.com/seu-usuario/seu-repositorio.git
-
-# Enviar para o repositório remoto
-git push -u origin main
-# ou
-git push -u origin master
-```
-
-### 2. Configurar no cPanel
-
-#### 2.1. Criar Repositório no cPanel
-
-1. Acesse o **cPanel**
-2. Na seção **Arquivos**, clique em **Git™ Version Control**
-3. Clique em **Criar** (botão no canto superior direito)
-4. Configure:
-   - **Clone a Repository**: ✅ Ativado
-   - **Clone URL**: Cole a URL do seu repositório remoto
-     - Exemplo HTTPS: `https://github.com/seu-usuario/seu-repositorio.git`
-     - Exemplo SSH: `[email protected]:seu-usuario/seu-repositorio.git`
-   - **Repository Path**: `/home/seu-usuario/public_html/wp-content/themes/cbd-ai-theme`
-     - ⚠️ **IMPORTANTE**: Este deve ser o caminho completo até a pasta do tema
-     - Substitua `seu-usuario` pelo seu nome de usuário do cPanel
-   - **Repository Name**: `cbd-ai-theme` (ou outro nome descritivo)
-5. Clique em **Criar**
-
-#### 2.2. Verificar SSH (se usar SSH)
-
-Se você usar uma URL SSH para clonar repositórios privados:
-
-1. O cPanel solicitará verificação da chave SSH do host remoto
-2. Clique em **Save and Continue** para adicionar a chave
-3. Para mais informações, consulte: [Guide to Git - Set Up Access to Private Repositories](https://docs.cpanel.net/cpanel/files/git-version-control/)
+6. Clique em **Create**
 
 ### 3. Configurar Deployment Automático
 
-Após criar o repositório:
+O arquivo `.cpanel.yml` já está configurado no repositório para fazer deployment automático. Ele irá:
 
-1. Na lista de repositórios, encontre o seu repositório
-2. Clique em **Gerenciar** (Manage)
-3. Vá para a aba **Pull or Deploy**
-4. O arquivo `.cpanel.yml` já está configurado e será usado automaticamente
+- Copiar todos os arquivos do repositório para a pasta do tema
+- Ajustar permissões corretamente (755 para pastas, 644 para arquivos)
 
-### 4. Fazer o Primeiro Deploy
+### 4. Fazer Pull/Deploy Manual (se necessário)
 
-1. No cPanel, vá em **Gerenciar** > **Pull or Deploy**
-2. Clique em **Update from Remote** para fazer o primeiro pull
-3. Após o pull, clique em **Deploy HEAD Commit**
-4. O sistema executará automaticamente:
-   - Instalação de dependências npm
-   - Compilação dos assets (Vite)
-   - Compilação do Tailwind CSS
-   - Ajuste de permissões
+1. Na lista de repositórios, clique em **Manage** ao lado do repositório
+2. Vá para a aba **Pull or Deploy**
+3. Clique em **Update from Remote** para puxar as últimas alterações
+4. Clique em **Deploy HEAD Commit** para fazer o deployment
 
-### 5. Atualizações Futuras
+## 🔄 Workflow de Atualização
 
-Agora, sempre que você fizer push para o repositório remoto:
+### Quando você fizer push para o GitHub:
 
-1. No cPanel, vá em **Gerenciar** > **Pull or Deploy**
-2. Clique em **Update from Remote** para buscar as mudanças
-3. Clique em **Deploy HEAD Commit** para aplicar as mudanças
+1. O cPanel detectará automaticamente as mudanças
+2. Use **Update from Remote** para baixar as alterações
+3. Use **Deploy HEAD Commit** para aplicar as alterações ao tema
 
-**Ou configure um hook automático** (requer acesso SSH):
-- Configure um webhook no seu repositório Git para chamar o cPanel automaticamente
-- Ou configure um cron job no cPanel para fazer pull periódico
+### Deployment Automático via Post-Receive Hook
+
+O cPanel adiciona automaticamente um hook `post-receive` que executa o `.cpanel.yml` quando você faz push para o repositório. Isso significa que:
+
+- Quando você faz `git push` para o GitHub
+- E depois faz **Update from Remote** no cPanel
+- O deployment acontece automaticamente via `.cpanel.yml`
 
 ## ⚙️ Configuração do .cpanel.yml
 
 O arquivo `.cpanel.yml` está configurado para:
 
-1. **Instalar dependências**: `npm install`
-2. **Compilar Vite**: `npm run build`
-3. **Compilar Tailwind**: `npm run tailwind:build`
-4. **Ajustar permissões**: `chmod -R 755`
-
-### Personalizar o .cpanel.yml
-
-Se precisar ajustar o caminho ou comandos, edite o arquivo `.cpanel.yml` na raiz do tema.
-
-**Variáveis disponíveis:**
-- `$HOME` - Diretório home do usuário
-- `$CPANEL_USER` - Nome de usuário do cPanel
-
-**Exemplo de caminho personalizado:**
 ```yaml
+---
 deployment:
   tasks:
-    - cd $HOME/public_html/wp-content/themes/cbd-ai-theme && npm install
+    - export DEPLOYPATH=/home/$USER/public_html/wp-content/themes/cbd-ai-theme
+    - /bin/cp -R * $DEPLOYPATH/
+    - /bin/chmod -R 755 $DEPLOYPATH
+    - /bin/find $DEPLOYPATH -type f -exec chmod 644 {} \;
 ```
 
-## 🔧 Troubleshooting
+**Nota**: Se o caminho do seu tema for diferente, você precisará ajustar a variável `DEPLOYPATH` no `.cpanel.yml`.
 
-### Erro: "npm: command not found"
+## 🔐 SSH para Repositórios Privados
 
-**Solução**: Node.js não está instalado ou não está no PATH.
+Se o repositório for privado, você precisará configurar SSH:
 
-1. Verifique se o Node.js está instalado no servidor
-2. No `.cpanel.yml`, ajuste o caminho do Node.js:
-   ```yaml
-   - export PATH="/usr/local/bin:$PATH" && npm install
-   ```
+1. Acesse **Advanced** > **Terminal** no cPanel
+2. Siga o guia: [Set Up Access to Private Repositories](https://docs.cpanel.net/cpanel/files/git-version-control/#guide-to-git-set-up-access-to-private-repositories)
 
-### Erro: "Permission denied"
+## 📝 Notas Importantes
 
-**Solução**: Problema de permissões.
+- ⚠️ **Nunca modifique ou delete a pasta `.git`** dentro do repositório
+- ✅ O `.gitignore` está configurado para ignorar arquivos desnecessários (node_modules, arquivos temporários, etc.)
+- 🔄 Sempre faça **Update from Remote** antes de **Deploy HEAD Commit**
+- 📁 Certifique-se de que o caminho do repositório está correto antes de criar
 
-1. Verifique as permissões da pasta do tema
-2. O `.cpanel.yml` já inclui `chmod -R 755`, mas você pode ajustar se necessário
+## 🐛 Troubleshooting
 
-### Assets não compilam
+### Repositório não aparece na lista
+- Certifique-se de que criou o repositório através da interface do cPanel
+- Repositórios criados manualmente via linha de comando podem não aparecer
 
-**Solução**: Verifique os logs de deployment.
+### Deployment falha
+- Verifique as permissões da pasta do tema
+- Certifique-se de que o caminho no `.cpanel.yml` está correto
+- Verifique os logs de erro no cPanel
 
-1. No cPanel, vá em **Gerenciar** > **Pull or Deploy**
-2. Verifique as mensagens de erro após o deploy
-3. Teste os comandos manualmente via SSH:
-   ```bash
-   cd ~/public_html/wp-content/themes/cbd-ai-theme
-   npm install
-   npm run build
-   npm run tailwind:build
-   ```
+### Arquivos não atualizam
+- Faça **Update from Remote** primeiro
+- Depois faça **Deploy HEAD Commit**
+- Verifique se há conflitos de merge
 
-### Repositório não atualiza
+## 📚 Referências
 
-**Solução**: Verifique a configuração do repositório.
-
-1. Verifique se a URL do repositório está correta
-2. Verifique se você tem permissões para acessar o repositório
-3. Para repositórios privados, configure SSH keys no cPanel
-
-## 📚 Recursos Adicionais
-
-- [Documentação oficial do cPanel Git Version Control](https://docs.cpanel.net/cpanel/files/git-version-control/)
-- [Guia de Deployment do cPanel](https://docs.cpanel.net/cpanel/files/git-version-control/#manage-repositories)
-- [Configuração de SSH para repositórios privados](https://docs.cpanel.net/cpanel/files/git-version-control/#ssh-host-key-verification)
-
-## ✅ Checklist Final
-
-- [ ] Repositório Git criado e configurado localmente
-- [ ] Arquivos commitados e enviados para o repositório remoto
-- [ ] Repositório criado no cPanel Git Version Control
-- [ ] Caminho do repositório aponta para a pasta do tema WordPress
-- [ ] Arquivo `.cpanel.yml` está na raiz do repositório
-- [ ] Primeiro deploy executado com sucesso
-- [ ] Assets compilados corretamente (verificar pasta `assets/dist` e `assets/css/tailwind-output.css`)
-
-## 🎯 Próximos Passos
-
-Após configurar tudo:
-
-1. Faça uma alteração pequena no tema
-2. Commit e push para o repositório remoto
-3. No cPanel, faça **Update from Remote** e **Deploy HEAD Commit**
-4. Verifique se as mudanças aparecem no site WordPress
-
----
-
-**Nota**: O arquivo `.cpanel.yml` deve estar commitado no repositório remoto para funcionar. Certifique-se de fazer push deste arquivo.
+- [Documentação Oficial cPanel Git Version Control](https://docs.cpanel.net/cpanel/files/git-version-control/)
+- [Documentação Deployment cPanel](https://docs.cpanel.net/knowledge-base/general-systems-administration/how-to-use-git-deployment/)
 

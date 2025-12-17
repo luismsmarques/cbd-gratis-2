@@ -1,0 +1,23 @@
+# Arquivos de texto devem usar LF (Unix) line endings
+* text=auto eol=lf
+
+# Arquivos binários
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.svg binary
+
+# Arquivos específicos do WordPress
+*.php text
+*.css text
+*.js text
+*.json text
+*.md text
+*.yml text
+
