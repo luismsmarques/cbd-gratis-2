@@ -779,6 +779,23 @@ img {
 	-webkit-overflow-scrolling: touch;
 }
 
+/* Garantir que a tabela mantenha estrutura interna e largura mínima */
+.entry-content table,
+.prose table,
+.wp-block-table table {
+	min-width: 100%;
+}
+
+/* Forçar thead a ocupar 100% da largura mesmo quando tabela está em block */
+.entry-content table thead,
+.prose table thead,
+.wp-block-table table thead {
+	display: table;
+	width: 100%;
+	min-width: 100%;
+	table-layout: fixed;
+}
+
 /* Tabela em si - reset de estilos inline antigos */
 .entry-content table,
 .prose table,
@@ -817,9 +834,20 @@ img {
 .entry-content tbody,
 .prose tbody,
 .wp-block-table tbody {
-	display: table;
-	width: 100%;
+	display: table-row-group;
+	width: 100% !important;
+	min-width: 100%;
 	border-collapse: collapse;
+}
+
+/* Forçar tbody a ocupar 100% da largura mesmo quando tabela está em block */
+.entry-content table tbody,
+.prose table tbody,
+.wp-block-table table tbody {
+	display: table;
+	width: 100% !important;
+	min-width: 100%;
+	table-layout: fixed;
 }
 
 /* Thead - estilo para cabeçalho */
@@ -827,8 +855,28 @@ img {
 .prose thead,
 .wp-block-table thead {
 	display: table-header-group;
+	width: 100% !important;
+	min-width: 100%;
 	background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
 	color: #ffffff;
+}
+
+/* Linha do thead - garantir largura total */
+.entry-content thead tr,
+.prose thead tr,
+.wp-block-table thead tr {
+	display: table-row;
+	width: 100% !important;
+	min-width: 100%;
+}
+
+/* Linhas do tbody - garantir largura total */
+.entry-content tbody tr,
+.prose tbody tr,
+.wp-block-table tbody tr {
+	display: table-row;
+	width: 100% !important;
+	min-width: 100%;
 }
 
 /* Células do cabeçalho (th) */
@@ -838,6 +886,7 @@ img {
 .entry-content thead td,
 .prose thead td,
 .wp-block-table thead td {
+	display: table-cell;
 	padding: 1rem 1.25rem !important;
 	text-align: left;
 	font-weight: 600;
@@ -851,10 +900,11 @@ img {
 	white-space: nowrap;
 }
 
-/* Primeira linha (cabeçalho) - estilo especial quando não há thead */
-.entry-content tbody tr:first-child td,
-.prose tbody tr:first-child td,
-.wp-block-table tbody tr:first-child td {
+/* Primeira linha (cabeçalho) - estilo especial APENAS quando NÃO há thead */
+/* Usar :not(:has(thead)) para detectar tabelas sem thead */
+.entry-content table:not(:has(thead)) tbody tr:first-child td,
+.prose table:not(:has(thead)) tbody tr:first-child td,
+.wp-block-table table:not(:has(thead)) tbody tr:first-child td {
 	background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
 	color: #ffffff;
 	padding: 1rem 1.25rem !important;
@@ -865,11 +915,33 @@ img {
 	border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Strong dentro da primeira linha */
-.entry-content tbody tr:first-child td strong,
-.prose tbody tr:first-child td strong,
-.wp-block-table tbody tr:first-child td strong {
+/* Strong dentro da primeira linha (apenas quando não há thead) */
+.entry-content table:not(:has(thead)) tbody tr:first-child td strong,
+.prose table:not(:has(thead)) tbody tr:first-child td strong,
+.wp-block-table table:not(:has(thead)) tbody tr:first-child td strong {
 	color: #ffffff;
+	font-weight: 600;
+}
+
+/* Quando há thead, a primeira linha do tbody deve ter estilo normal (sobrescrever qualquer estilo anterior) */
+.entry-content thead + tbody tr:first-child td,
+.prose thead + tbody tr:first-child td,
+.wp-block-table thead + tbody tr:first-child td {
+	background-color: #ffffff !important;
+	color: #424242 !important;
+	padding: 0.875rem 1.25rem !important;
+	font-weight: normal !important;
+	font-size: 0.9375rem !important;
+	text-transform: none !important;
+	letter-spacing: normal !important;
+	border-bottom: 1px solid #e0e0e0 !important;
+}
+
+/* Strong dentro da primeira linha quando há thead */
+.entry-content thead + tbody tr:first-child td strong,
+.prose thead + tbody tr:first-child td strong,
+.wp-block-table thead + tbody tr:first-child td strong {
+	color: #212121 !important;
 	font-weight: 600;
 }
 
@@ -887,14 +959,14 @@ img {
 	background-color: #ffffff;
 }
 
-/* Linhas alternadas (zebra striping) - começar após a primeira linha */
-.entry-content tbody tr:nth-child(even):not(:first-child) td,
-.prose tbody tr:nth-child(even):not(:first-child) td,
-.wp-block-table tbody tr:nth-child(even):not(:first-child) td {
+/* Linhas alternadas (zebra striping) - quando não há thead, começar após a primeira linha */
+.entry-content table:not(:has(thead)) tbody tr:nth-child(even):not(:first-child) td,
+.prose table:not(:has(thead)) tbody tr:nth-child(even):not(:first-child) td,
+.wp-block-table table:not(:has(thead)) tbody tr:nth-child(even):not(:first-child) td {
 	background-color: #fafafa;
 }
 
-/* Se há thead, aplicar zebra striping normalmente */
+/* Se há thead, aplicar zebra striping normalmente em todas as linhas */
 .entry-content thead + tbody tr:nth-child(even) td,
 .prose thead + tbody tr:nth-child(even) td,
 .wp-block-table thead + tbody tr:nth-child(even) td {
@@ -953,11 +1025,20 @@ img {
 		font-size: 0.875rem;
 	}
 	
-	.entry-content tbody tr:first-child td,
-	.prose tbody tr:first-child td,
-	.wp-block-table tbody tr:first-child td {
+	/* Primeira linha como cabeçalho (apenas quando não há thead) */
+	.entry-content table:not(:has(thead)) tbody tr:first-child td,
+	.prose table:not(:has(thead)) tbody tr:first-child td,
+	.wp-block-table table:not(:has(thead)) tbody tr:first-child td {
 		padding: 0.75rem 1rem !important;
 		font-size: 0.8125rem;
+	}
+	
+	/* Primeira linha normal quando há thead */
+	.entry-content thead + tbody tr:first-child td,
+	.prose thead + tbody tr:first-child td,
+	.wp-block-table thead + tbody tr:first-child td {
+		padding: 0.75rem 1rem !important;
+		font-size: 0.875rem;
 	}
 }
 
