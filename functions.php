@@ -1156,35 +1156,3 @@ function cbd_ai_fix_page_template_pagination_404() {
 }
 add_action( 'template_redirect', 'cbd_ai_fix_page_template_pagination_404', 1 );
 
-/**
- * Add Favicon and Mobile Icons
- * Adds favicon, Apple Touch Icons, Android Chrome Icons, and Windows Tiles
- */
-function cbd_ai_add_favicon_and_icons() {
-	$theme_uri = get_template_directory_uri();
-	$icons_path = $theme_uri . '/assets/images/icons';
-	
-	// Standard Favicon (16x16, 32x32)
-	echo '<link rel="icon" type="image/png" sizes="32x32" href="' . esc_url( $icons_path . '/favicon-32x32.png' ) . '">' . "\n";
-	echo '<link rel="icon" type="image/png" sizes="16x16" href="' . esc_url( $icons_path . '/favicon-16x16.png' ) . '">' . "\n";
-	echo '<link rel="shortcut icon" href="' . esc_url( $icons_path . '/favicon.ico' ) . '">' . "\n";
-	
-	// Apple Touch Icons (iOS)
-	echo '<link rel="apple-touch-icon" sizes="180x180" href="' . esc_url( $icons_path . '/apple-touch-icon.png' ) . '">' . "\n";
-	
-	// Android Chrome Icons
-	echo '<link rel="icon" type="image/png" sizes="192x192" href="' . esc_url( $icons_path . '/android-chrome-192x192.png' ) . '">' . "\n";
-	echo '<link rel="icon" type="image/png" sizes="512x512" href="' . esc_url( $icons_path . '/android-chrome-512x512.png' ) . '">' . "\n";
-	
-	// Windows Tiles
-	echo '<meta name="msapplication-TileColor" content="#00897b">' . "\n";
-	echo '<meta name="msapplication-TileImage" content="' . esc_url( $icons_path . '/mstile-144x144.png' ) . '">' . "\n";
-	
-	// Theme Color (for mobile browsers)
-	echo '<meta name="theme-color" content="#00897b">' . "\n";
-	
-	// Web App Manifest (for PWA support)
-	echo '<link rel="manifest" href="' . esc_url( $theme_uri . '/assets/images/icons/site.webmanifest' ) . '">' . "\n";
-}
-add_action( 'wp_head', 'cbd_ai_add_favicon_and_icons', 1 );
-
