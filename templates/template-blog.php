@@ -293,165 +293,18 @@ $blog_query = new WP_Query( array(
 			</div>
 			
 			<!-- Sidebar -->
-			<aside class="lg:col-span-4">
-				<div class="sticky top-24 space-y-6">
-					
-					<!-- Search Widget -->
-					<div class="mui-card mui-card-elevated p-6">
-						<h3 class="mui-typography-h6 mb-4">Pesquisar Artigos</h3>
-						<form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-							<div class="mui-text-field">
-								<input
-									type="search"
-									name="s"
-									placeholder="Digite sua pesquisa..."
-									class="mui-input mui-input-outlined"
-									value="<?php echo get_search_query(); ?>"
-								>
-							</div>
-							<button type="submit" class="mui-button mui-button-contained mui-button-primary mui-button-small mt-4 w-full">
-								<svg style="width: 16px; height: 16px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-								</svg>
-								Pesquisar
-							</button>
-						</form>
-					</div>
-					
-					<!-- Categories Widget -->
-					<?php
-					$categories = get_categories( array(
-						'orderby' => 'count',
-						'order' => 'DESC',
-						'hide_empty' => true,
-						'number' => 10,
-					) );
-					
-					if ( ! empty( $categories ) ) :
-					?>
-						<div class="mui-card mui-card-elevated p-6">
-							<h3 class="mui-typography-h6 mb-4">Categorias</h3>
-							<ul class="mui-list">
-								<?php foreach ( $categories as $category ) : ?>
-									<li class="mui-list-item">
-										<a href="<?php echo esc_url( get_category_link( $category->term_id ) ); ?>" 
-										   class="mui-list-item-text flex items-center justify-between hover:text-blue-600 transition-colors">
-											<span><?php echo esc_html( $category->name ); ?></span>
-											<span class="mui-typography-caption" style="color: var(--mui-gray-500);">
-												<?php echo esc_html( $category->count ); ?>
-											</span>
-										</a>
-									</li>
-								<?php endforeach; ?>
-							</ul>
-						</div>
-					<?php endif; ?>
-					
-					<!-- Recent Posts Widget -->
-					<?php
-					$recent_posts = new WP_Query( array(
-						'post_type' => 'post',
-						'posts_per_page' => 5,
-						'post_status' => 'publish',
-						'orderby' => 'date',
-						'order' => 'DESC',
-					) );
-					
-					if ( $recent_posts->have_posts() ) :
-					?>
-						<div class="mui-card mui-card-elevated p-6">
-							<h3 class="mui-typography-h6 mb-4">Artigos Recentes</h3>
-							<ul class="space-y-4">
-								<?php while ( $recent_posts->have_posts() ) : $recent_posts->the_post(); ?>
-									<li>
-										<a href="<?php the_permalink(); ?>" class="flex gap-3 group">
-											<?php if ( has_post_thumbnail() ) : ?>
-												<?php the_post_thumbnail( 'thumbnail', array(
-													'class' => 'w-16 h-16 object-cover rounded-lg flex-shrink-0',
-													'loading' => 'lazy'
-												) ); ?>
-											<?php endif; ?>
-											<div class="flex-1 min-w-0">
-												<h4 class="mui-typography-subtitle2 group-hover:text-blue-600 transition-colors line-clamp-2 mb-1">
-													<?php the_title(); ?>
-												</h4>
-												<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="mui-typography-caption" style="color: var(--mui-gray-500);">
-													<?php echo esc_html( get_the_date( 'd/m/Y' ) ); ?>
-												</time>
-											</div>
-										</a>
-									</li>
-								<?php endwhile; ?>
-							</ul>
-						</div>
-					<?php
-					wp_reset_postdata();
-					endif;
-					?>
-					
-					<!-- Chatbot Widget -->
-					<div class="mui-card mui-card-elevated overflow-hidden" style="border: 2px solid var(--mui-teal-primary);">
-						<div style="background: linear-gradient(to right, var(--mui-teal-primary), var(--mui-teal-dark)); padding: 20px; color: white;">
-							<div class="flex items-center gap-3">
-								<div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-									<span style="font-size: 1.5rem;">💬</span>
-								</div>
-								<div>
-									<h3 class="mui-typography-h6" style="margin: 0; color: white; font-weight: 600;">Chatbot Especialista</h3>
-									<p class="mui-typography-body2" style="margin: 0; opacity: 0.9;">Tire suas dúvidas agora</p>
-								</div>
-							</div>
-						</div>
-						<div class="p-6">
-							<p class="mui-typography-body2 mb-4" style="color: var(--mui-gray-700);">
-								Faça perguntas sobre dosagem, segurança ou qualquer dúvida sobre CBD. Nossa IA especializada está pronta para ajudar.
-							</p>
-							<?php
-							$chatbot_page = get_page_by_path( 'chatbot' );
-							$chatbot_url = $chatbot_page ? get_permalink( $chatbot_page->ID ) : '#';
-							?>
-							<a href="<?php echo esc_url( $chatbot_url ); ?>" class="mui-button mui-button-contained mui-button-contained-teal w-full">
-								<svg style="width: 20px; height: 20px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-								</svg>
-								Iniciar Conversa
-							</a>
-						</div>
-					</div>
-					
-					<!-- Newsletter Widget -->
-					<div class="mui-card mui-card-elevated p-6" style="background: linear-gradient(to bottom, rgba(0, 137, 123, 0.05), white); border: 1px solid var(--mui-teal-primary);">
-						<h3 class="mui-typography-h6 mb-2">Mantenha-se Atualizado</h3>
-						<p class="mui-typography-body2 mb-4" style="color: var(--mui-gray-700);">
-							Receba alertas sobre mudanças na legislação e novos artigos sobre CBD.
-						</p>
-						<form class="space-y-3" method="post" action="#">
-							<div class="mui-text-field">
-								<label for="newsletter-email" class="mui-text-field-label mui-text-field-label-shrink">Email</label>
-								<input
-									type="email"
-									id="newsletter-email"
-									name="email"
-									placeholder="seu@email.com"
-									class="mui-input mui-input-outlined"
-									required
-								>
-							</div>
-							<button type="submit" class="mui-button mui-button-contained mui-button-contained-teal w-full">
-								Subscrever
-							</button>
-						</form>
-					</div>
-					
-					<!-- Dynamic Sidebar -->
-					<?php if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
-						<div class="dynamic-sidebar">
-							<?php dynamic_sidebar( 'sidebar-1' ); ?>
-						</div>
-					<?php endif; ?>
-					
-				</div>
-			</aside>
+			<?php
+			cbd_ai_sidebar( array(
+				'show_search'     => true,
+				'show_categories' => true,
+				'show_recent'     => true,
+				'show_chatbot'    => true,
+				'show_calculator' => false,
+				'show_newsletter' => true,
+				'show_related'    => false,
+				'context'         => 'blog',
+			) );
+			?>
 			
 		</div>
 	</div>
