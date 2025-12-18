@@ -16,8 +16,8 @@ $search_query = get_search_query();
 $found_posts = $wp_query->found_posts;
 ?>
 
-<main class="main-content py-8 md:py-12" style="background: linear-gradient(to bottom, var(--mui-gray-50), rgba(0, 137, 123, 0.03), var(--mui-gray-50));">
-	<div class="mui-container">
+<div class="content-area">
+	<div class="container mx-auto px-4 py-8">
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
 			
 			<!-- Main Content Area -->
@@ -54,7 +54,7 @@ $found_posts = $wp_query->found_posts;
 					<?php endif; ?>
 					
 					<!-- Search Form - MUI Style -->
-					<div class="mui-card mui-card-elevated p-6 mb-8">
+					<div class="mui-card mui-card-elevated p-6 md:p-8 mb-8">
 						<form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex gap-2">
 							<div class="mui-text-field" style="flex: 1; margin: 0;">
 								<label for="search-input" class="mui-text-field-label mui-text-field-label-shrink">Pesquisar</label>
@@ -84,7 +84,7 @@ $found_posts = $wp_query->found_posts;
 						<?php while ( have_posts() ) : the_post(); ?>
 							<article id="post-<?php the_ID(); ?>" <?php post_class( 'mui-card mui-card-elevated group hover:shadow-xl transition-all duration-300' ); ?> itemscope itemtype="https://schema.org/Article">
 								
-								<div class="mui-card-content p-6">
+								<div class="mui-card-content p-6 md:p-8">
 									
 									<!-- Post Type Badge -->
 									<?php 
@@ -294,7 +294,7 @@ $found_posts = $wp_query->found_posts;
 			
 		</div>
 	</div>
-</main>
+</div>
 
 <style>
 /* Pagination Styles */

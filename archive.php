@@ -15,8 +15,8 @@ $archive_title = get_the_archive_title();
 $archive_description = get_the_archive_description();
 ?>
 
-<main class="main-content py-8 md:py-12" style="background: linear-gradient(to bottom, var(--mui-gray-50), rgba(0, 137, 123, 0.03), var(--mui-gray-50));">
-	<div class="mui-container">
+<div class="content-area">
+	<div class="container mx-auto px-4 py-8">
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
 			
 			<!-- Main Content Area -->
@@ -69,7 +69,7 @@ $archive_description = get_the_archive_description();
 									</a>
 								<?php endif; ?>
 								
-								<div class="mui-card-content p-6">
+								<div class="mui-card-content p-6 md:p-8">
 									
 									<!-- Title -->
 									<h2 class="mui-typography-h6 mb-3" itemprop="headline">
@@ -190,7 +190,7 @@ $archive_description = get_the_archive_description();
 			
 		</div>
 	</div>
-</main>
+</div>
 
 <style>
 /* Pagination Styles */

@@ -78,7 +78,7 @@ $post_count = $category->count;
 									</a>
 								<?php endif; ?>
 								
-								<div class="mui-card-content p-6">
+								<div class="mui-card-content p-6 md:p-8">
 									
 									
 									<!-- Title -->
@@ -260,7 +260,7 @@ $post_count = $category->count;
 			
 		</div>
 	</div>
-</main>
+</div>
 
 <style>
 /* Pagination Styles */
