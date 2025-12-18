@@ -135,10 +135,10 @@ $found_posts = $wp_query->found_posts;
 									
 									<!-- Featured Image (if available) -->
 									<?php if ( has_post_thumbnail() ) : ?>
-										<div class="mb-4 overflow-hidden rounded-lg">
-											<a href="<?php the_permalink(); ?>">
+										<div class="mb-4 overflow-hidden rounded-lg featured-image-container">
+											<a href="<?php the_permalink(); ?>" class="block">
 												<?php the_post_thumbnail( 'medium', array(
-													'class' => 'w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300 rounded-lg',
+													'class' => 'featured-image-search w-full object-cover group-hover:scale-105 transition-transform duration-300',
 													'loading' => 'lazy',
 													'itemprop' => 'image'
 												) ); ?>
@@ -469,6 +469,34 @@ mark {
 	padding: 2px 4px;
 	border-radius: 2px;
 	font-weight: 500;
+}
+
+/* Featured Image Fix - Ensure fixed height */
+.featured-image-container {
+	height: 200px;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
+
+.featured-image-container a {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.featured-image-search {
+	height: 200px !important;
+	width: 100% !important;
+	object-fit: cover !important;
+	object-position: center;
+	display: block;
+}
+
+/* Fallback for browsers that don't support :has() */
+.search-results .mui-card-content .featured-image-container {
+	height: 200px;
+	max-height: 200px;
 }
 </style>
 

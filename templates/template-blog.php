@@ -109,9 +109,9 @@ $blog_query = new WP_Query( array(
 								
 								<!-- Featured Image -->
 								<?php if ( has_post_thumbnail() ) : ?>
-									<a href="<?php the_permalink(); ?>" class="block overflow-hidden rounded-t-lg">
+									<a href="<?php the_permalink(); ?>" class="block overflow-hidden rounded-t-lg featured-image-container-blog">
 										<?php the_post_thumbnail( 'medium', array(
-											'class' => 'w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300',
+											'class' => 'featured-image-blog w-full object-cover group-hover:scale-105 transition-transform duration-300',
 											'loading' => 'lazy',
 											'itemprop' => 'image',
 											'sizes' => '(max-width: 768px) 100vw, 50vw'
@@ -601,6 +601,30 @@ $blog_query = new WP_Query( array(
 	font-weight: 600;
 	margin-bottom: 16px;
 	color: var(--mui-gray-900);
+}
+
+/* Featured Image Fix - Ensure fixed height */
+.featured-image-container-blog {
+	height: 200px;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	display: block;
+}
+
+.featured-image-blog {
+	height: 200px !important;
+	width: 100% !important;
+	object-fit: cover !important;
+	object-position: center;
+	display: block;
+}
+
+/* Ensure images in blog grid maintain fixed height */
+.blog-posts-grid .featured-image-container-blog {
+	height: 200px;
+	max-height: 200px;
+	min-height: 200px;
 }
 </style>
 
