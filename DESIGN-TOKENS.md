@@ -273,7 +273,7 @@ Este documento descreve todos os tokens de design utilizados no tema CBD AI Them
 **Estratégia Mobile-First:**
 - Sempre comece com estilos mobile
 - Use `min-width` para adicionar estilos em breakpoints maiores
-- Evite `max-width` quando possível
+- Evite `max-width` quando possível.
 
 ---
 
