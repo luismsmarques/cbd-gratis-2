@@ -30,7 +30,11 @@ get_header();
 						</a>
 					</h2>
 					
-					<?php cbd_ai_post_meta( array( 'date' => true, 'author' => false ) ); ?>
+					<?php cbd_ai_post_meta( array( 
+						'show_author' => false,
+						'show_ai_badge' => false,
+						'show_updated_date' => false
+					) ); ?>
 					
 					<div class="mt-4 text-gray-600">
 						<?php echo cbd_ai_get_excerpt( 20 ); ?>

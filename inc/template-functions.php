@@ -25,39 +25,81 @@ function cbd_ai_get_excerpt( $length = 30 ) {
 }
 
 /**
- * Display post meta
+ * Display post meta for single posts
+ * 
+ * Shows: Author, AI Analysis badge, Last updated date
  *
  * @param array $args Arguments
  */
 function cbd_ai_post_meta( $args = array() ) {
 	$defaults = array(
-		'author' => true,
-		'date' => true,
-		'categories' => true,
-		'tags' => false,
+		'show_author' => true,
+		'show_ai_badge' => true,
+		'show_updated_date' => true,
 	);
 	
 	$args = wp_parse_args( $args, $defaults );
 	
-	echo '<div class="post-meta flex flex-wrap gap-4 text-sm text-gray-600">';
+	// Get author info
+	$author_id = get_the_author_meta( 'ID' );
+	$author_name = get_the_author();
+	$author_url = get_author_posts_url( $author_id );
 	
-	if ( $args['author'] ) {
-		echo '<span class="author">Por ' . esc_html( get_the_author() ) . '</span>';
-	}
+	// Get dates
+	$published_date = get_the_date( 'c' );
+	$published_date_display = get_the_date( 'd/m/Y' );
+	$modified_date = get_the_modified_date( 'c' );
+	$modified_date_display = get_the_modified_date( 'd/m/Y' );
+	$is_updated = ( $published_date !== $modified_date );
 	
-	if ( $args['date'] ) {
-		echo '<span class="date">' . esc_html( get_the_date() ) . '</span>';
-	}
-	
-	if ( $args['categories'] && has_category() ) {
-		echo '<span class="categories">' . get_the_category_list( ', ' ) . '</span>';
-	}
-	
-	if ( $args['tags'] && has_tag() ) {
-		echo '<span class="tags">' . get_the_tag_list( '', ', ' ) . '</span>';
-	}
-	
-	echo '</div>';
+	?>
+	<div class="post-meta-single flex flex-wrap items-center gap-4 text-sm mb-6 pb-6 border-b border-gray-200">
+		
+		<?php if ( $args['show_author'] && $author_name ) : ?>
+			<!-- Author -->
+			<div class="meta-author flex items-center gap-2">
+				<svg class="w-4 h-4 text-cbd-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+				</svg>
+				<span class="text-gray-600">Autor:</span>
+				<a href="<?php echo esc_url( $author_url ); ?>" class="font-semibold text-cbd-green-600 hover:text-cbd-green-700 transition-colors">
+					<?php echo esc_html( $author_name ); ?>
+				</a>
+			</div>
+		<?php endif; ?>
+		
+		<?php if ( $args['show_ai_badge'] ) : ?>
+			<!-- AI Analysis Badge -->
+			<div class="meta-ai-badge flex items-center gap-2 bg-gradient-to-r from-cbd-green-50 to-cbd-green-100 px-3 py-1.5 rounded-full border border-cbd-green-200">
+				<svg class="w-4 h-4 text-cbd-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+				</svg>
+				<span class="text-cbd-green-700 font-medium text-xs">Analisado por AI</span>
+			</div>
+		<?php endif; ?>
+		
+		<?php if ( $args['show_updated_date'] ) : ?>
+			<!-- Last Updated Date -->
+			<div class="meta-updated flex items-center gap-2 text-gray-600">
+				<svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+				</svg>
+				<?php if ( $is_updated ) : ?>
+					<span>Última atualização:</span>
+					<time datetime="<?php echo esc_attr( $modified_date ); ?>" class="font-semibold text-gray-900">
+						<?php echo esc_html( $modified_date_display ); ?>
+					</time>
+				<?php else : ?>
+					<span>Publicado em:</span>
+					<time datetime="<?php echo esc_attr( $published_date ); ?>" class="font-semibold text-gray-900">
+						<?php echo esc_html( $published_date_display ); ?>
+					</time>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
+		
+	</div>
+	<?php
 }
 
 /**
@@ -99,11 +141,17 @@ function cbd_ai_related_posts( $post_id = null, $limit = 3 ) {
 			<article class="card">
 				<?php if ( has_post_thumbnail() ) : ?>
 					<a href="<?php the_permalink(); ?>" class="block mb-4 overflow-hidden rounded-lg">
-						<?php the_post_thumbnail( 'medium', array( 
-							'class' => 'w-full h-[200px] object-cover rounded-lg',
-							'loading' => 'lazy',
-							'sizes' => '(max-width: 768px) 100vw, 33vw'
-						) ); ?>
+						<div class="w-full rounded-lg" style="height: 200px; overflow: hidden;">
+							<?php 
+							cbd_ai_the_post_thumbnail_with_dimensions( 
+								'medium', 
+								array( 
+									'class' => 'w-full h-full object-cover rounded-lg'
+								),
+								true
+							);
+							?>
+						</div>
 					</a>
 				<?php endif; ?>
 				

@@ -53,20 +53,6 @@ get_header();
 						
 						<?php cbd_ai_social_share(); ?>
 						
-						<!-- Affiliate CTA - Contextual -->
-						<div class="affiliate-cta mt-8 p-6 bg-gradient-to-br from-cbd-green-50 to-white rounded-lg border border-cbd-green-200">
-							<h3 class="text-xl font-bold text-gray-900 mb-2">Onde Comprar Produtos Recomendados</h3>
-							<p class="text-gray-700 text-sm mb-4">
-								Encontre produtos de qualidade testados e aprovados por especialistas. Ao comprar através dos nossos links, você apoia nosso trabalho de pesquisa.
-							</p>
-							<a href="#produtos-recomendados" class="btn-cta bg-cbd-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-cbd-green-700 transition-colors inline-flex items-center gap-2 text-sm">
-								Ver Produtos Recomendados
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-								</svg>
-							</a>
-						</div>
-						
 						<?php
 						// Comments
 						if ( comments_open() || get_comments_number() ) {
