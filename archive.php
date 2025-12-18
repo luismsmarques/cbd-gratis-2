@@ -47,9 +47,7 @@ $archive_description = get_the_archive_description();
 							</div>
 						<?php endif; ?>
 					</div>
-					
-					<!-- Breadcrumbs -->
-					<?php cbd_ai_breadcrumbs(); ?>
+				
 				</header>
 
 				<?php if ( have_posts() ) : ?>

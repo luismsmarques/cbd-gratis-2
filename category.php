@@ -56,9 +56,7 @@ $post_count = $category->count;
 							</div>
 						<?php endif; ?>
 					</div>
-					
-					<!-- Breadcrumbs -->
-					<?php cbd_ai_breadcrumbs(); ?>
+
 				</header>
 
 				<?php if ( have_posts() ) : ?>

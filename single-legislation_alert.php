@@ -38,9 +38,6 @@ $monitor_url = $monitor_page ? get_permalink( $monitor_page->ID ) : home_url( '/
 			
 			<?php while ( have_posts() ) : the_post(); ?>
 				
-				<!-- Breadcrumbs -->
-				<?php cbd_ai_breadcrumbs(); ?>
-				
 				<!-- Alert Badge -->
 				<div class="mb-6">
 					<?php if ( $is_new ) : ?>
