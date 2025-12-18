@@ -11,8 +11,59 @@
 
 get_header();
 
+// IMPORTANTE: Obter o ID da página do blog ANTES de qualquer query
+// Isso garante que não seja afetado pelo loop de posts
+// Para page templates, precisamos obter o ID da página que está sendo visualizada
+$blog_page_id = null;
+
+if ( is_page() ) {
+	// Se estamos em uma página, obter o ID diretamente
+	global $wp_query;
+	$queried_object = $wp_query->get_queried_object();
+	if ( $queried_object && isset( $queried_object->ID ) ) {
+		$blog_page_id = $queried_object->ID;
+	} else {
+		$blog_page_id = get_queried_object_id();
+	}
+}
+
+// Fallback: se ainda não temos o ID, tentar obter pela query global
+if ( ! $blog_page_id ) {
+	global $wp_query;
+	if ( isset( $wp_query->queried_object->ID ) ) {
+		$blog_page_id = $wp_query->queried_object->ID;
+	} else {
+		$blog_page_id = get_queried_object_id();
+	}
+}
+
+// Último fallback: usar get_the_ID() (pode não funcionar se já estivermos no loop)
+if ( ! $blog_page_id ) {
+	$blog_page_id = get_the_ID();
+}
+
 // Query para posts do blog
-$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+// Detecção da página atual para paginação
+// Em page templates: WordPress usa 'page' query var com pretty permalinks
+$paged = 1;
+
+// Para page templates com pretty permalinks, WordPress usa 'page' (não 'paged')
+if ( is_page() ) {
+	$page_num = get_query_var( 'page' );
+	if ( $page_num > 0 ) {
+		$paged = absint( $page_num );
+	}
+} else {
+	// Para archives ou plain permalinks, usa 'paged'
+	$paged_num = get_query_var( 'paged' );
+	if ( $paged_num > 0 ) {
+		$paged = absint( $paged_num );
+	}
+}
+
+// Garantir que paged seja pelo menos 1
+$paged = max( 1, $paged );
+
 $blog_query = new WP_Query( array(
 	'post_type' => 'post',
 	'posts_per_page' => 9,
@@ -20,6 +71,7 @@ $blog_query = new WP_Query( array(
 	'post_status' => 'publish',
 	'orderby' => 'date',
 	'order' => 'DESC',
+	'ignore_sticky_posts' => true,
 ) );
 ?>
 
@@ -128,38 +180,111 @@ $blog_query = new WP_Query( array(
 					</div>
 					
 					<!-- Pagination -->
+					<?php if ( $blog_query->max_num_pages > 1 ) : ?>
 					<div class="pagination mt-8">
 						<?php
-						$big = 999999999;
+						/**
+						 * Sistema de Paginação Corrigido para Page Templates
+						 * 
+						 * Funciona corretamente com:
+						 * - Pretty permalinks: /blog/page/2/
+						 * - Plain permalinks: ?page_id=X&paged=2
+						 * 
+						 * IMPORTANTE: Usa $blog_page_id obtido ANTES do loop para garantir
+						 * que sempre referencia a página do blog, não o último post.
+						 */
+						
+						// Obter o permalink da página do blog (não do último post)
+						$page_permalink = get_permalink( $blog_page_id );
+						
+						// Verificar se estamos usando pretty permalinks
+						$permalink_structure = get_option( 'permalink_structure' );
+						$using_pretty_permalinks = ! empty( $permalink_structure );
+						
+						// Construir a base de paginação corretamente
+						if ( $using_pretty_permalinks ) {
+							// Pretty permalinks: /blog/page/2/
+							// Remove qualquer /page/X/ existente da URL base
+							$page_permalink = preg_replace( '/\/page\/\d+\/?$/', '', $page_permalink );
+							$page_permalink = trailingslashit( $page_permalink );
+							$pagination_base = $page_permalink . 'page/%#%/';
+						} else {
+							// Plain permalinks: ?page_id=X&paged=2
+							// Remove qualquer parâmetro paged existente
+							$page_permalink = remove_query_arg( 'paged', $page_permalink );
+							$pagination_base = add_query_arg( 'paged', '%#%', $page_permalink );
+						}
+						
+						// Configuração dos argumentos de paginação
 						$pagination_args = array(
-							'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-							'format' => '?paged=%#%',
-							'current' => max( 1, $paged ),
-							'total' => $blog_query->max_num_pages,
-							'prev_text' => '<svg style="width: 16px; height: 16px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> Anterior',
-							'next_text' => 'Próxima <svg style="width: 16px; height: 16px; margin-left: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>',
-							'type' => 'list',
-							'end_size' => 2,
-							'mid_size' => 1,
+							'base'      => $pagination_base,
+							'format'    => '',
+							'current'   => $paged,
+							'total'     => $blog_query->max_num_pages,
+							'prev_text' => '<svg style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> <span>Anterior</span>',
+							'next_text' => '<span>Próxima</span> <svg style="width: 16px; height: 16px; margin-left: 4px; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>',
+							'type'      => 'list',
+							'end_size'  => 2,
+							'mid_size'  => 1,
+							'show_all'  => false,
+							'add_args'  => false,
+							'before_page_number' => '<span class="sr-only">Página </span>',
 						);
 						
+						// Gerar links de paginação
 						$pagination = paginate_links( $pagination_args );
 						
 						if ( $pagination ) :
 						?>
-							<nav class="mui-pagination" aria-label="Navegação de páginas">
+							<nav class="mui-pagination" aria-label="<?php esc_attr_e( 'Navegação de páginas', 'cbd-ai-theme' ); ?>">
 								<?php 
-								// Style pagination with MUI classes
-								$pagination = str_replace( '<ul class=\'page-numbers\'>', '<ul class="mui-pagination-list flex flex-wrap justify-center gap-2">', $pagination );
-								$pagination = str_replace( '<li>', '<li class="mui-pagination-item">', $pagination );
-								$pagination = str_replace( '<a class="page-numbers', '<a class="mui-button mui-button-outlined mui-button-small', $pagination );
-								$pagination = str_replace( '<span class="page-numbers current', '<span class="mui-button mui-button-contained mui-button-primary mui-button-small', $pagination );
-								$pagination = str_replace( '<span class="page-numbers dots', '<span class="mui-typography-body2" style="padding: 8px 12px; color: var(--mui-gray-600);"', $pagination );
+								// Aplicar classes MUI aos elementos de paginação
+								$pagination = str_replace( 
+									'<ul class=\'page-numbers\'>', 
+									'<ul class="mui-pagination-list flex flex-wrap justify-center items-center gap-2">', 
+									$pagination 
+								);
+								
+								$pagination = str_replace( 
+									'<li>', 
+									'<li class="mui-pagination-item">', 
+									$pagination 
+								);
+								
+								// Links de página (não ativos)
+								$pagination = str_replace( 
+									'<a class="page-numbers', 
+									'<a class="mui-button mui-button-outlined mui-button-small mui-pagination-link', 
+									$pagination 
+								);
+								
+								// Página atual
+								$pagination = str_replace( 
+									'<span class="page-numbers current', 
+									'<span class="mui-button mui-button-contained mui-button-primary mui-button-small mui-pagination-current" aria-current="page"', 
+									$pagination 
+								);
+								
+								// Dots (reticências)
+								$pagination = str_replace( 
+									'<span class="page-numbers dots', 
+									'<span class="mui-typography-body2 mui-pagination-dots" style="padding: 8px 12px; color: var(--mui-gray-600);"', 
+									$pagination 
+								);
+								
+								// Links de navegação (prev/next)
+								$pagination = preg_replace( 
+									'/<a class="(prev|next) page-numbers/', 
+									'<a class="mui-button mui-button-outlined mui-button-small mui-pagination-nav mui-pagination-$1', 
+									$pagination 
+								);
+								
 								echo $pagination;
 								?>
 							</nav>
 						<?php endif; ?>
 					</div>
+					<?php endif; ?>
 					
 					<?php wp_reset_postdata(); ?>
 					
@@ -348,24 +473,105 @@ $blog_query = new WP_Query( array(
 </main>
 
 <style>
-/* Pagination Styles */
+/* Pagination Styles - Sistema Completo */
+.mui-pagination {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
 .mui-pagination-list {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
 }
 
 .mui-pagination-item {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .mui-pagination-item .mui-button {
 	min-width: auto;
 	padding: 8px 16px;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+.mui-pagination-item .mui-button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .mui-pagination-item span.mui-button {
 	cursor: default;
+	pointer-events: none;
+}
+
+.mui-pagination-link {
+	color: var(--mui-gray-700);
+}
+
+.mui-pagination-link:hover {
+	color: var(--mui-teal-primary);
+	border-color: var(--mui-teal-primary);
+}
+
+.mui-pagination-current {
+	font-weight: 600;
+	cursor: default;
+	pointer-events: none;
+}
+
+.mui-pagination-nav {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.mui-pagination-dots {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	user-select: none;
+}
+
+/* Screen reader only */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+	.mui-pagination-list {
+		gap: 0.375rem;
+	}
+	
+	.mui-pagination-item .mui-button {
+		padding: 6px 12px;
+		font-size: 0.875rem;
+	}
+	
+	.mui-pagination-nav span {
+		display: none;
+	}
+	
+	.mui-pagination-nav svg {
+		margin: 0 !important;
+	}
 }
 
 /* Blog Posts Grid Responsive */

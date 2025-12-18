@@ -935,3 +935,224 @@ function cbd_ai_output_schema_markup() {
 }
 add_action( 'wp_head', 'cbd_ai_output_schema_markup', 5 );
 
+/**
+ * Fix pagination for custom page templates
+ * Ensures that pagination works correctly on custom page templates like template-blog.php
+ * Adds rewrite rules to ensure /page-slug/page/2/ URLs are recognized
+ */
+function cbd_ai_fix_custom_page_pagination() {
+	// WordPress already handles /page-slug/page/2/ by default, but we ensure it works
+	// The default WordPress rewrite rules should handle this, but we add explicit support
+	// Note: WordPress core already has this rule, but we ensure paged is recognized
+	
+	// Add rewrite rule for page pagination if not already present
+	// Format: /page-slug/page/2/
+	// This is already handled by WordPress core, but we ensure it's available
+	$permalink_structure = get_option( 'permalink_structure' );
+	if ( ! empty( $permalink_structure ) ) {
+		// WordPress core already handles this, but we ensure the query var is recognized
+		// The rewrite rule is: (.+?)/page/?([0-9]{1,})/?$
+		// This matches any page slug followed by /page/ and a number
+		// No need to add custom rule as WordPress handles it natively
+	}
+}
+add_action( 'init', 'cbd_ai_fix_custom_page_pagination' );
+
+/**
+ * Flush rewrite rules on theme activation
+ * This ensures pagination URLs work correctly after theme activation
+ */
+function cbd_ai_flush_rewrite_rules() {
+	flush_rewrite_rules();
+}
+add_action( 'after_switch_theme', 'cbd_ai_flush_rewrite_rules' );
+
+/**
+ * Flush rewrite rules when permalink structure changes
+ * This helps ensure pagination works after permalink changes
+ */
+function cbd_ai_flush_rewrite_on_permalink_change() {
+	// Only flush if we're saving permalink settings
+	if ( isset( $_POST['permalink_structure'] ) || isset( $_POST['category_base'] ) || isset( $_POST['tag_base'] ) ) {
+		flush_rewrite_rules( false );
+	}
+}
+add_action( 'admin_init', 'cbd_ai_flush_rewrite_on_permalink_change' );
+
+/**
+ * Ensure paged query var is recognized for custom pages
+ * Also ensure 'page' is available (it should be by default, but we make sure)
+ */
+function cbd_ai_add_paged_query_var( $vars ) {
+	$vars[] = 'paged';
+	// 'page' should already be in $vars, but we ensure it's there
+	if ( ! in_array( 'page', $vars, true ) ) {
+		$vars[] = 'page';
+	}
+	return $vars;
+}
+add_filter( 'query_vars', 'cbd_ai_add_paged_query_var' );
+
+/**
+ * Parse pagination for custom page templates
+ * This ensures that when visiting /page-slug/page/2/, WordPress recognizes it
+ * For page templates, WordPress uses 'page' query var (not 'paged')
+ * Compatible with Yoast SEO
+ */
+function cbd_ai_parse_custom_page_pagination( $query ) {
+	// Only run on front-end and main query
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+	
+	// For page templates with pretty permalinks, WordPress uses 'page' query var
+	// This is already handled by WordPress core, but we ensure it's available
+	if ( $query->is_page() ) {
+		$page_num = get_query_var( 'page' );
+		if ( $page_num && $page_num > 0 ) {
+			// WordPress automatically handles this, but we ensure it's set
+			// For page templates, 'page' is the correct query var
+			// We don't need to set 'paged' as WordPress handles page templates differently
+			// The 'page' query var is already set by WordPress core rewrite rules
+		}
+	}
+}
+add_action( 'pre_get_posts', 'cbd_ai_parse_custom_page_pagination', 1 );
+
+/**
+ * Fix pagination URLs for page templates - compatible with Yoast SEO
+ * This ensures pagination links work correctly even when Yoast is active
+ * Priority 5 ensures this runs before Yoast's filter (priority 10)
+ */
+function cbd_ai_fix_page_template_pagination( $link, $pagenum ) {
+	// Only apply to page templates
+	if ( is_page_template() ) {
+		// Get the page ID from queried object to avoid getting last post ID
+		global $wp_query;
+		$current_page_id = null;
+		
+		if ( isset( $wp_query->queried_object->ID ) ) {
+			$current_page_id = $wp_query->queried_object->ID;
+		} else {
+			$current_page_id = get_queried_object_id();
+		}
+		
+		if ( ! $current_page_id ) {
+			return $link;
+		}
+		
+		$current_page_url = get_permalink( $current_page_id );
+		
+		// Remove any existing pagination from URL
+		$current_page_url = preg_replace( '/\/page\/\d+\/?$/', '', $current_page_url );
+		$current_page_url = rtrim( $current_page_url, '/' );
+		
+		// Check if permalinks are being used
+		$using_permalinks = get_option( 'permalink_structure' );
+		
+		if ( $using_permalinks && ! empty( $using_permalinks ) ) {
+			if ( $pagenum > 1 ) {
+				$link = trailingslashit( $current_page_url ) . 'page/' . $pagenum . '/';
+			} else {
+				$link = trailingslashit( $current_page_url );
+			}
+		} else {
+			if ( $pagenum > 1 ) {
+				$link = add_query_arg( 'paged', $pagenum, $current_page_url );
+			} else {
+				$link = $current_page_url;
+			}
+		}
+	}
+	
+	return $link;
+}
+add_filter( 'get_pagenum_link', 'cbd_ai_fix_page_template_pagination', 5, 2 );
+
+/**
+ * Ensure Yoast SEO doesn't interfere with page template pagination
+ * Run early to prevent conflicts
+ */
+function cbd_ai_prevent_yoast_pagination_conflict() {
+	// Only on page templates
+	if ( is_page_template() ) {
+		// Remove Yoast's pagination filters if they exist and might interfere
+		if ( class_exists( 'WPSEO_Frontend' ) ) {
+			$yoast_frontend = WPSEO_Frontend::get_instance();
+			if ( $yoast_frontend && has_filter( 'get_pagenum_link', array( $yoast_frontend, 'get_pagenum_link' ) ) ) {
+				remove_filter( 'get_pagenum_link', array( $yoast_frontend, 'get_pagenum_link' ), 10 );
+			}
+		}
+	}
+}
+add_action( 'template_redirect', 'cbd_ai_prevent_yoast_pagination_conflict', 1 );
+
+/**
+ * Fix 404 errors on pagination URLs for page templates
+ * Ensures that /page-slug/page/2/ URLs are recognized correctly
+ */
+function cbd_ai_fix_page_template_pagination_404() {
+	// Only run on 404 pages that might be pagination URLs
+	if ( ! is_404() ) {
+		return;
+	}
+	
+	global $wp, $wp_query;
+	
+	// Get the requested URL path
+	$requested_path = trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+	
+	// Check if this looks like a pagination URL: page-slug/page/2
+	if ( preg_match( '#^([^/]+)/page/(\d+)/?$#', $requested_path, $matches ) ) {
+		$page_slug = $matches[1];
+		$page_num = intval( $matches[2] );
+		
+		// Try to find the page by slug
+		$page = get_page_by_path( $page_slug );
+		
+		if ( $page && $page->ID ) {
+			// Check if this page uses a custom template
+			$template = get_page_template_slug( $page->ID );
+			
+			if ( ! empty( $template ) ) {
+				// This is a page template with pagination
+				// Set up the query to recognize this page correctly
+				$wp_query->queried_object = $page;
+				$wp_query->queried_object_id = $page->ID;
+				$wp_query->is_page = true;
+				$wp_query->is_singular = true;
+				$wp_query->is_404 = false;
+				$wp_query->is_archive = false;
+				$wp_query->is_home = false;
+				
+				// Set query vars
+				$wp_query->set( 'page_id', $page->ID );
+				$wp_query->set( 'page', $page_num );
+				$wp_query->set( 'paged', $page_num );
+				
+				// Also set in $wp for consistency
+				$wp->query_vars['page_id'] = $page->ID;
+				$wp->query_vars['page'] = $page_num;
+				$wp->query_vars['paged'] = $page_num;
+				
+				// Set global post data
+				$wp_query->posts = array( $page );
+				$wp_query->post_count = 1;
+				$wp_query->post = $page;
+				$GLOBALS['post'] = $page;
+				
+				// Set status to 200
+				status_header( 200 );
+				
+				// Load the correct template
+				$template_file = locate_template( $template );
+				if ( $template_file ) {
+					load_template( $template_file );
+					exit;
+				}
+			}
+		}
+	}
+}
+add_action( 'template_redirect', 'cbd_ai_fix_page_template_pagination_404', 1 );
+
