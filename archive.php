@@ -71,22 +71,6 @@ $archive_description = get_the_archive_description();
 								
 								<div class="mui-card-content p-6">
 									
-									<!-- Categories -->
-									<?php 
-									$categories = get_the_category();
-									if ( ! empty( $categories ) ) :
-									?>
-										<div class="flex flex-wrap gap-2 mb-3">
-											<?php foreach ( array_slice( $categories, 0, 2 ) as $category ) : ?>
-												<a href="<?php echo esc_url( get_category_link( $category->term_id ) ); ?>" 
-												   class="mui-chip mui-chip-info mui-chip-small" 
-												   style="text-decoration: none;">
-													<?php echo esc_html( $category->name ); ?>
-												</a>
-											<?php endforeach; ?>
-										</div>
-									<?php endif; ?>
-									
 									<!-- Title -->
 									<h2 class="mui-typography-h6 mb-3" itemprop="headline">
 										<a href="<?php the_permalink(); ?>" 
