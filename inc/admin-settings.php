@@ -304,17 +304,36 @@ function cbd_ai_settings_page() {
 		return;
 	}
 	
-		// Save settings
+	// Save settings - handle all forms
 	if ( isset( $_POST['submit'] ) && check_admin_referer( 'cbd_ai_settings' ) ) {
-		$new_api_key = sanitize_text_field( $_POST['cbd_gemini_api_key'] ?? '' );
-		update_option( 'cbd_gemini_api_key', $new_api_key );
+		// Save Gemini API Key - preserve existing if password field is empty
+		if ( isset( $_POST['cbd_gemini_api_key'] ) ) {
+			$new_api_key = sanitize_text_field( $_POST['cbd_gemini_api_key'] );
+			// If password field is empty, use current value
+			if ( empty( $new_api_key ) && isset( $_POST['cbd_gemini_api_key_current'] ) ) {
+				$new_api_key = sanitize_text_field( $_POST['cbd_gemini_api_key_current'] );
+			}
+			update_option( 'cbd_gemini_api_key', $new_api_key );
+		}
+		
+		// Save module settings
 		update_option( 'cbd_legislation_monitor_enabled', isset( $_POST['cbd_legislation_monitor_enabled'] ) );
 		update_option( 'cbd_chatbot_enabled', isset( $_POST['cbd_chatbot_enabled'] ) );
 		update_option( 'cbd_chatbot_humans_enabled', isset( $_POST['cbd_chatbot_humans_enabled'] ) );
 		
-		// Save Brevo settings
-		update_option( 'cbd_brevo_api_key', sanitize_text_field( $_POST['cbd_brevo_api_key'] ?? '' ) );
-		update_option( 'cbd_brevo_list_id', absint( $_POST['cbd_brevo_list_id'] ?? 0 ) );
+		// Save Brevo settings - preserve existing if password field is empty
+		if ( isset( $_POST['cbd_brevo_api_key'] ) ) {
+			$brevo_key = sanitize_text_field( $_POST['cbd_brevo_api_key'] );
+			// If password field is empty, use current value
+			if ( empty( $brevo_key ) && isset( $_POST['cbd_brevo_api_key_current'] ) ) {
+				$brevo_key = sanitize_text_field( $_POST['cbd_brevo_api_key_current'] );
+			}
+			update_option( 'cbd_brevo_api_key', $brevo_key );
+		}
+		
+		if ( isset( $_POST['cbd_brevo_list_id'] ) ) {
+			update_option( 'cbd_brevo_list_id', absint( $_POST['cbd_brevo_list_id'] ?? 0 ) );
+		}
 		
 		echo '<div class="notice notice-success is-dismissible"><p><strong>Configurações salvas com sucesso!</strong></p></div>';
 	}
@@ -356,6 +375,10 @@ function cbd_ai_settings_page() {
 		
 		<div class="cbd-ai-settings-container" style="max-width: 900px;">
 			
+			<!-- Unified Settings Form -->
+			<form method="post" action="" id="cbd-ai-settings-form">
+				<?php wp_nonce_field( 'cbd_ai_settings' ); ?>
+			
 			<!-- API Key Section -->
 			<div class="card" style="margin-top: 20px;">
 				<h2 class="title">🔑 Chave API Google Gemini</h2>
@@ -371,9 +394,6 @@ function cbd_ai_settings_page() {
 					?>
 					<br><small style="color: #666;">O sistema detectará automaticamente os modelos disponíveis ao testar a API Key.</small>
 				</p>
-				
-				<form method="post" action="" id="cbd-ai-api-form">
-					<?php wp_nonce_field( 'cbd_ai_settings' ); ?>
 					
 					<table class="form-table">
 						<tr>
@@ -381,13 +401,21 @@ function cbd_ai_settings_page() {
 								<label for="cbd_gemini_api_key">Chave API</label>
 							</th>
 							<td>
+								<?php if ( ! empty( $api_key ) ) : ?>
+									<input type="hidden" name="cbd_gemini_api_key_current" value="<?php echo esc_attr( $api_key ); ?>">
+								<?php endif; ?>
 								<input type="password" 
 								       id="cbd_gemini_api_key" 
 								       name="cbd_gemini_api_key" 
-								       value="<?php echo esc_attr( $api_key ); ?>" 
+								       value="" 
 								       class="regular-text code" 
-								       placeholder="AIzaSy..."
+								       placeholder="<?php echo ! empty( $api_key ) ? '•••••••• (deixe em branco para manter atual)' : 'AIzaSy...'; ?>"
 								       autocomplete="off">
+								<?php if ( ! empty( $api_key ) ) : ?>
+									<p class="description" style="margin-top: 5px; color: #666;">
+										<small>Deixe em branco para manter a chave atual. Digite uma nova chave para alterar.</small>
+									</p>
+								<?php endif; ?>
 								<p class="description">
 									<strong>Como obter:</strong>
 									<ol style="margin-left: 20px; margin-top: 5px;">
@@ -437,9 +465,6 @@ function cbd_ai_settings_page() {
 							</td>
 						</tr>
 					</table>
-					
-					<?php submit_button( 'Salvar Configurações', 'primary', 'submit', false ); ?>
-				</form>
 			</div>
 			
 			<!-- Brevo Newsletter Section -->
@@ -449,9 +474,6 @@ function cbd_ai_settings_page() {
 					Configure a integração com Brevo para gerenciar subscrições de newsletter.
 					<br><small style="color: #666;">O widget de newsletter nos posts será conectado automaticamente à sua lista do Brevo.</small>
 				</p>
-				
-				<form method="post" action="">
-					<?php wp_nonce_field( 'cbd_ai_settings' ); ?>
 					
 					<table class="form-table">
 						<tr>
@@ -459,13 +481,21 @@ function cbd_ai_settings_page() {
 								<label for="cbd_brevo_api_key">API Key do Brevo</label>
 							</th>
 							<td>
+								<?php if ( ! empty( $brevo_api_key ) ) : ?>
+									<input type="hidden" name="cbd_brevo_api_key_current" value="<?php echo esc_attr( $brevo_api_key ); ?>">
+								<?php endif; ?>
 								<input type="password" 
 								       id="cbd_brevo_api_key" 
 								       name="cbd_brevo_api_key" 
-								       value="<?php echo esc_attr( $brevo_api_key ); ?>" 
+								       value="" 
 								       class="regular-text code" 
-								       placeholder="xkeysib-..."
+								       placeholder="<?php echo ! empty( $brevo_api_key ) ? '•••••••• (deixe em branco para manter atual)' : 'xkeysib-...'; ?>"
 								       autocomplete="off">
+								<?php if ( ! empty( $brevo_api_key ) ) : ?>
+									<p class="description" style="margin-top: 5px; color: #666;">
+										<small>Deixe em branco para manter a chave atual. Digite uma nova chave para alterar.</small>
+									</p>
+								<?php endif; ?>
 								<p class="description">
 									<strong>Como obter:</strong>
 									<ol style="margin-left: 20px; margin-top: 5px;">
@@ -512,9 +542,6 @@ function cbd_ai_settings_page() {
 							</td>
 						</tr>
 					</table>
-					
-					<?php submit_button( 'Salvar Configurações', 'primary', 'submit', false ); ?>
-				</form>
 			</div>
 			
 			<!-- Features Section -->
@@ -523,9 +550,6 @@ function cbd_ai_settings_page() {
 				<p class="description" style="margin-bottom: 20px;">
 					Ative ou desative os módulos de IA do tema.
 				</p>
-				
-				<form method="post" action="">
-					<?php wp_nonce_field( 'cbd_ai_settings' ); ?>
 					
 					<table class="form-table">
 						<tr>
@@ -568,10 +592,14 @@ function cbd_ai_settings_page() {
 							</td>
 						</tr>
 					</table>
-					
-					<?php submit_button( 'Salvar Configurações', 'primary', 'submit', false ); ?>
-				</form>
 			</div>
+			
+			<!-- Submit Button for all settings -->
+			<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+				<?php submit_button( 'Salvar Todas as Configurações', 'primary', 'submit', false ); ?>
+			</div>
+			
+			</form>
 			
 			<!-- Information Section -->
 			<div class="card" style="margin-top: 20px;">
