@@ -17,7 +17,7 @@ get_header();
 			<div class="lg:col-span-8">
 				<?php while ( have_posts() ) : the_post(); ?>
 					<article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded-lg shadow-md p-6 md:p-8' ); ?>>
-						<?php cbd_ai_breadcrumbs(); ?>
+						
 						
 						<header class="entry-header mb-6">
 							<h1 class="entry-title text-3xl md:text-4xl font-bold mb-4 text-gray-900">
