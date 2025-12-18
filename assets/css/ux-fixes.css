@@ -759,3 +759,229 @@ img {
 	transition-timing-function: ease-out;
 }
 
+/* ============================================
+   ESTILOS MODERNOS PARA TABELAS
+   ============================================ */
+
+/* Container de tabela - responsivo */
+.entry-content table,
+.prose table,
+.wp-block-table table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.5rem 0;
+	background-color: #ffffff;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	display: block;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Tabela em si - reset de estilos inline antigos */
+.entry-content table,
+.prose table,
+.wp-block-table table,
+.entry-content table[border],
+.prose table[border],
+.wp-block-table table[border] {
+	border: none !important;
+	border-collapse: collapse !important;
+	border-spacing: 0 !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* Remover atributos inline antigos */
+.entry-content table[cellspacing],
+.prose table[cellspacing],
+.wp-block-table table[cellspacing] {
+	border-spacing: 0 !important;
+}
+
+.entry-content table[cellpadding],
+.prose table[cellpadding],
+.wp-block-table table[cellpadding] {
+	/* cellpadding é aplicado via padding nas células */
+}
+
+/* Colgroup - ocultar se não necessário */
+.entry-content colgroup,
+.prose colgroup,
+.wp-block-table colgroup {
+	display: none;
+}
+
+/* Tbody - display table para manter estrutura */
+.entry-content tbody,
+.prose tbody,
+.wp-block-table tbody {
+	display: table;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+/* Thead - estilo para cabeçalho */
+.entry-content thead,
+.prose thead,
+.wp-block-table thead {
+	display: table-header-group;
+	background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+	color: #ffffff;
+}
+
+/* Células do cabeçalho (th) */
+.entry-content th,
+.prose th,
+.wp-block-table th,
+.entry-content thead td,
+.prose thead td,
+.wp-block-table thead td {
+	padding: 1rem 1.25rem !important;
+	text-align: left;
+	font-weight: 600;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #ffffff;
+	border: none !important;
+	background-color: transparent;
+	white-space: nowrap;
+}
+
+/* Primeira linha (cabeçalho) - estilo especial quando não há thead */
+.entry-content tbody tr:first-child td,
+.prose tbody tr:first-child td,
+.wp-block-table tbody tr:first-child td {
+	background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+	color: #ffffff;
+	padding: 1rem 1.25rem !important;
+	font-weight: 600;
+	font-size: 0.875rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Strong dentro da primeira linha */
+.entry-content tbody tr:first-child td strong,
+.prose tbody tr:first-child td strong,
+.wp-block-table tbody tr:first-child td strong {
+	color: #ffffff;
+	font-weight: 600;
+}
+
+/* Células de dados (td) */
+.entry-content td,
+.prose td,
+.wp-block-table td {
+	padding: 0.875rem 1.25rem !important;
+	border: none !important;
+	border-bottom: 1px solid #e0e0e0;
+	vertical-align: top;
+	font-size: 0.9375rem;
+	line-height: 1.6;
+	color: #424242;
+	background-color: #ffffff;
+}
+
+/* Linhas alternadas (zebra striping) - começar após a primeira linha */
+.entry-content tbody tr:nth-child(even):not(:first-child) td,
+.prose tbody tr:nth-child(even):not(:first-child) td,
+.wp-block-table tbody tr:nth-child(even):not(:first-child) td {
+	background-color: #fafafa;
+}
+
+/* Se há thead, aplicar zebra striping normalmente */
+.entry-content thead + tbody tr:nth-child(even) td,
+.prose thead + tbody tr:nth-child(even) td,
+.wp-block-table thead + tbody tr:nth-child(even) td {
+	background-color: #fafafa;
+}
+
+/* Hover effect nas linhas */
+.entry-content tbody tr:hover td,
+.prose tbody tr:hover td,
+.wp-block-table tbody tr:hover td {
+	background-color: #f0f9f0;
+	transition: background-color 0.2s ease;
+}
+
+/* Última linha - sem borda inferior */
+.entry-content tbody tr:last-child td,
+.prose tbody tr:last-child td,
+.wp-block-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+/* Strong dentro das células */
+.entry-content td strong,
+.prose td strong,
+.wp-block-table td strong {
+	font-weight: 600;
+	color: #212121;
+}
+
+/* Divs dentro das células - remover estilos desnecessários */
+.entry-content td div,
+.prose td div,
+.wp-block-table td div {
+	margin: 0;
+	padding: 0;
+}
+
+/* Responsividade - scroll horizontal em mobile */
+@media (max-width: 768px) {
+	.entry-content table,
+	.prose table,
+	.wp-block-table table {
+		display: block;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		font-size: 0.875rem;
+	}
+	
+	.entry-content th,
+	.prose th,
+	.wp-block-table th,
+	.entry-content td,
+	.prose td,
+	.wp-block-table td {
+		padding: 0.75rem 1rem !important;
+		font-size: 0.875rem;
+	}
+	
+	.entry-content tbody tr:first-child td,
+	.prose tbody tr:first-child td,
+	.wp-block-table tbody tr:first-child td {
+		padding: 0.75rem 1rem !important;
+		font-size: 0.8125rem;
+	}
+}
+
+/* Estilo para tabelas com muitas colunas - scroll horizontal sempre */
+.entry-content table[data-sheets-root],
+.prose table[data-sheets-root],
+.wp-block-table table[data-sheets-root] {
+	display: block;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Remover altura fixa inline */
+.entry-content table[style*="height"],
+.prose table[style*="height"],
+.wp-block-table table[style*="height"] {
+	height: auto !important;
+}
+
+/* Ajustar largura - não forçar largura fixa */
+.entry-content table[width],
+.prose table[width],
+.wp-block-table table[width] {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
