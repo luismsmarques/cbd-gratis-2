@@ -484,14 +484,25 @@ function cbd_ai_sidebar( $args = array() ) {
 			<p class="text-gray-700 text-sm mb-4">
 				Receba alertas sobre mudanças na legislação e novos guias sobre CBD.
 			</p>
-			<form class="space-y-3">
+			<form class="newsletter-form space-y-3" data-context="<?php echo esc_attr( $args['context'] ); ?>">
 				<input 
 					type="email" 
+					name="email"
+					id="newsletter-email-<?php echo esc_attr( $args['context'] ); ?>"
 					placeholder="Seu email" 
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cbd-green-500 focus:border-transparent text-sm"
+					class="newsletter-email-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cbd-green-500 focus:border-transparent text-sm"
+					required
 				>
-				<button type="submit" class="btn-cta bg-cbd-green-600 text-white w-full py-2 rounded-lg font-semibold hover:bg-cbd-green-700 transition-colors text-sm">
-					Subscrever
+				<div class="newsletter-message text-sm mt-2" style="display: none;"></div>
+				<button type="submit" class="newsletter-submit-btn btn-cta bg-cbd-green-600 text-white w-full py-2 rounded-lg font-semibold hover:bg-cbd-green-700 transition-colors text-sm">
+					<span class="btn-text">Subscrever</span>
+					<span class="btn-loading" style="display: none;">
+						<svg class="animate-spin h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+						</svg>
+						A processar...
+					</span>
 				</button>
 			</form>
 		</div>

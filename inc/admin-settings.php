@@ -60,6 +60,17 @@ function cbd_ai_register_settings() {
 		'type' => 'boolean',
 		'default' => true,
 	) );
+	
+	// Brevo (Newsletter) settings
+	register_setting( 'cbd_ai_settings', 'cbd_brevo_api_key', array(
+		'type' => 'string',
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	
+	register_setting( 'cbd_ai_settings', 'cbd_brevo_list_id', array(
+		'type' => 'integer',
+		'sanitize_callback' => 'absint',
+	) );
 }
 add_action( 'admin_init', 'cbd_ai_register_settings' );
 
@@ -293,7 +304,7 @@ function cbd_ai_settings_page() {
 		return;
 	}
 	
-	// Save settings
+		// Save settings
 	if ( isset( $_POST['submit'] ) && check_admin_referer( 'cbd_ai_settings' ) ) {
 		$new_api_key = sanitize_text_field( $_POST['cbd_gemini_api_key'] ?? '' );
 		update_option( 'cbd_gemini_api_key', $new_api_key );
@@ -301,10 +312,16 @@ function cbd_ai_settings_page() {
 		update_option( 'cbd_chatbot_enabled', isset( $_POST['cbd_chatbot_enabled'] ) );
 		update_option( 'cbd_chatbot_humans_enabled', isset( $_POST['cbd_chatbot_humans_enabled'] ) );
 		
+		// Save Brevo settings
+		update_option( 'cbd_brevo_api_key', sanitize_text_field( $_POST['cbd_brevo_api_key'] ?? '' ) );
+		update_option( 'cbd_brevo_list_id', absint( $_POST['cbd_brevo_list_id'] ?? 0 ) );
+		
 		echo '<div class="notice notice-success is-dismissible"><p><strong>Configurações salvas com sucesso!</strong></p></div>';
 	}
 	
 	$api_key = get_option( 'cbd_gemini_api_key', '' );
+	$brevo_api_key = get_option( 'cbd_brevo_api_key', '' );
+	$brevo_list_id = get_option( 'cbd_brevo_list_id', 0 );
 	
 	// Get module settings - default to true if not set (first time)
 	$monitor_enabled = get_option( 'cbd_legislation_monitor_enabled' );
@@ -415,6 +432,81 @@ function cbd_ai_settings_page() {
 											Testar API Key
 										</button>
 										<span id="test-result" style="margin-left: 10px;"></span>
+									</p>
+								<?php endif; ?>
+							</td>
+						</tr>
+					</table>
+					
+					<?php submit_button( 'Salvar Configurações', 'primary', 'submit', false ); ?>
+				</form>
+			</div>
+			
+			<!-- Brevo Newsletter Section -->
+			<div class="card" style="margin-top: 20px;">
+				<h2 class="title">📧 Newsletter - Brevo (Sendinblue)</h2>
+				<p class="description" style="margin-bottom: 20px;">
+					Configure a integração com Brevo para gerenciar subscrições de newsletter.
+					<br><small style="color: #666;">O widget de newsletter nos posts será conectado automaticamente à sua lista do Brevo.</small>
+				</p>
+				
+				<form method="post" action="">
+					<?php wp_nonce_field( 'cbd_ai_settings' ); ?>
+					
+					<table class="form-table">
+						<tr>
+							<th scope="row">
+								<label for="cbd_brevo_api_key">API Key do Brevo</label>
+							</th>
+							<td>
+								<input type="password" 
+								       id="cbd_brevo_api_key" 
+								       name="cbd_brevo_api_key" 
+								       value="<?php echo esc_attr( $brevo_api_key ); ?>" 
+								       class="regular-text code" 
+								       placeholder="xkeysib-..."
+								       autocomplete="off">
+								<p class="description">
+									<strong>Como obter:</strong>
+									<ol style="margin-left: 20px; margin-top: 5px;">
+										<li>Acesse <a href="https://app.brevo.com/settings/keys/api" target="_blank" rel="noopener">Brevo API Keys</a></li>
+										<li>Faça login na sua conta Brevo</li>
+										<li>Clique em "Generate a new API key"</li>
+										<li>Copie a chave gerada e cole aqui</li>
+									</ol>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="cbd_brevo_list_id">ID da Lista</label>
+							</th>
+							<td>
+								<input type="number" 
+								       id="cbd_brevo_list_id" 
+								       name="cbd_brevo_list_id" 
+								       value="<?php echo esc_attr( $brevo_list_id ); ?>" 
+								       class="regular-text" 
+								       placeholder="1"
+								       min="1">
+								<p class="description">
+									<strong>Como encontrar:</strong>
+									<ol style="margin-left: 20px; margin-top: 5px;">
+										<li>Acesse <a href="https://app.brevo.com/contact/list-listing" target="_blank" rel="noopener">Brevo Lists</a></li>
+										<li>Clique na lista que deseja usar</li>
+										<li>O ID da lista aparece na URL: <code>.../list-listing/1</code> (o número é o ID)</li>
+									</ol>
+								</p>
+								<?php if ( ! empty( $brevo_api_key ) ) : ?>
+									<p style="margin-top: 15px;">
+										<button type="button" 
+										        class="button button-secondary" 
+										        id="test-brevo-btn"
+										        onclick="testBrevoConnection()">
+											<span class="dashicons dashicons-admin-tools" style="vertical-align: middle;"></span>
+											Testar Conexão
+										</button>
+										<span id="brevo-test-result" style="margin-left: 10px;"></span>
 									</p>
 								<?php endif; ?>
 							</td>
@@ -557,6 +649,46 @@ function cbd_ai_settings_page() {
 	const style = document.createElement('style');
 	style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
 	document.head.appendChild(style);
+	
+	function testBrevoConnection() {
+		const apiKey = document.getElementById('cbd_brevo_api_key').value;
+		const resultDiv = document.getElementById('brevo-test-result');
+		const testBtn = document.getElementById('test-brevo-btn');
+		
+		if (!apiKey) {
+			resultDiv.innerHTML = '<span style="color: #d63638;">Por favor, insira uma API Key primeiro.</span>';
+			return;
+		}
+		
+		testBtn.disabled = true;
+		testBtn.innerHTML = '<span class="dashicons dashicons-update" style="animation: spin 1s linear infinite; vertical-align: middle;"></span> Testando...';
+		resultDiv.innerHTML = '';
+		
+		const formData = new FormData();
+		formData.append('action', 'cbd_ai_test_brevo');
+		formData.append('api_key', apiKey);
+		formData.append('nonce', '<?php echo wp_create_nonce( 'cbd_ai_test_brevo' ); ?>');
+		
+		fetch(ajaxurl, {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				resultDiv.innerHTML = '<span style="color: #00a32a;"><span class="dashicons dashicons-yes-alt" style="vertical-align: middle;"></span> ' + (data.data.message || 'Conexão com Brevo estabelecida com sucesso!') + '</span>';
+			} else {
+				resultDiv.innerHTML = '<span style="color: #d63638;"><span class="dashicons dashicons-warning" style="vertical-align: middle;"></span> ' + (data.data.message || 'Erro ao testar conexão') + '</span>';
+			}
+		})
+		.catch(error => {
+			resultDiv.innerHTML = '<span style="color: #d63638;"><span class="dashicons dashicons-warning" style="vertical-align: middle;"></span> Erro de conexão</span>';
+		})
+		.finally(() => {
+			testBtn.disabled = false;
+			testBtn.innerHTML = '<span class="dashicons dashicons-admin-tools" style="vertical-align: middle;"></span> Testar Conexão';
+		});
+	}
 	</script>
 	<?php
 }
@@ -581,3 +713,35 @@ function cbd_ai_ajax_test_api_key() {
 	}
 }
 add_action( 'wp_ajax_cbd_ai_test_api_key', 'cbd_ai_ajax_test_api_key' );
+
+/**
+ * AJAX handler for Brevo connection test
+ */
+function cbd_ai_ajax_test_brevo() {
+	check_ajax_referer( 'cbd_ai_test_brevo', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Permissão negada' ) );
+	}
+	
+	require_once CBD_AI_THEME_PATH . '/inc/class-brevo-integration.php';
+	
+	$api_key = sanitize_text_field( $_POST['api_key'] ?? '' );
+	
+	// Temporarily set API key for testing
+	$original_key = get_option( 'cbd_brevo_api_key' );
+	update_option( 'cbd_brevo_api_key', $api_key );
+	
+	$brevo = new CBD_Brevo_Integration();
+	$result = $brevo->test_connection();
+	
+	// Restore original key
+	update_option( 'cbd_brevo_api_key', $original_key );
+	
+	if ( is_wp_error( $result ) ) {
+		wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+	} else {
+		wp_send_json_success( $result );
+	}
+}
+add_action( 'wp_ajax_cbd_ai_test_brevo', 'cbd_ai_ajax_test_brevo' );

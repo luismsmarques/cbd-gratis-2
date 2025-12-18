@@ -238,6 +238,23 @@ function cbd_ai_register_rest_routes() {
 			),
 		),
 	) );
+	
+	// Newsletter subscription endpoint
+	register_rest_route( 'cbd-ai/v1', '/newsletter/subscribe', array(
+		'methods' => 'POST',
+		'callback' => 'cbd_ai_newsletter_subscribe',
+		'permission_callback' => '__return_true',
+		'args' => array(
+			'email' => array(
+				'required' => true,
+				'type' => 'string',
+				'validate_callback' => function( $param ) {
+					return is_email( $param );
+				},
+				'sanitize_callback' => 'sanitize_email',
+			),
+		),
+	) );
 }
 add_action( 'rest_api_init', 'cbd_ai_register_rest_routes' );
 
@@ -574,6 +591,49 @@ function cbd_ai_get_legislation_alerts( $request ) {
 	$alerts = $monitor->get_recent_alerts( $limit );
 	
 	return rest_ensure_response( $alerts );
+}
+
+/**
+ * Handle newsletter subscription
+ *
+ * @param WP_REST_Request $request Request object
+ * @return WP_REST_Response|WP_Error
+ */
+function cbd_ai_newsletter_subscribe( $request ) {
+	$email = $request->get_param( 'email' );
+	
+	if ( empty( $email ) || ! is_email( $email ) ) {
+		return new WP_Error( 'invalid_email', 'Email inválido.', array( 'status' => 400 ) );
+	}
+	
+	// Check if Brevo integration is configured
+	$api_key = get_option( 'cbd_brevo_api_key', false );
+	$list_id = get_option( 'cbd_brevo_list_id', false );
+	
+	if ( ! $api_key || ! $list_id ) {
+		return new WP_Error( 'not_configured', 'Newsletter não está configurado. Por favor, contacte o administrador.', array( 'status' => 500 ) );
+	}
+	
+	// Initialize Brevo integration
+	if ( ! class_exists( 'CBD_Brevo_Integration' ) ) {
+		require_once CBD_AI_THEME_PATH . '/inc/class-brevo-integration.php';
+	}
+	
+	$brevo = new CBD_Brevo_Integration();
+	
+	// Add source attribute
+	$attributes = array(
+		'SOURCE' => 'Website',
+		'SUBSCRIBED_AT' => current_time( 'mysql' ),
+	);
+	
+	$result = $brevo->subscribe( $email, $attributes );
+	
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	
+	return rest_ensure_response( $result );
 }
 
 /**

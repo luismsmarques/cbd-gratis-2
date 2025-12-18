@@ -329,6 +329,21 @@ function cbd_ai_theme_scripts() {
 		false // Load in header
 	);
 	
+	// Enqueue newsletter script
+	wp_enqueue_script(
+		'cbd-ai-newsletter',
+		CBD_AI_THEME_URI . '/assets/js/newsletter.js',
+		array(),
+		CBD_AI_THEME_VERSION,
+		true // Load in footer
+	);
+	
+	// Localize script for REST API
+	wp_localize_script( 'cbd-ai-newsletter', 'cbdAIData', array(
+		'apiUrl' => rest_url( 'cbd-ai/v1/' ),
+		'nonce'  => wp_create_nonce( 'wp_rest' ),
+	) );
+	
 	// Enqueue styles - load in correct order
 	// Note: Critical CSS is already inlined via cbd_ai_output_critical_css()
 	// These stylesheets are loaded asynchronously via style_loader_tag filter
@@ -926,6 +941,7 @@ require_once CBD_AI_THEME_PATH . '/inc/admin-legislation-sources.php';
 require_once CBD_AI_THEME_PATH . '/inc/migrate-legislation-sources.php';
 require_once CBD_AI_THEME_PATH . '/inc/debug-gemini.php';
 require_once CBD_AI_THEME_PATH . '/inc/class-featured-image-generator.php';
+require_once CBD_AI_THEME_PATH . '/inc/class-brevo-integration.php';
 
 /**
  * Output Schema.org JSON-LD markup
