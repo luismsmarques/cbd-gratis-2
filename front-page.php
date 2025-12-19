@@ -140,23 +140,7 @@ get_header();
 						itemtype="https://schema.org/Article"
 					>
 						
-						<!-- Featured Image -->
-						<?php if ( $alert_id && has_post_thumbnail( $alert_id ) ) : ?>
-							<div class="w-full h-48 overflow-hidden bg-gray-100 group/image" style="aspect-ratio: 16/9; min-height: 192px;">
-								<a href="<?php echo esc_url( $alert['url'] ); ?>" aria-label="<?php echo esc_attr( $alert['title'] ); ?>" class="block h-full">
-									<?php 
-									cbd_ai_the_post_thumbnail_with_dimensions( 
-										'medium_large', 
-										array( 
-											'class' => 'w-full h-full object-cover transition-transform duration-300 group-hover/image:scale-105',
-											'loading' => 'lazy'
-										),
-										true
-									);
-									?>
-								</a>
-							</div>
-						<?php endif; ?>
+						
 							
 							<!-- Card Content -->
 							<div class="p-6" itemprop="articleBody">
@@ -378,13 +362,9 @@ get_header();
 				</div>
 				
 				<!-- Link to Blog Archive -->
-				<?php
-				$posts_page_id = get_option( 'page_for_posts' );
-				$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
-				?>
 				<div class="text-center">
 					<a 
-						href="<?php echo esc_url( $posts_page_url ); ?>" 
+						href="https://cbd.gratis/blog/" 
 						class="mui-button mui-button-contained mui-button-primary mui-button-large"
 					>
 						Ver Todos os Artigos do Blog

@@ -217,3 +217,5 @@ class CBD_Brevo_Integration {
 	}
 }
 
+
+

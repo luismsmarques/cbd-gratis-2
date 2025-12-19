@@ -490,6 +490,16 @@ function cbd_ai_theme_scripts() {
 			CBD_AI_THEME_VERSION
 		);
 	}
+	
+	// Enqueue Store Directory CSS (only on store directory pages)
+	if ( is_page_template( 'templates/template-store-directory.php' ) || is_singular( 'cbd_store' ) || is_post_type_archive( 'cbd_store' ) ) {
+		wp_enqueue_style(
+			'cbd-ai-store-directory',
+			CBD_AI_THEME_URI . '/assets/css/store-directory.css',
+			array( 'cbd-ai-mui-design-system' ),
+			CBD_AI_THEME_VERSION
+		);
+	}
 
 	// Enqueue chatbot formatter (shared utility for all chatbots)
 	if ( is_page_template( 'templates/template-chatbot.php' ) ||
@@ -567,6 +577,17 @@ function cbd_ai_theme_scripts() {
 		}
 	}
 
+	// Enqueue Store Directory JS (only on store directory pages)
+	if ( is_page_template( 'templates/template-store-directory.php' ) || is_singular( 'cbd_store' ) || is_post_type_archive( 'cbd_store' ) ) {
+		wp_enqueue_script(
+			'cbd-ai-store-directory',
+			CBD_AI_THEME_URI . '/assets/js/store-directory.js',
+			array(),
+			CBD_AI_THEME_VERSION,
+			true
+		);
+	}
+	
 	// Enqueue main script for all pages
 	wp_enqueue_script(
 		'cbd-ai-main',
@@ -940,8 +961,8 @@ require_once CBD_AI_THEME_PATH . '/inc/admin-settings.php';
 require_once CBD_AI_THEME_PATH . '/inc/admin-legislation-sources.php';
 require_once CBD_AI_THEME_PATH . '/inc/migrate-legislation-sources.php';
 require_once CBD_AI_THEME_PATH . '/inc/debug-gemini.php';
-require_once CBD_AI_THEME_PATH . '/inc/class-featured-image-generator.php';
 require_once CBD_AI_THEME_PATH . '/inc/class-brevo-integration.php';
+require_once CBD_AI_THEME_PATH . '/inc/post-meta-store.php';
 
 /**
  * Output Schema.org JSON-LD markup

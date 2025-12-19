@@ -255,6 +255,67 @@ function cbd_ai_register_rest_routes() {
 			),
 		),
 	) );
+	
+	// Stores endpoints
+	register_rest_route( 'cbd-ai/v1', '/stores', array(
+		'methods' => 'GET',
+		'callback' => 'cbd_ai_get_stores',
+		'permission_callback' => '__return_true',
+		'args' => array(
+			'per_page' => array(
+				'required' => false,
+				'type' => 'integer',
+				'default' => 10,
+				'sanitize_callback' => 'absint',
+			),
+			'page' => array(
+				'required' => false,
+				'type' => 'integer',
+				'default' => 1,
+				'sanitize_callback' => 'absint',
+			),
+			'store_type' => array(
+				'required' => false,
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			),
+			'location' => array(
+				'required' => false,
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			),
+			'min_rating' => array(
+				'required' => false,
+				'type' => 'number',
+				'sanitize_callback' => 'floatval',
+			),
+			'orderby' => array(
+				'required' => false,
+				'type' => 'string',
+				'default' => 'date',
+				'enum' => array( 'date', 'title', 'rating' ),
+			),
+			'order' => array(
+				'required' => false,
+				'type' => 'string',
+				'default' => 'DESC',
+				'enum' => array( 'ASC', 'DESC' ),
+			),
+		),
+	) );
+	
+	register_rest_route( 'cbd-ai/v1', '/stores/(?P<id>\d+)', array(
+		'methods' => 'GET',
+		'callback' => 'cbd_ai_get_store',
+		'permission_callback' => '__return_true',
+		'args' => array(
+			'id' => array(
+				'required' => true,
+				'type' => 'integer',
+				'sanitize_callback' => 'absint',
+			),
+		),
+	) );
 }
 add_action( 'rest_api_init', 'cbd_ai_register_rest_routes' );
 
@@ -744,5 +805,164 @@ function cbd_ai_test_legislation_source( $request ) {
 		'hash' => $result['content_hash'],
 		'message' => $changes['has_changes'] ? 'Mudanças detectadas!' : 'Nenhuma mudança detectada.',
 	) );
+}
+
+/**
+ * Get stores list
+ *
+ * @param WP_REST_Request $request Request object
+ * @return WP_REST_Response|WP_Error
+ */
+function cbd_ai_get_stores( $request ) {
+	$per_page = $request->get_param( 'per_page' );
+	$page = $request->get_param( 'page' );
+	$store_type = $request->get_param( 'store_type' );
+	$location = $request->get_param( 'location' );
+	$min_rating = $request->get_param( 'min_rating' );
+	$orderby = $request->get_param( 'orderby' );
+	$order = $request->get_param( 'order' );
+	
+	$query_args = array(
+		'post_type' => 'cbd_store',
+		'posts_per_page' => $per_page,
+		'paged' => $page,
+		'post_status' => 'publish',
+	);
+	
+	// Add taxonomy filters
+	$tax_query = array();
+	if ( ! empty( $store_type ) ) {
+		$tax_query[] = array(
+			'taxonomy' => 'store_type',
+			'field' => 'slug',
+			'terms' => $store_type,
+		);
+	}
+	if ( ! empty( $location ) ) {
+		$tax_query[] = array(
+			'taxonomy' => 'store_location',
+			'field' => 'slug',
+			'terms' => $location,
+		);
+	}
+	if ( ! empty( $tax_query ) ) {
+		$query_args['tax_query'] = $tax_query;
+	}
+	
+	// Add rating filter
+	if ( $min_rating > 0 ) {
+		$query_args['meta_query'] = array(
+			array(
+				'key' => '_cbd_store_google_rating',
+				'value' => $min_rating,
+				'compare' => '>=',
+				'type' => 'DECIMAL',
+			),
+		);
+	}
+	
+	// Add ordering
+	if ( $orderby === 'rating' ) {
+		$query_args['meta_key'] = '_cbd_store_google_rating';
+		$query_args['orderby'] = 'meta_value_num';
+		$query_args['order'] = $order;
+	} elseif ( $orderby === 'title' ) {
+		$query_args['orderby'] = 'title';
+		$query_args['order'] = $order;
+	} else {
+		$query_args['orderby'] = 'date';
+		$query_args['order'] = $order;
+	}
+	
+	$query = new WP_Query( $query_args );
+	
+	$stores = array();
+	
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			$store_id = get_the_ID();
+			
+			$stores[] = array(
+				'id' => $store_id,
+				'title' => get_the_title(),
+				'slug' => get_post_field( 'post_name', $store_id ),
+				'permalink' => get_permalink( $store_id ),
+				'excerpt' => get_the_excerpt(),
+				'featured_image' => get_the_post_thumbnail_url( $store_id, 'medium' ),
+				'address' => get_post_meta( $store_id, '_cbd_store_address', true ),
+				'city' => get_post_meta( $store_id, '_cbd_store_city', true ),
+				'postal_code' => get_post_meta( $store_id, '_cbd_store_postal_code', true ),
+				'country' => get_post_meta( $store_id, '_cbd_store_country', true ),
+				'phone' => get_post_meta( $store_id, '_cbd_store_phone', true ),
+				'email' => get_post_meta( $store_id, '_cbd_store_email', true ),
+				'website' => get_post_meta( $store_id, '_cbd_store_website', true ),
+				'latitude' => get_post_meta( $store_id, '_cbd_store_latitude', true ),
+				'longitude' => get_post_meta( $store_id, '_cbd_store_longitude', true ),
+				'rating' => get_post_meta( $store_id, '_cbd_store_google_rating', true ),
+				'review_count' => get_post_meta( $store_id, '_cbd_store_google_review_count', true ),
+				'google_maps_url' => get_post_meta( $store_id, '_cbd_store_google_maps_url', true ),
+				'store_type' => wp_get_post_terms( $store_id, 'store_type', array( 'fields' => 'names' ) ),
+				'location' => wp_get_post_terms( $store_id, 'store_location', array( 'fields' => 'names' ) ),
+				'categories' => wp_get_post_terms( $store_id, 'store_category', array( 'fields' => 'names' ) ),
+			);
+		}
+		wp_reset_postdata();
+	}
+	
+	return rest_ensure_response( array(
+		'stores' => $stores,
+		'total' => $query->found_posts,
+		'pages' => $query->max_num_pages,
+		'current_page' => $page,
+	) );
+}
+
+/**
+ * Get single store
+ *
+ * @param WP_REST_Request $request Request object
+ * @return WP_REST_Response|WP_Error
+ */
+function cbd_ai_get_store( $request ) {
+	$store_id = $request->get_param( 'id' );
+	
+	$store = get_post( $store_id );
+	
+	if ( ! $store || $store->post_type !== 'cbd_store' || $store->post_status !== 'publish' ) {
+		return new WP_Error( 'not_found', 'Loja não encontrada.', array( 'status' => 404 ) );
+	}
+	
+	$store_data = array(
+		'id' => $store_id,
+		'title' => get_the_title( $store_id ),
+		'slug' => $store->post_name,
+		'permalink' => get_permalink( $store_id ),
+		'content' => apply_filters( 'the_content', $store->post_content ),
+		'excerpt' => get_the_excerpt( $store_id ),
+		'featured_image' => get_the_post_thumbnail_url( $store_id, 'large' ),
+		'address' => get_post_meta( $store_id, '_cbd_store_address', true ),
+		'city' => get_post_meta( $store_id, '_cbd_store_city', true ),
+		'postal_code' => get_post_meta( $store_id, '_cbd_store_postal_code', true ),
+		'country' => get_post_meta( $store_id, '_cbd_store_country', true ),
+		'phone' => get_post_meta( $store_id, '_cbd_store_phone', true ),
+		'email' => get_post_meta( $store_id, '_cbd_store_email', true ),
+		'website' => get_post_meta( $store_id, '_cbd_store_website', true ),
+		'latitude' => get_post_meta( $store_id, '_cbd_store_latitude', true ),
+		'longitude' => get_post_meta( $store_id, '_cbd_store_longitude', true ),
+		'rating' => get_post_meta( $store_id, '_cbd_store_google_rating', true ),
+		'review_count' => get_post_meta( $store_id, '_cbd_store_google_review_count', true ),
+		'google_maps_url' => get_post_meta( $store_id, '_cbd_store_google_maps_url', true ),
+		'opening_hours' => get_post_meta( $store_id, '_cbd_store_opening_hours', true ),
+		'products' => get_post_meta( $store_id, '_cbd_store_products', true ),
+		'certifications' => get_post_meta( $store_id, '_cbd_store_certifications', true ),
+		'payment_methods' => get_post_meta( $store_id, '_cbd_store_payment_methods', true ),
+		'delivery_available' => get_post_meta( $store_id, '_cbd_store_delivery_available', true ) === '1',
+		'store_type' => wp_get_post_terms( $store_id, 'store_type', array( 'fields' => 'all' ) ),
+		'location' => wp_get_post_terms( $store_id, 'store_location', array( 'fields' => 'all' ) ),
+		'categories' => wp_get_post_terms( $store_id, 'store_category', array( 'fields' => 'all' ) ),
+	);
+	
+	return rest_ensure_response( $store_data );
 }
 

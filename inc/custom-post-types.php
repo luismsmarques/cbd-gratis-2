@@ -55,6 +55,28 @@ function cbd_ai_register_post_types() {
 		'supports' => array( 'title' ),
 		'menu_icon' => 'dashicons-admin-links',
 	) );
+	
+	// CBD Stores
+	register_post_type( 'cbd_store', array(
+		'labels' => array(
+			'name' => 'Lojas CBD',
+			'singular_name' => 'Loja CBD',
+			'add_new' => 'Adicionar Nova',
+			'add_new_item' => 'Adicionar Nova Loja',
+			'edit_item' => 'Editar Loja',
+			'new_item' => 'Nova Loja',
+			'view_item' => 'Ver Loja',
+			'search_items' => 'Pesquisar Lojas',
+			'not_found' => 'Nenhuma loja encontrada',
+			'not_found_in_trash' => 'Nenhuma loja encontrada no lixo',
+		),
+		'public' => true,
+		'has_archive' => true,
+		'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+		'menu_icon' => 'dashicons-store',
+		'rewrite' => array( 'slug' => 'lojas-cbd' ),
+		'show_in_rest' => true,
+	) );
 }
 add_action( 'init', 'cbd_ai_register_post_types' );
 
@@ -141,6 +163,66 @@ function cbd_ai_register_taxonomies() {
 		'query_var' => true,
 	) );
 	
+	// Store Type Taxonomy
+	register_taxonomy( 'store_type', array( 'cbd_store' ), array(
+		'labels' => array(
+			'name' => 'Tipos de Loja',
+			'singular_name' => 'Tipo de Loja',
+			'search_items' => 'Pesquisar Tipos',
+			'all_items' => 'Todos os Tipos',
+			'edit_item' => 'Editar Tipo',
+			'update_item' => 'Atualizar Tipo',
+			'add_new_item' => 'Adicionar Novo Tipo',
+			'new_item_name' => 'Nome do Novo Tipo',
+			'menu_name' => 'Tipos de Loja',
+		),
+		'hierarchical' => true,
+		'show_ui' => true,
+		'show_admin_column' => true,
+		'query_var' => true,
+		'rewrite' => array( 'slug' => 'tipo-loja' ),
+	) );
+	
+	// Store Location Taxonomy
+	register_taxonomy( 'store_location', array( 'cbd_store' ), array(
+		'labels' => array(
+			'name' => 'Localizações',
+			'singular_name' => 'Localização',
+			'search_items' => 'Pesquisar Localizações',
+			'all_items' => 'Todas as Localizações',
+			'edit_item' => 'Editar Localização',
+			'update_item' => 'Atualizar Localização',
+			'add_new_item' => 'Adicionar Nova Localização',
+			'new_item_name' => 'Nome da Nova Localização',
+			'menu_name' => 'Localizações',
+		),
+		'hierarchical' => true,
+		'show_ui' => true,
+		'show_admin_column' => true,
+		'query_var' => true,
+		'rewrite' => array( 'slug' => 'localizacao' ),
+	) );
+	
+	// Store Category Taxonomy
+	register_taxonomy( 'store_category', array( 'cbd_store' ), array(
+		'labels' => array(
+			'name' => 'Categorias de Produtos',
+			'singular_name' => 'Categoria de Produtos',
+			'search_items' => 'Pesquisar Categorias',
+			'all_items' => 'Todas as Categorias',
+			'edit_item' => 'Editar Categoria',
+			'update_item' => 'Atualizar Categoria',
+			'add_new_item' => 'Adicionar Nova Categoria',
+			'new_item_name' => 'Nome da Nova Categoria',
+			'menu_name' => 'Categorias de Produtos',
+		),
+		'hierarchical' => true,
+		'show_ui' => true,
+		'show_admin_column' => true,
+		'query_var' => true,
+		'rewrite' => array( 'slug' => 'categoria-produtos' ),
+	) );
+	
 	// Add default terms
 	cbd_ai_add_default_terms();
 }
@@ -171,6 +253,22 @@ function cbd_ai_add_default_terms() {
 	foreach ( $legislation_types as $type ) {
 		if ( ! term_exists( $type, 'legislation_type' ) ) {
 			wp_insert_term( $type, 'legislation_type' );
+		}
+	}
+	
+	// Store types
+	$store_types = array( 'física', 'online', 'híbrida' );
+	foreach ( $store_types as $type ) {
+		if ( ! term_exists( $type, 'store_type' ) ) {
+			wp_insert_term( $type, 'store_type' );
+		}
+	}
+	
+	// Store categories
+	$store_categories = array( 'óleos', 'cremes', 'cápsulas', 'comestíveis', 'flores', 'outros' );
+	foreach ( $store_categories as $category ) {
+		if ( ! term_exists( $category, 'store_category' ) ) {
+			wp_insert_term( $category, 'store_category' );
 		}
 	}
 }
